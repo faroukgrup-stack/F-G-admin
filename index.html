@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta name="theme-color" content="#0a0e16">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فاروق - لوحة التحكم">
     <title>لوحة تحكم المبيعات والاشتراكات | FAROUK GRUP</title>
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e6u-DPTinDJl_Q9wW3QvGgzFbXO_2sXa">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -357,8 +365,14 @@
         <h2>الدخول للمصرح لهم</h2>
         <p class="sub-title" id="loginSubTitle">مجموعة فاروق للاستشارات والأعمال</p>
         <input type="email" id="usernameInput" class="login-input" placeholder="البريد الإلكتروني" value="" dir="ltr" autocomplete="username">
-        <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور" autofocus autocomplete="current-password">
-        <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> دخول</button>
+        <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور" autocomplete="current-password">
+        <button type="button" class="login-btn" id="loginBtn" onclick="attemptLogin()"><i class="fas fa-sign-in-alt"></i> دخول</button>
+        <div id="loginStep2" style="display:none;margin-top:8px;">
+            <p style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;" id="otpHint">أدخل رمز التحقق المرسل لبريدك</p>
+            <input type="text" id="otpInput" class="login-input" placeholder="رمز التحقق (6 أرقام)" dir="ltr" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+            <button type="button" class="login-btn" id="otpBtn" onclick="verifyOtpLogin()"><i class="fas fa-shield-alt"></i> تأكيد الدخول</button>
+            <button type="button" class="login-btn" id="backToLoginBtn" style="margin-top:8px;background:transparent;border:1px solid #555;color:#ccc;"><i class="fas fa-arrow-right"></i> رجوع</button>
+        </div>
         <div class="error-msg" id="errorMsg"></div>
     </div>
 </div>
@@ -369,7 +383,7 @@
         <i class="fas fa-exclamation-triangle" style="font-size:2.8rem; color:#fbbf24; margin-bottom:0.9rem;"></i>
         <h2 id="sessionExpiredTitle">⚠️ انتهت صلاحية الجلسة</h2>
         <p id="sessionExpiredMsg">انتهت مدة الجلسة (24 ساعة). الرجاء تسجيل الدخول مجدداً.</p>
-        <a href="https://alfan.link/faroukazem?digital=r89RJK" target="_blank" class="renew-link" id="renewLinkBtn" style="display:none;">
+        <a href="#" class="renew-link" id="renewLinkBtn" style="display:none;" onclick="return false;">
             <i class="fas fa-sync-alt"></i> تجديد الإشتراك
         </a>
         <button class="relogin-btn" id="reloginBtn"><i class="fas fa-sign-in-alt"></i> العودة لشاشة الدخول</button>
@@ -715,6 +729,8 @@
         <input type="text" id="staffFullName" placeholder="الاسم">
         <label>كلمة المرور</label>
         <input type="text" id="staffPassword" dir="ltr" placeholder="كلمة مرور قوية">
+        <label>رقم الهاتف (للتحقق عند الدخول)</label>
+        <input type="tel" id="staffPhone" dir="ltr" placeholder="90555...">
         <label style="margin-top:12px;display:block;color:var(--gold-light);">المنصات المسموحة</label>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;">
             <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="comprehensive"> المنصة الشاملة</label>
@@ -835,41 +851,7 @@
 <div class="toast-container" id="toastBox"></div>
 
 <script>
-// ---- كود الحماية ومنع الوصول لأدوات المطور ----
-(function () {
-  "use strict";
-
-  // منع F12 واختصارات أدوات المطور وعرض المصدر
-  document.addEventListener('keydown', function (e) {
-    // F12
-    if (e.key === 'F12' || e.keyCode === 123) {
-      e.preventDefault();
-      return false;
-    }
-    // Ctrl+Shift+I / J / C
-    if (e.ctrlKey && e.shiftKey &&
-        (e.key === 'I' || e.key === 'i' ||
-         e.key === 'J' || e.key === 'j' ||
-         e.key === 'C' || e.key === 'c')) {
-      e.preventDefault();
-      return false;
-    }
-    // Ctrl+U (عرض المصدر)
-    if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-      e.preventDefault();
-      return false;
-    }
-  }, true);
-
-  // منع النقر بزر الماوس الأيمن (بدون alert)
-  document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-    return false;
-  }, true);
-
-})();
-// ---- نهاية كود الحماية ----
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0XST9C_oSUU6vTb_TLOudAfCMF146LqxVfd-XmSV7O5bccAdeMm1KmVVK0YYUd3_MfQ/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzHSxbzddg--qk_D-vMuNYdTkG6WPdv16o82rjDRhLCQDmuJqcmiKgp1hwOa7UvA3ViA/exec";
     // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لهندسة المينيو
     const ADMIN_KEY = "mF9$kL2#pQ8wZ4xR7vN1yT6";
     const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -993,7 +975,7 @@
         localStorage.removeItem('userToken'); localStorage.removeItem('userName'); localStorage.removeItem('daysLeft'); localStorage.removeItem('loginTimestamp');
         document.getElementById('sessionExpiredTitle').textContent = isSubExpired ? '⚠️ انتهى الاشتراك' : '⏰ انتهت الجلسة';
         document.getElementById('sessionExpiredMsg').textContent = reason;
-        document.getElementById('renewLinkBtn').style.display = isSubExpired ? 'inline-block' : 'none';
+        document.getElementById('renewLinkBtn').style.display = 'none'; // لا تجديد — صفحة داخلية للموظفين فقط
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('sessionExpiredOverlay').style.display = 'flex';
     }
@@ -1057,37 +1039,87 @@
         };
     }
 
-    async function attemptLogin() {
-        const usernameEl = document.getElementById('usernameInput');
-        const username = (usernameEl ? usernameEl.value.trim() : '') || 'faroukgrup@gmail.com';
-        const password = document.getElementById('passwordInput').value.trim();
-        if (!password) { document.getElementById('errorMsg').textContent = '❌ أدخل كلمة المرور'; return; }
-        const btn = document.getElementById('loginBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري التحقق...'; btn.disabled = true;
+    let pendingLoginEmail = '';
+    window.attemptLogin = async function attemptLogin() {
         try {
-            const body = new URLSearchParams({ action: 'login', username, password });
-            const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body });
+            const usernameEl = document.getElementById('usernameInput');
+            const username = (usernameEl && usernameEl.value ? usernameEl.value.trim() : '');
+            const passwordEl = document.getElementById('passwordInput');
+            const password = passwordEl ? passwordEl.value.trim() : '';
+            const err = document.getElementById('errorMsg');
+            if (!username || !password) {
+                if (err) err.textContent = '❌ أدخل البريد وكلمة المرور';
+                return;
+            }
+            const btn = document.getElementById('loginBtn');
+            if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري الدخول...'; btn.disabled = true; }
+            if (err) err.textContent = '';
+            const body = new URLSearchParams({ action: 'login', username: username, password: password });
+            const res = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: body
+            });
             const r = await res.json();
-            if (r.status === 'success') {
-                localStorage.setItem('userToken', r.token);
-                localStorage.setItem('userName', r.name || username);
-                localStorage.setItem('userEmail', r.email || username);
-                localStorage.setItem('userRole', r.role || 'staff');
-                localStorage.setItem('userPerms', JSON.stringify(r.permissions || {}));
-                localStorage.setItem('isSuperAdmin', (r.isSuperAdmin || r.role === 'super') ? '1' : '0');
-                localStorage.setItem('loginTimestamp', Date.now().toString());
-                if (r.daysLeft !== undefined) localStorage.setItem('daysLeft', r.daysLeft);
-                loadCurrentUserFromStorage();
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('sessionExpiredOverlay').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                applyPermissionsUI();
-                startSessionTimer(); initAudio(); loadAllData();
-                showToast(`مرحباً ${r.name}`, "fa-smile");
-            } else if (r.status === 'expired') {
-                document.getElementById('errorMsg').innerHTML = '❌ انتهى اشتراكك. <a href="https://alfan.link/faroukazem?digital=r89RJK" target="_blank" style="color:#cfa776;">تجديد</a>';
-            } else document.getElementById('errorMsg').textContent = '❌ ' + (r.message || 'بيانات خاطئة');
-        } catch (e) { document.getElementById('errorMsg').textContent = '❌ ' + e.message; }
-        finally { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول'; btn.disabled = false; }
+            if (r.status === 'otp_required') {
+                pendingLoginEmail = r.email || username;
+                const step2 = document.getElementById('loginStep2');
+                if (step2) step2.style.display = 'block';
+                const hint = document.getElementById('otpHint');
+                if (hint) hint.textContent = r.message || 'أدخل رمز التحقق المرسل لبريدك';
+                if (err) err.textContent = '';
+                if (typeof showToast === 'function') showToast('تحقق من بريدك للرمز', 'fa-envelope');
+            } else if (r.status === 'success') {
+                finishLoginSuccess(r);
+            } else {
+                if (err) err.textContent = '❌ ' + (r.message || 'بيانات خاطئة');
+            }
+            if (btn) { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول'; btn.disabled = false; }
+        } catch (e) {
+            const err = document.getElementById('errorMsg');
+            if (err) err.textContent = '❌ ' + (e.message || 'خطأ اتصال');
+            const btn = document.getElementById('loginBtn');
+            if (btn) { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول'; btn.disabled = false; }
+        }
+    };
+    window.verifyOtpLogin = async function verifyOtpLogin() {
+        const codeEl = document.getElementById('otpInput');
+        const code = codeEl ? codeEl.value.trim() : '';
+        const err = document.getElementById('errorMsg');
+        if (!code || code.length < 6) { if (err) err.textContent = '❌ أدخل الرمز المكوّن من 6 أرقام'; return; }
+        const btn = document.getElementById('otpBtn');
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري التأكيد...'; btn.disabled = true; }
+        try {
+            const body = new URLSearchParams({ action: 'verifyotp', username: pendingLoginEmail, otp: code });
+            const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body: body });
+            const r = await res.json();
+            if (r.status === 'success') finishLoginSuccess(r);
+            else if (err) err.textContent = '❌ ' + (r.message || 'رمز غير صحيح');
+        } catch (e) {
+            if (err) err.textContent = '❌ ' + (e.message || 'خطأ');
+        }
+        if (btn) { btn.innerHTML = '<i class="fas fa-shield-alt"></i> تأكيد الدخول'; btn.disabled = false; }
+    };
+    function finishLoginSuccess(r) {
+        const email = r.email || pendingLoginEmail || '';
+        localStorage.setItem('userToken', r.token);
+        localStorage.setItem('userName', r.name || email);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userRole', r.role || 'staff');
+        localStorage.setItem('userPerms', JSON.stringify(r.permissions || {}));
+        localStorage.setItem('isSuperAdmin', (r.isSuperAdmin || r.role === 'super') ? '1' : '0');
+        localStorage.setItem('loginTimestamp', Date.now().toString());
+        loadCurrentUserFromStorage();
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('sessionExpiredOverlay').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        const step2 = document.getElementById('loginStep2');
+        if (step2) step2.style.display = 'none';
+        applyPermissionsUI();
+        startSessionTimer();
+        initAudio();
+        loadAllData();
+        showToast('مرحباً ' + (r.name || ''), 'fa-smile');
     }
     function initialSessionCheck() {
         const token = localStorage.getItem('userToken');
@@ -2112,6 +2144,16 @@
     document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') attemptLogin(); });
     const usernameInputEl = document.getElementById('usernameInput');
     if (usernameInputEl) usernameInputEl.addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
+    const otpBtn = document.getElementById('otpBtn');
+    if (otpBtn) otpBtn.addEventListener('click', verifyOtpLogin);
+    const otpInput = document.getElementById('otpInput');
+    if (otpInput) otpInput.addEventListener('keypress', e => { if (e.key === 'Enter') verifyOtpLogin(); });
+    const backBtn = document.getElementById('backToLoginBtn');
+    if (backBtn) backBtn.addEventListener('click', () => {
+        document.getElementById('loginStep2').style.display = 'none';
+        document.getElementById('loginStep1').style.display = 'block';
+        document.getElementById('errorMsg').textContent = '';
+    });
     document.getElementById('reloginBtn').addEventListener('click', () => { document.getElementById('sessionExpiredOverlay').style.display = 'none'; showLoginScreen(); });
     window.addEventListener('load', () => { initialSessionCheck(); updateDateTime(); setInterval(updateDateTime, 1000); });
 
@@ -2177,6 +2219,7 @@
                 document.getElementById('staffFullName').value = s.fullName || '';
                 document.getElementById('staffPassword').value = '';
                 document.getElementById('staffPassword').placeholder = 'اترك فارغاً للإبقاء على الحالية';
+                if (document.getElementById('staffPhone')) document.getElementById('staffPhone').value = s.phone || '';
                 (s.permissions?.platforms || []).forEach(p => { const el = document.querySelector(`.perm-plat[value="${p}"]`); if (el) el.checked = true; });
                 (s.permissions?.actions || []).forEach(a => { const el = document.querySelector(`.perm-act[value="${a}"]`); if (el) el.checked = true; });
             }
@@ -2194,6 +2237,7 @@
         const email = document.getElementById('staffEmail').value.trim().toLowerCase();
         const fullName = document.getElementById('staffFullName').value.trim();
         const password = document.getElementById('staffPassword').value;
+        const phone = (document.getElementById('staffPhone')?.value || '').trim();
         const platforms = [...document.querySelectorAll('.perm-plat:checked')].map(c => c.value);
         const actions = [...document.querySelectorAll('.perm-act:checked')].map(c => c.value);
         if (!email || !fullName) { showToast('الإيميل والاسم مطلوبان', 'fa-exclamation', 'danger'); return; }
@@ -2203,11 +2247,11 @@
         try {
             let r;
             if (editEmail) {
-                const payload = { email: editEmail, fullName, permissions: JSON.stringify({ platforms, actions }) };
+                const payload = { email: editEmail, fullName, phone, permissions: JSON.stringify({ platforms, actions }) };
                 if (password) payload.password = password;
                 r = await apiStaffPost('updatestaff', payload);
             } else {
-                r = await apiStaffPost('createstaff', { email, password, fullName, permissions: JSON.stringify({ platforms, actions }) });
+                r = await apiStaffPost('createstaff', { email, password, fullName, phone, permissions: JSON.stringify({ platforms, actions }) });
             }
             if (r.status === 'success') { showToast(editEmail ? 'تم التحديث' : 'تم إنشاء الموظف'); closeModal('staffModal'); loadStaffListUI(); }
             else showToast(r.message || 'فشل', 'fa-times', 'danger');
@@ -2436,6 +2480,33 @@
             updateAppointmentStats();
         };
     }
+</script>
+
+<script>
+// تسجيل PWA Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(function(reg) { console.log('[PWA] SW registered', reg.scope); })
+      .catch(function(err) { console.warn('[PWA] SW failed', err); });
+  });
+}
+// زر تثبيت اختياري عند توفر beforeinstallprompt
+let deferredPwaPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  var btn = document.getElementById('pwaInstallBtn');
+  if (btn) btn.style.display = 'inline-flex';
+});
+window.installPwaApp = function() {
+  if (!deferredPwaPrompt) {
+    if (typeof showToast === 'function') showToast('التثبيت متاح من قائمة المتصفح (إضافة إلى الشاشة الرئيسية)', 'fa-info-circle');
+    return;
+  }
+  deferredPwaPrompt.prompt();
+  deferredPwaPrompt.userChoice.then(function() { deferredPwaPrompt = null; var btn = document.getElementById('pwaInstallBtn'); if (btn) btn.style.display = 'none'; });
+};
 </script>
 </body>
 </html>
