@@ -2,8 +2,8 @@
   "name": "لوحة تحكم المبيعات والاشتراكات | مجموعة فاروق للإستشارات والأعمال",
   "short_name": "مجموعة فاروق للإستشارات والأعمال - لوحة التحكم",
   "description": "لوحة تحكم المبيعات والاشتراكات - مجموعة فاروق للاستشارات والأعمال",
-  "id": "./admin.html",
-  "start_url": "./admin.html",
+  "id": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
@@ -37,6 +37,9 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["business", "productivity"],
+  "categories": [
+    "business",
+    "productivity"
+  ],
   "prefer_related_applications": false
 }
