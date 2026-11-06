@@ -1,9 +1,9 @@
 /* Service Worker - لوحة تحكم مجموعة فاروق v2
  * تخزين مؤقت + إشعارات المواعيد
  */
-const CACHE_NAME = 'farouk-admin-v5';
+const CACHE_NAME = 'farouk-admin-v3';
 const SHELL = [
-  './admin.html',
+  './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png'
@@ -48,7 +48,7 @@ self.addEventListener('fetch', (event) => {
           }
           return res;
         })
-        .catch(() => cached || caches.match('./admin.html'));
+        .catch(() => cached || caches.match('./index.html'));
     })
   );
 });
@@ -64,7 +64,7 @@ self.addEventListener('message', (event) => {
       tag: data.tag || 'farouk-reminder',
       requireInteraction: true,
       vibrate: [200, 100, 200],
-      data: { url: './admin.html' }
+      data: { url: './index.html' }
     };
     event.waitUntil(self.registration.showNotification(title, options));
   }
@@ -87,7 +87,7 @@ async function scheduleFutureNotifications(apps) {
         badge: './icon-192.png',
         tag: tag,
         requireInteraction: true,
-        data: { url: './admin.html', appId: a.id }
+        data: { url: './index.html', appId: a.id }
       };
       // Timestamp Trigger إن وُجد (Chrome Android)
       if (typeof TimestampTrigger !== 'undefined') {
@@ -100,7 +100,7 @@ async function scheduleFutureNotifications(apps) {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || './admin.html';
+  const target = (event.notification.data && event.notification.data.url) || './index.html';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const c of list) {
