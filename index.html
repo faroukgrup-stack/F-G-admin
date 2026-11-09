@@ -1201,6 +1201,34 @@
         });
     }
 
+    /** توحيد شكل مستخدم أي منصة + التقاط آخر دخول إن وُجد */
+    function mapPlatformUser(u, key) {
+        const rawLogin = u.lastLogin || u.last_login || u.last_sign_in_at || u.lastSignInAt || u.lastSeen || u.last_seen || null;
+        return {
+            id: u.username || u.id,
+            username: u.username,
+            name: u.fullName || u.username,
+            platform: translatePlatform(key),
+            platformKey: key,
+            startDate: u.expiryDate || "غير محدد",
+            daysLeft: parseInt(u.daysLeft) || 0,
+            frozen: u.frozen === true || u.frozen === 'TRUE' || u.frozen === 'true',
+            regDate: u.regDate || null,
+            lastLogin: rawLogin || null
+        };
+    }
+
+    function formatLastLogin(val) {
+        if (!val) return null;
+        try {
+            const d = new Date(val);
+            if (isNaN(d.getTime())) return String(val);
+            return d.toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' });
+        } catch (_) {
+            return String(val);
+        }
+    }
+
     async function fetchSinglePlatform(key, retries = 1) {
         const url = getPlatformUrl(key);
         if (!url) return { key, success: false, data: [] };
@@ -1212,12 +1240,7 @@
                 if (data && Array.isArray(data.data)) {
                     return {
                         key, success: true,
-                        data: data.data.map(u => ({
-                            id: u.username || u.id, username: u.username, name: u.fullName || u.username,
-                            platform: translatePlatform(key), platformKey: key,
-                            startDate: u.expiryDate || "غير محدد", daysLeft: parseInt(u.daysLeft) || 0,
-                            frozen: u.frozen === true || u.frozen === 'TRUE' || u.frozen === 'true', regDate: u.regDate || null
-                        }))
+                        data: data.data.map(u => mapPlatformUser(u, key))
                     };
                 }
             } catch (e) {}
@@ -1235,12 +1258,7 @@
                     if ((data.status === 'success' || data.success === true) && data.data && Array.isArray(data.data)) {
                         return {
                             key, success: true,
-                            data: data.data.map(u => ({
-                                id: u.username || u.id, username: u.username, name: u.fullName || u.username,
-                                platform: translatePlatform(key), platformKey: key,
-                                startDate: u.expiryDate || "غير محدد", daysLeft: parseInt(u.daysLeft) || 0,
-                                frozen: u.frozen === true || u.frozen === 'TRUE' || u.frozen === 'true', regDate: u.regDate || null
-                            }))
+                            data: data.data.map(u => mapPlatformUser(u, key))
                         };
                     }
                 } catch (e) {}
@@ -1492,7 +1510,17 @@
             const p = u.progressPercent;
             const hasProgress = typeof p === 'number';
             const level = u.progressLevel || (hasProgress ? (p >= 75 ? 'high' : p >= 25 ? 'medium' : p > 0 ? 'low' : 'empty') : '');
-            const progressHtml = hasProgress ? `<div class="progress-cell"><div class="progress-wrapper"><div class="progress-track"><div class="progress-fill ${level}" style="width:${p}%;"></div></div><span class="progress-percent">${p}%</span></div><span class="progress-lessons">${u.completedLessons||0} / ${u.totalLessons||0} درس</span></div>` : '<span style="color:#666;font-size:0.8rem;">—</span>';
+            let progressHtml;
+            if (hasProgress) {
+                progressHtml = `<div class="progress-cell"><div class="progress-wrapper"><div class="progress-track"><div class="progress-fill ${level}" style="width:${p}%;"></div></div><span class="progress-percent">${p}%</span></div><span class="progress-lessons">${u.completedLessons||0} / ${u.totalLessons||0} درس</span></div>`;
+            } else if (u.platformKey === 'menuEngineering') {
+                const loginTxt = formatLastLogin(u.lastLogin);
+                progressHtml = loginTxt
+                    ? `<span style="font-size:0.78rem;color:var(--gold-light);font-weight:700;" title="آخر دخول"><i class="fas fa-clock" style="margin-left:4px;opacity:.8;"></i>${escapeHtml(loginTxt)}</span>`
+                    : `<span style="color:#888;font-size:0.75rem;">لم يسجّل دخولاً بعد</span>`;
+            } else {
+                progressHtml = '<span style="color:#666;font-size:0.8rem;">—</span>';
+            }
             tr.innerHTML = `
                 <td><input type="checkbox" class="row-checkbox" data-uid="${uid}"></td>
                 <td>${escapeHtml(u.name)}</td>
