@@ -176,6 +176,20 @@
         .search-box { padding: 8px 14px; border: 1px solid #3a3a3a; border-radius: 25px; min-width: 200px; background: rgba(0,0,0,0.3); color: #ddd; font-family: 'Tajawal', sans-serif; font-size: 0.9rem; }
         .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
         .filter-chip { padding: 5px 12px; border-radius: 20px; border: 1px solid #3a3a3a; background: rgba(0,0,0,0.25); color: #bbb; cursor: pointer; font-size: 0.8rem; transition: var(--transition); }
+        .cell-clip { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .rec-body { display: flex; flex-direction: column; gap: 6px; }
+        .rec-row { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 10px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; background: rgba(0,0,0,0.2); }
+        .rec-k { color: var(--gold-light); font-weight: 700; font-size: 0.85rem; word-break: break-word; }
+        .rec-v { color: #ddd; font-size: 0.88rem; white-space: pre-wrap; word-break: break-word; }
+        .q-bar { display: grid; grid-template-columns: 150px 1fr 48px; gap: 10px; align-items: center; margin: 8px 0; }
+        .q-label { font-size: 0.85rem; color: #ccc; }
+        .q-track { height: 10px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
+        .q-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #f1c40f); border-radius: 10px; }
+        .q-val { font-weight: 900; color: var(--gold-light); text-align: center; }
+        .stars { color: #f1c40f; letter-spacing: 1px; white-space: nowrap; } .stars .off { color: #444; }
+        .r-badge { padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 700; border: 1px solid #444; white-space: nowrap; }
+        .r-badge.good { color: #2ecc71; border-color: #2ecc7180; } .r-badge.mid { color: #f39c12; border-color: #f39c1280; } .r-badge.bad { color: #e74c3c; border-color: #e74c3c80; }
+        @media (max-width: 600px) { .q-bar { grid-template-columns: 110px 1fr 40px; } .rec-row { grid-template-columns: 1fr; } }
         .filter-chip:hover, .filter-chip.active { background: rgba(184,134,11,0.2); border-color: var(--gold); color: var(--gold-light); }
         .bulk-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
         .bulk-actions select, .bulk-actions button { padding: 7px 11px; border-radius: 8px; border: 1px solid #3a3a3a; background: rgba(0,0,0,0.3); color: #ddd; cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 0.85rem; }
@@ -431,6 +445,13 @@
                 <button class="sidebar-btn" onclick="showBookingsView()"><i class="fas fa-calendar-check" style="color:#e67e22"></i> <span>حجوزات العملاء</span></button>
                 <button class="sidebar-btn" onclick="openBookingSettingsModal()"><i class="fas fa-clock" style="color:#3498db"></i> <span>إعدادات الحجز</span></button>
             </div>
+            <div class="sidebar-section" id="dataSidebarSection">
+                <div class="sidebar-section-title" onclick="toggleSection(this)"><span>البيانات الواردة</span><i class="fas fa-chevron-down"></i></div>
+                <button class="sidebar-btn" id="btnRatingsView" onclick="showRatingsView(this)"><i class="fas fa-star" style="color:#f1c40f"></i> <span>تقييمات المنصة الشاملة</span></button>
+                <button class="sidebar-btn inbound-btn" onclick="showInboundView('books', this)"><i class="fas fa-book-open" style="color:#2ecc71"></i> <span>تحميل الكتب</span></button>
+                <button class="sidebar-btn inbound-btn" onclick="showInboundView('diagnostics', this)"><i class="fas fa-stethoscope" style="color:#3498db"></i> <span>التشخيص والأدوات المجانية</span></button>
+                <button class="sidebar-btn inbound-btn" onclick="showInboundView('requests', this)"><i class="fas fa-inbox" style="color:#e67e22"></i> <span>طلبات المواقع</span></button>
+            </div>
             <div class="sidebar-section" id="toolsSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الأدوات الاستشارية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" onclick="window.open('business-audit-60q.html','_blank')"><i class="fas fa-clipboard-list"></i> <span>التدقيق السريع</span></button>
@@ -678,6 +699,52 @@
                 </div>
             </div>
 
+            <!-- ===== تقييمات المنصة الشاملة ===== -->
+            <div id="ratingsView" style="display:none;">
+                <div class="cards-grid" id="ratingsCards"></div>
+                <div class="table-container" style="margin-bottom:16px;">
+                    <div class="table-header"><h3><i class="fas fa-chart-bar"></i> متوسط كل سؤال (من 5)</h3></div>
+                    <div id="ratingsQuestions"></div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3><i class="fas fa-star"></i> تقييمات المنصة الشاملة <span id="ratingsCount" style="font-size:0.85rem;color:var(--text-muted);font-weight:400;"></span></h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <input type="text" id="ratingsSearch" class="search-box" placeholder="بحث بالاسم أو الاقتراحات">
+                            <button class="refresh-btn" onclick="loadRatings(true)"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="exportRatings()"><i class="fas fa-file-csv"></i> تصدير</button>
+                        </div>
+                    </div>
+                    <div class="filter-chips">
+                        <span class="filter-chip active" onclick="setRatingsFilter('all', this)">الكل</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('good', this)">راضٍ</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('mid', this)">محايد</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('bad', this)">غير راضٍ</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('ar', this)">العربية</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('en', this)">English</span>
+                        <span class="filter-chip" onclick="setRatingsFilter('tr', this)">Türkçe</span>
+                    </div>
+                    <div id="ratingsTableWrap"></div>
+                </div>
+            </div>
+
+            <!-- ===== البيانات الواردة من Google Script (الكتب / التشخيص / الطلبات) ===== -->
+            <div id="inboundView" style="display:none;">
+                <div class="cards-grid" id="inboundCards"></div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 id="inboundTitle"></h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <input type="text" id="inboundSearch" class="search-box" placeholder="بحث في كل الحقول">
+                            <button class="refresh-btn" onclick="loadInbound(true)"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="exportInbound()"><i class="fas fa-file-csv"></i> تصدير</button>
+                        </div>
+                    </div>
+                    <div class="filter-chips" id="inboundTabs"></div>
+                    <div id="inboundTableWrap"></div>
+                </div>
+            </div>
+
             <!-- ===== Staff View ===== -->
             <div id="staffView" style="display:none;">
                 <div class="table-container">
@@ -848,6 +915,15 @@
     </div>
 </div>
 
+<!-- نافذة تفاصيل السجل -->
+<div class="modal" id="recordModal" onclick="if(event.target===this)closeModal('recordModal')">
+    <div class="modal-content" style="max-width:640px;">
+        <h3 id="recordModalTitle" style="color:var(--gold-light);margin-bottom:12px;"></h3>
+        <div id="recordModalBody" class="rec-body"></div>
+        <div class="modal-buttons" style="margin-top:14px;"><button class="btn-outline-sm" onclick="closeModal('recordModal')"><i class="fas fa-times"></i> إغلاق</button></div>
+    </div>
+</div>
+
 <div class="toast-container" id="toastBox"></div>
 
 <script>
@@ -867,7 +943,8 @@
     const PLATFORMS = {
         comprehensive: {
             name: 'المنصة الشاملة',
-            url: 'https://script.google.com/macros/s/AKfycbw4AQpUXJdU_NBraX1Y0FuFw-gSuBqYUw3g9CoCUIR6yc-gj-VNxGMglzr_MmL54GuE/exec'
+            // Supabase (دالة admin) — المفتاح ADMIN_KEY في Supabase يجب أن يساوي ADMIN_KEY أعلاه
+            url: 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin'
         },
         portaltr: {
             name: 'الشاملة تركي',
@@ -1015,6 +1092,12 @@
         if (bookingsSec) bookingsSec.style.display = hasPerm('manage_bookings') ? '' : 'none';
         const staffSec = document.getElementById('staffSidebarSection');
         if (staffSec) staffSec.style.display = (currentUser.isSuperAdmin || hasPerm('manage_staff')) ? '' : 'none';
+        const dataSec = document.getElementById('dataSidebarSection');
+        if (dataSec) {
+            const full = currentUser.isSuperAdmin || currentUser.role === 'super' || hasPerm('view_reports');
+            dataSec.style.display = (full || hasPlatform('comprehensive')) ? '' : 'none';
+            dataSec.querySelectorAll('.inbound-btn').forEach(b => b.style.display = full ? '' : 'none');
+        }
         const toolsSec = document.getElementById('toolsSidebarSection');
         if (toolsSec) toolsSec.style.display = hasPerm('use_audit_tools') ? '' : 'none';
         const roleLabel = document.getElementById('userRoleLabel');
@@ -1894,8 +1977,227 @@
     let bookingsData = [], bookingsLoaded = false, bookingFilter = 'all', calendarYear = null, calendarMonth = null, currentBookingSettings = null;
 
     function hideAllSpecialViews() {
-        ['bookingsView','staffView','messagesView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        ['bookingsView','staffView','messagesView','ratingsView','inboundView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     }
+    // ════════════════════════════════════════════════════════════
+    //  البيانات الواردة: تقييمات المنصة الشاملة + تحميل الكتب + التشخيص + الطلبات
+    // ════════════════════════════════════════════════════════════
+    const SUPABASE_ADMIN_URL = 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin';
+    const DATA_SOURCES = {
+        books: {
+            title: 'تحميل الكتب', icon: 'fa-book-open',
+            url: 'https://script.google.com/macros/s/AKfycbyzSA9Q8Hmi6ayHCz9gi0dlXOzWaVTsPIKuP_udG3krQoEKaUF0R3KCRQIquNqwfGgS3g/exec',
+            labels: { book1: 'الكتاب 1', book2: 'الكتاب 2', book3: 'الكتاب 3', book4: 'الكتاب 4', general: 'عام' },
+            preview: ['التاريخ', 'الوقت', 'الاسم', 'الإيميل', 'رقم الهاتف', 'الكتاب', 'الصفحة']
+        },
+        diagnostics: {
+            title: 'التشخيص والأدوات المجانية', icon: 'fa-stethoscope',
+            url: 'https://script.google.com/macros/s/AKfycbyW6Jql8vrS2HzVDt5KHjaTL5fMZWlzr8XB1zU3sQp6gILqWHPJUjwDk2uZS4hkYxoh/exec',
+            labels: { FormResponses: 'تشخيص المطاعم', ManagementResponses: 'مقياس الإداري', FeasibilityResponses: 'تقييم الجدوى' },
+            preview: ['Timestamp', 'Restaurant Name', 'Owner Name', 'Name', 'Project Name', 'Email', 'Phone', 'City', 'Final Score (%)', 'Total Score', 'Level', 'Score', 'Grade']
+        },
+        requests: {
+            title: 'طلبات المواقع', icon: 'fa-inbox',
+            url: 'https://script.google.com/macros/s/AKfycbxEEOiKwJ2Tz3eD6hPHfAk25beh9FTU-nW_Oj36P1mz7A1m1btBCInkRCGBm0ZQpgelDQ/exec',
+            labels: { FormResponses: 'طلبات الاستشارة' },
+            preview: ['التاريخ', 'الاسم', 'البريد الإلكتروني', 'رقم الهاتف', 'مجال الاستشارة', 'تفاصيل الاستفسار']
+        }
+    };
+    const RATING_QUESTIONS = [
+        ['تجربة المستخدم', 'تصميم الموقع'], ['سهولة التعامل مع الأدوات', 'سهولة الأدوات'], ['السرعة', 'سرعة التحميل'],
+        ['مريحة', 'التجربة على الجوال'], ['دقيقة', 'دقة الحاسبات'], ['المصطلحات', 'وضوح المصطلحات']
+    ];
+    const RATING_CHOICES = [['تثبيت_التطبيق', 'ثبّت التطبيق'], ['الايقونة', 'الأيقونة واضحة'], ['نصيحة', 'ينصح بالأدوات'], ['دروس', 'يريد دروس فيديو']];
+    const inbound = { source: null, sheets: [], sheetIdx: 0, search: '', cache: {}, ratings: null, rFilter: 'all', rSearch: '' };
+
+    function canViewInbound() { return currentUser.isSuperAdmin || currentUser.role === 'super' || hasPerm('view_reports'); }
+    function hideMainSections() {
+        ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        hideAllSpecialViews();
+    }
+    function markSidebar(btn) { if (!btn) return; document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    function csvCell(v) { v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    function downloadCSV(name, headers, rows) {
+        const csv = [headers.map(csvCell).join(',')].concat(rows.map(r => r.map(csvCell).join(','))).join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+        showToast('تم التصدير', 'fa-file-csv');
+    }
+    window.openRecordModal = function(title, pairs) {
+        document.getElementById('recordModalTitle').textContent = title || 'التفاصيل';
+        document.getElementById('recordModalBody').innerHTML = pairs.filter(p => String(p[1] == null ? '' : p[1]).trim() !== '')
+            .map(p => `<div class="rec-row"><div class="rec-k">${escapeHtml(p[0])}</div><div class="rec-v">${escapeHtml(p[1])}</div></div>`).join('') || '<div class="empty-state">لا توجد بيانات</div>';
+        document.getElementById('recordModal').style.display = 'flex';
+    };
+
+    // ---------- صفحات Google Script (الكتب / التشخيص / الطلبات) ----------
+    window.showInboundView = function(key, btn) {
+        if (!canViewInbound()) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
+        hideMainSections(); markSidebar(btn);
+        document.getElementById('inboundView').style.display = 'block'; closeMobileMenu();
+        const src = DATA_SOURCES[key]; inbound.source = key; inbound.search = ''; inbound.sheetIdx = 0;
+        document.getElementById('inboundTitle').innerHTML = `<i class="fas ${src.icon}"></i> ${src.title} <span id="inboundCount" style="font-size:0.85rem;color:var(--text-muted);font-weight:400;"></span>`;
+        document.getElementById('inboundSearch').value = '';
+        if (inbound.cache[key]) { inbound.sheets = inbound.cache[key]; renderInbound(); } else loadInbound(false);
+    };
+    window.loadInbound = async function(force) {
+        const key = inbound.source, src = DATA_SOURCES[key]; if (!src) return;
+        const body = document.getElementById('inboundTableWrap');
+        document.getElementById('inboundCards').innerHTML = ''; document.getElementById('inboundTabs').innerHTML = '';
+        body.innerHTML = '<div class="loader"></div>';
+        try {
+            const res = await fetch(src.url + '?fn=list&adminKey=' + encodeURIComponent(ADMIN_KEY) + '&t=' + Date.now(), { cache: 'no-store' });
+            const text = await res.text(); let data;
+            try { data = JSON.parse(text); } catch (e) { throw new Error('السكريبت لم يُحدَّث بعد: انسخ الكود الجديد ثم انشر نسخة جديدة (New version)'); }
+            if (data.status !== 'success' || !Array.isArray(data.sheets)) throw new Error(data.message === 'غير مصرح' ? 'المفتاح غير مطابق: ADMIN_KEY في السكريبت يجب أن يساوي المفتاح في لوحة الإدارة' : 'السكريبت لم يُحدَّث بعد: انشر نسخة جديدة (New version)');
+            inbound.sheets = data.sheets.filter(s => s.headers && s.headers.length);
+            inbound.cache[key] = inbound.sheets;
+            if (key !== inbound.source) return;
+            renderInbound();
+            if (force) showToast('تم التحديث', 'fa-check-circle');
+        } catch (e) {
+            body.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i>${escapeHtml(e.message || 'تعذر الاتصال')}</div>`;
+        }
+    };
+    function sheetLabel(name) { const src = DATA_SOURCES[inbound.source]; return (src.labels && src.labels[name]) || name; }
+    function rowDateKey(headers, r) {
+        const iD = headers.indexOf('التاريخ'), iT = headers.indexOf('Timestamp');
+        const v = iD >= 0 ? r[iD] : iT >= 0 ? r[iT] : '';
+        const d = new Date(String(v).replace(' ', 'T')); return isNaN(d) ? String(v).slice(0, 10) : getLocalDateStr(d);
+    }
+    function renderInbound() {
+        const sheets = inbound.sheets, cards = document.getElementById('inboundCards'), tabs = document.getElementById('inboundTabs');
+        const total = sheets.reduce((s, x) => s + x.rows.length, 0), today = getLocalDateStr();
+        const weekAgo = getLocalDateStr(new Date(Date.now() - 6 * 86400000));
+        let todayCount = 0, weekCount = 0;
+        sheets.forEach(s => s.rows.forEach(r => { const k = rowDateKey(s.headers, r); if (k === today) todayCount++; if (k >= weekAgo && k <= today) weekCount++; }));
+        cards.innerHTML = `
+            <div class="stat-card"><div><h4>الإجمالي</h4><span class="stat-number">${total}</span><div class="stat-sub">كل السجلات</div></div><i class="fas fa-database"></i></div>
+            <div class="stat-card"><div><h4>اليوم</h4><span class="stat-number">${todayCount}</span><div class="stat-sub">${today}</div></div><i class="fas fa-calendar-day"></i></div>
+            <div class="stat-card"><div><h4>آخر 7 أيام</h4><span class="stat-number">${weekCount}</span><div class="stat-sub">منذ ${weekAgo}</div></div><i class="fas fa-calendar-week"></i></div>`
+            + sheets.map((s, i) => `<div class="stat-card${i === inbound.sheetIdx ? ' active' : ''}" onclick="selectInboundSheet(${i})"><div><h4>${escapeHtml(sheetLabel(s.name))}</h4><span class="stat-number">${s.rows.length}</span><div class="stat-sub">اضغط للعرض</div></div><i class="fas fa-table"></i></div>`).join('');
+        tabs.innerHTML = sheets.map((s, i) => `<span class="filter-chip${i === inbound.sheetIdx ? ' active' : ''}" onclick="selectInboundSheet(${i})">${escapeHtml(sheetLabel(s.name))} (${s.rows.length})</span>`).join('');
+        renderInboundTable();
+    }
+    window.selectInboundSheet = function(i) { inbound.sheetIdx = i; renderInbound(); };
+    function previewCols(headers) {
+        const want = DATA_SOURCES[inbound.source].preview || [];
+        let cols = want.map(h => headers.indexOf(h)).filter(i => i >= 0);
+        if (cols.length < 3) cols = headers.map((_, i) => i).filter(i => headers[i] !== '#').slice(0, 7);
+        return cols.slice(0, 8);
+    }
+    function filteredInboundRows() {
+        const s = inbound.sheets[inbound.sheetIdx]; if (!s) return [];
+        const q = inbound.search.trim().toLowerCase();
+        const rows = s.rows.map((r, i) => ({ r, i })).reverse(); // الأحدث أولاً
+        return q ? rows.filter(x => x.r.some(v => String(v).toLowerCase().includes(q))) : rows;
+    }
+    function renderInboundTable() {
+        const wrap = document.getElementById('inboundTableWrap'), s = inbound.sheets[inbound.sheetIdx];
+        if (!s) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>لا توجد بيانات بعد</div>'; document.getElementById('inboundCount').textContent = ''; return; }
+        const cols = previewCols(s.headers), rows = filteredInboundRows();
+        document.getElementById('inboundCount').textContent = `(${rows.length})`;
+        if (!rows.length) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>لا توجد سجلات</div>'; return; }
+        const shown = rows.slice(0, 500);
+        wrap.innerHTML = `<table><thead><tr><th>#</th>${cols.map(c => `<th>${escapeHtml(s.headers[c])}</th>`).join('')}<th>التفاصيل</th></tr></thead><tbody>`
+            + shown.map((x, n) => `<tr><td>${x.i + 1}</td>${cols.map(c => `<td class="cell-clip" title="${escapeHtml(x.r[c])}">${escapeHtml(x.r[c])}</td>`).join('')}<td><button class="action-btn edit-btn" onclick="openInboundRecord(${x.i})" title="عرض كل البيانات"><i class="fas fa-eye"></i></button></td></tr>`).join('')
+            + '</tbody></table>' + (rows.length > 500 ? `<div class="empty-state">يعرض أحدث 500 سجل من ${rows.length}. استخدم البحث أو التصدير لرؤية الباقي.</div>` : '');
+    }
+    window.openInboundRecord = function(i) {
+        const s = inbound.sheets[inbound.sheetIdx]; const r = s.rows[i]; if (!r) return;
+        openRecordModal(sheetLabel(s.name) + ' — سجل ' + (i + 1), s.headers.map((h, k) => [h, r[k]]));
+    };
+    window.exportInbound = function() {
+        const s = inbound.sheets[inbound.sheetIdx]; if (!s) return;
+        downloadCSV(DATA_SOURCES[inbound.source].title + '_' + sheetLabel(s.name), s.headers, filteredInboundRows().map(x => x.r));
+    };
+
+    // ---------- تقييمات المنصة الشاملة (Supabase: survey_responses) ----------
+    window.showRatingsView = function(btn) {
+        if (!canViewInbound() && !hasPlatform('comprehensive')) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
+        hideMainSections(); markSidebar(btn);
+        document.getElementById('ratingsView').style.display = 'block'; closeMobileMenu();
+        if (inbound.ratings) renderRatings(); else loadRatings(false);
+    };
+    window.loadRatings = async function(force) {
+        const wrap = document.getElementById('ratingsTableWrap');
+        wrap.innerHTML = '<div class="loader"></div>';
+        try {
+            const res = await fetch(SUPABASE_ADMIN_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body: new URLSearchParams({ fn: 'getRatings', adminKey: ADMIN_KEY }) });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401) throw new Error('المفتاح غير مطابق: ADMIN_KEY في Supabase يجب أن يساوي المفتاح في لوحة الإدارة');
+            if (data.status !== 'success') throw new Error(data.message === 'fn' ? 'دالة admin في Supabase قديمة: الصق النسخة الجديدة واضغط Deploy' : (data.message || 'تعذر جلب التقييمات'));
+            inbound.ratings = data.data || [];
+            renderRatings();
+            if (force) showToast(`تم جلب ${inbound.ratings.length} تقييم`, 'fa-check-circle');
+        } catch (e) {
+            wrap.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i>${escapeHtml(e.message || 'تعذر الاتصال')}</div>`;
+        }
+    };
+    function ratingClass(st, avg) {
+        const s = String(st || '');
+        if (s.includes('غير')) return 'bad'; if (s.includes('محايد')) return 'mid'; if (s.includes('راض')) return 'good';
+        if (avg == null) return ''; return avg <= 2.5 ? 'bad' : avg <= 3.5 ? 'mid' : 'good';
+    }
+    function stars(v) { const n = Math.round(Number(v) || 0); return n ? '<span class="stars">' + '★'.repeat(n) + '<span class="off">' + '★'.repeat(Math.max(0, 5 - n)) + '</span></span>' : '—'; }
+    function filteredRatings() {
+        const q = inbound.rSearch.trim().toLowerCase();
+        return (inbound.ratings || []).filter(r => {
+            const avg = r.avg_rating == null ? null : Number(r.avg_rating), cls = ratingClass(r.status, avg);
+            if (inbound.rFilter === 'good' && cls !== 'good') return false;
+            if (inbound.rFilter === 'mid' && cls !== 'mid') return false;
+            if (inbound.rFilter === 'bad' && cls !== 'bad') return false;
+            if (['ar','en','tr'].includes(inbound.rFilter) && r.lang !== inbound.rFilter) return false;
+            return !q || JSON.stringify(r.answers || {}).toLowerCase().includes(q);
+        });
+    }
+    function renderRatings() {
+        const all = inbound.ratings || [], n = all.length;
+        const avgs = all.map(r => Number(r.avg_rating)).filter(v => !isNaN(v) && v > 0);
+        const overall = avgs.length ? (avgs.reduce((a, b) => a + b, 0) / avgs.length) : 0;
+        const good = all.filter(r => ratingClass(r.status, r.avg_rating == null ? null : Number(r.avg_rating)) === 'good').length;
+        const rec = all.filter(r => (r.answers || {})['نصيحة'] === 'نعم').length, recAns = all.filter(r => (r.answers || {})['نصيحة']).length;
+        document.getElementById('ratingsCards').innerHTML = `
+            <div class="stat-card"><div><h4>عدد التقييمات</h4><span class="stat-number">${n}</span><div class="stat-sub">كل اللغات</div></div><i class="fas fa-star-half-alt"></i></div>
+            <div class="stat-card"><div><h4>متوسط التقييم العام</h4><span class="stat-number">${overall ? overall.toFixed(2) : '—'}</span><div class="stat-sub">من 5</div></div><i class="fas fa-star"></i></div>
+            <div class="stat-card"><div><h4>العملاء الراضون</h4><span class="stat-number">${n ? Math.round(good / n * 100) : 0}%</span><div class="stat-sub">${good} من ${n}</div></div><i class="fas fa-smile"></i></div>
+            <div class="stat-card"><div><h4>ينصحون بالأدوات</h4><span class="stat-number">${recAns ? Math.round(rec / recAns * 100) : 0}%</span><div class="stat-sub">${rec} من ${recAns}</div></div><i class="fas fa-thumbs-up"></i></div>`;
+        document.getElementById('ratingsQuestions').innerHTML = RATING_QUESTIONS.map(([k, label]) => {
+            const v = all.map(r => Number((r.answers || {})[k])).filter(x => x > 0);
+            const a = v.length ? v.reduce((s, x) => s + x, 0) / v.length : 0;
+            return `<div class="q-bar"><div class="q-label">${label}</div><div class="q-track"><div class="q-fill" style="width:${a / 5 * 100}%"></div></div><div class="q-val">${a ? a.toFixed(2) : '—'}</div></div>`;
+        }).join('');
+        const rows = filteredRatings();
+        document.getElementById('ratingsCount').textContent = `(${rows.length})`;
+        const wrap = document.getElementById('ratingsTableWrap');
+        if (!rows.length) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i>لا توجد تقييمات</div>'; return; }
+        const langName = { ar: 'العربية', en: 'English', tr: 'Türkçe' };
+        wrap.innerHTML = '<table><thead><tr><th>التاريخ</th><th>الاسم</th><th>اللغة</th><th>التقييم العام</th><th>المتوسط</th><th>التصنيف</th><th>ينصح</th><th>الاقتراحات</th><th>التفاصيل</th></tr></thead><tbody>'
+            + rows.slice(0, 500).map(r => {
+                const a = r.answers || {}, avg = r.avg_rating == null ? null : Number(r.avg_rating), cls = ratingClass(r.status, avg);
+                const d = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) : '';
+                return `<tr><td>${escapeHtml(d)}</td><td>${escapeHtml(a['الاسم'] || '—')}</td><td>${langName[r.lang] || escapeHtml(r.lang)}</td><td>${stars(a['التقييم_العام'])}</td><td>${avg != null ? avg.toFixed(1) : '—'}</td><td><span class="r-badge ${cls}">${escapeHtml(r.status || '—')}</span></td><td>${escapeHtml(a['نصيحة'] || '—')}</td><td class="cell-clip" title="${escapeHtml(a['الاقتراحات'] || '')}">${escapeHtml(a['الاقتراحات'] || '—')}</td><td><button class="action-btn edit-btn" onclick="openRatingRecord(${r.id})" title="عرض كل الإجابات"><i class="fas fa-eye"></i></button></td></tr>`;
+            }).join('') + '</tbody></table>';
+    }
+    window.setRatingsFilter = function(f, el) { inbound.rFilter = f; document.querySelectorAll('#ratingsView .filter-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); renderRatings(); };
+    window.openRatingRecord = function(id) {
+        const r = (inbound.ratings || []).find(x => x.id === id); if (!r) return;
+        const a = r.answers || {}, used = new Set();
+        const pairs = [['التاريخ', r.created_at ? new Date(r.created_at).toLocaleString('ar-EG') : ''], ['اللغة', r.lang], ['المتوسط', r.avg_rating], ['التصنيف', r.status]];
+        [['الاسم', 'الاسم'], ['التقييم_العام', 'التقييم العام']].concat(RATING_QUESTIONS, RATING_CHOICES, [['الاقتراحات', 'الاقتراحات']]).forEach(([k, l]) => { used.add(k); pairs.push([l, a[k]]); });
+        Object.keys(a).forEach(k => { if (!used.has(k) && k !== 'تصنيف_العميل') pairs.push([k, a[k]]); });
+        openRecordModal('تقييم رقم ' + r.id, pairs);
+    };
+    window.exportRatings = function() {
+        const keys = ['الاسم', 'التقييم_العام'].concat(RATING_QUESTIONS.map(q => q[0]), RATING_CHOICES.map(q => q[0]), ['الاقتراحات']);
+        downloadCSV('تقييمات_المنصة_الشاملة', ['التاريخ', 'اللغة', 'المتوسط', 'التصنيف'].concat(keys),
+            filteredRatings().map(r => [r.created_at, r.lang, r.avg_rating, r.status].concat(keys.map(k => (r.answers || {})[k] || ''))));
+    };
+    document.addEventListener('input', e => {
+        if (e.target && e.target.id === 'inboundSearch') { inbound.search = e.target.value; renderInboundTable(); }
+        if (e.target && e.target.id === 'ratingsSearch') { inbound.rSearch = e.target.value; renderRatings(); }
+    });
+
     window.showBookingsView = function() {
         ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
         hideAllSpecialViews();
