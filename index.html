@@ -365,6 +365,53 @@
             .pwa-install-bar { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
             .toast-container { bottom: calc(70px + env(safe-area-inset-bottom)); }
         }
+
+        .perm-hidden{display:none!important}
+        .pe-presets{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+        .pe-group{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;margin:10px 0;background:rgba(255,255,255,.025)}
+        .pe-group h5{color:var(--gold-light);font-size:.9rem;margin-bottom:4px;display:flex;flex-direction:column;gap:2px}
+        .pe-group h5 small{color:#8a93a6;font-weight:400;font-size:.72rem}
+        .pe-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px dashed rgba(255,255,255,.06);flex-wrap:wrap;font-size:.86rem}
+        .pe-seg{display:inline-flex;border:1px solid #3a3a3a;border-radius:9px;overflow:hidden}
+        .pe-seg label{margin:0!important;display:block!important;cursor:pointer}
+        .pe-seg input{position:absolute;opacity:0;pointer-events:none;width:auto!important}
+        .pe-seg span{display:block;padding:5px 13px;font-size:.78rem;color:#9aa3b5;background:rgba(0,0,0,.25)}
+        .pe-seg input:checked+span{background:var(--gold);color:#111;font-weight:800}
+        .pe-seg label:nth-child(3) input:checked+span{background:#2ecc71}
+        .pe-chk,.rcp{display:flex!important;align-items:center;gap:8px;font-size:.84rem;padding:5px 4px;cursor:pointer;margin:0!important}
+        .pe-chk input,.rcp input{width:auto!important;margin:0!important}
+        .pe-chip{display:inline-block;font-size:.7rem;padding:2px 9px;border-radius:10px;margin:3px 0 0 4px;background:rgba(52,152,219,.18);color:#9cc9ee}
+        .pe-chip.edit{background:rgba(46,204,113,.18);color:#8be0b0}
+        .mail{display:grid;grid-template-columns:180px 330px 1fr;min-height:540px}
+        .mail-side{padding:12px;border-left:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:4px}
+        .mail-folder{display:flex;align-items:center;gap:8px;background:none;border:0;color:#bbb;padding:9px 10px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.88rem;text-align:right}
+        .mail-folder.active{background:rgba(184,134,11,.16);color:var(--gold-light);font-weight:700}
+        .mail-folder b{margin-right:auto;background:var(--danger);color:#fff;border-radius:10px;font-size:.68rem;padding:1px 7px}
+        .mail-list{border-left:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;min-width:0}
+        .mail-tools{display:flex;gap:6px;padding:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+        #messagesListContainer{overflow-y:auto;max-height:600px;padding:6px}
+        .msg-item{display:flex;gap:10px;padding:10px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:4px}
+        .msg-item:hover{background:rgba(255,255,255,.04)} .msg-item.sel{background:rgba(184,134,11,.1);border-color:rgba(184,134,11,.4)}
+        .msg-item.unread .mi-name,.msg-item.unread .mi-subj{color:var(--gold-light);font-weight:800}
+        .av{width:34px;height:34px;border-radius:50%;background:rgba(184,134,11,.25);color:var(--gold-light);display:inline-flex;align-items:center;justify-content:center;font-weight:800;flex:none;font-size:.85rem}
+        .mi-body{min-width:0;flex:1} .mi-top{display:flex;justify-content:space-between;gap:6px;font-size:.84rem}
+        .mi-time{font-size:.7rem;color:#888;white-space:nowrap}
+        .mi-subj,.mi-snip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.82rem;color:#ddd} .mi-snip{font-size:.76rem;color:#888}
+        .mi-star{background:none;border:0;color:#555;cursor:pointer} .mi-star.on{color:#f1c40f}
+        .mail-pane{padding:16px;display:flex;flex-direction:column;min-width:0}
+        .pane-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+        .pane-head h4{color:var(--gold-light);font-size:1.02rem}
+        .thread{flex:1;overflow-y:auto;max-height:430px;display:flex;flex-direction:column;gap:10px;padding:4px}
+        .bub{background:rgba(255,255,255,.05);border-radius:12px 12px 12px 3px;padding:10px 12px;max-width:88%;align-self:flex-start}
+        .bub.me{background:rgba(184,134,11,.14);align-self:flex-end;border-radius:12px 12px 3px 12px}
+        .bub-h{display:flex;justify-content:space-between;gap:14px;font-size:.74rem;color:#999;margin-bottom:4px}
+        .bub-b{font-size:.88rem;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+        .reply-box{margin-top:10px;display:flex;gap:8px;align-items:flex-end}
+        .reply-box textarea{flex:1;min-height:56px;padding:9px;border:1px solid #3a3a3a;border-radius:10px;background:rgba(0,0,0,.3);color:#ddd;font-family:inherit;resize:vertical}
+        .mail-empty{color:#888;text-align:center;padding:30px 10px;font-size:.88rem}
+        .rcp-list{max-height:200px;overflow-y:auto;border:1px solid #3a3a3a;border-radius:10px;padding:6px;margin:6px 0}
+        .rcp-all{border-bottom:1px solid rgba(255,255,255,.08);font-weight:700;color:var(--gold-light)} .mail-back{display:none}
+        @media(max-width:900px){.mail{grid-template-columns:1fr}.mail-side{flex-direction:row;overflow-x:auto;border-left:0;border-bottom:1px solid rgba(255,255,255,.08)}.mail-compose{flex:none}.mail-pane{display:none}.mail.show-pane .mail-list{display:none}.mail.show-pane .mail-pane{display:flex}.mail-back{display:inline-flex}}
     </style>
 </head>
 <body>
@@ -435,31 +482,30 @@
             <div class="sidebar-section" id="platformsSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>المنصات الأساسية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" data-platform="comprehensive" onclick="loadData('comprehensive', this)"><i class="fas fa-briefcase" style="color:#b8860b"></i> <span>المنصة الشاملة</span></button>
-                <button class="sidebar-btn" data-platform="portaltr" onclick="loadData('portaltr', this)"><i class="fas fa-globe-asia" style="color:#3498db"></i> <span>الشاملة تركي</span></button>
                 <button class="sidebar-btn" data-platform="restaurantCourse" onclick="loadData('restaurantCourse', this)"><i class="fas fa-graduation-cap" style="color:#2ecc71"></i> <span>دورة المطاعم</span></button>
                 <button class="sidebar-btn" data-platform="menuEngineering" onclick="loadData('menuEngineering', this)"><i class="fas fa-utensils" style="color:#e67e22"></i> <span>هندسة المينيو</span></button>
                 <button class="sidebar-btn" data-platform="newCourse" onclick="loadData('newCourse', this)"><i class="fas fa-book" style="color:#9b59b6"></i> <span>دورة الماليات</span></button>
             </div>
             <div class="sidebar-section" id="bookingsSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الحجوزات</span><i class="fas fa-chevron-down"></i></div>
-                <button class="sidebar-btn" onclick="showBookingsView()"><i class="fas fa-calendar-check" style="color:#e67e22"></i> <span>حجوزات العملاء</span></button>
-                <button class="sidebar-btn" onclick="openBookingSettingsModal()"><i class="fas fa-clock" style="color:#3498db"></i> <span>إعدادات الحجز</span></button>
+                <button class="sidebar-btn" data-perm="bookings_view" onclick="showBookingsView()"><i class="fas fa-calendar-check" style="color:#e67e22"></i> <span>حجوزات العملاء</span></button>
+                <button class="sidebar-btn" data-perm="booking_settings" onclick="openBookingSettingsModal()"><i class="fas fa-clock" style="color:#3498db"></i> <span>إعدادات الحجز</span></button>
             </div>
             <div class="sidebar-section" id="dataSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>البيانات الواردة</span><i class="fas fa-chevron-down"></i></div>
-                <button class="sidebar-btn" id="btnRatingsView" onclick="showRatingsView(this)"><i class="fas fa-star" style="color:#f1c40f"></i> <span>تقييمات المنصة الشاملة</span></button>
-                <button class="sidebar-btn inbound-btn" onclick="showInboundView('books', this)"><i class="fas fa-book-open" style="color:#2ecc71"></i> <span>تحميل الكتب</span></button>
-                <button class="sidebar-btn inbound-btn" onclick="showInboundView('diagnostics', this)"><i class="fas fa-stethoscope" style="color:#3498db"></i> <span>التشخيص والأدوات المجانية</span></button>
-                <button class="sidebar-btn inbound-btn" onclick="showInboundView('requests', this)"><i class="fas fa-inbox" style="color:#e67e22"></i> <span>طلبات المواقع</span></button>
+                <button class="sidebar-btn" data-perm="inbound_ratings" id="btnRatingsView" onclick="showRatingsView(this)"><i class="fas fa-star" style="color:#f1c40f"></i> <span>تقييمات المنصة الشاملة</span></button>
+                <button class="sidebar-btn inbound-btn" data-perm="inbound_books" onclick="showInboundView('books', this)"><i class="fas fa-book-open" style="color:#2ecc71"></i> <span>تحميل الكتب</span></button>
+                <button class="sidebar-btn inbound-btn" data-perm="inbound_diagnostics" onclick="showInboundView('diagnostics', this)"><i class="fas fa-stethoscope" style="color:#3498db"></i> <span>التشخيص والأدوات المجانية</span></button>
+                <button class="sidebar-btn inbound-btn" data-perm="inbound_requests" onclick="showInboundView('requests', this)"><i class="fas fa-inbox" style="color:#e67e22"></i> <span>طلبات المواقع</span></button>
             </div>
-            <div class="sidebar-section" id="toolsSidebarSection">
+            <div class="sidebar-section" id="toolsSidebarSection" data-perm="use_audit_tools">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الأدوات الاستشارية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" onclick="window.open('business-audit-60q.html','_blank')"><i class="fas fa-clipboard-list"></i> <span>التدقيق السريع</span></button>
                 <button class="sidebar-btn" onclick="window.open('restaurant-audit-150q.html','_blank')"><i class="fas fa-utensils"></i> <span>تقييم المطاعم</span></button>
                 <button class="sidebar-btn" onclick="window.open('business-audit-150q.html','_blank')"><i class="fas fa-briefcase"></i> <span>تقييم الأعمال</span></button>
                 <button class="sidebar-btn" onclick="window.open('investment-readiness.html','_blank')"><i class="fas fa-chart-pie"></i> <span>جاذبية الاستثمار</span></button>
             </div>
-            <div class="sidebar-section" id="staffSidebarSection" style="display:none;">
+            <div class="sidebar-section" id="staffSidebarSection" data-perm="manage_staff">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الإدارة</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" onclick="showStaffView()"><i class="fas fa-users-cog"></i> <span>إدارة الموظفين</span></button>
             </div>
@@ -605,7 +651,7 @@
                     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                         <input type="text" id="searchInput" class="search-box" placeholder="🔍 بحث (اسم، مستخدم، منصة...)">
                         <button class="refresh-btn" onclick="exportToCSV()" style="background:var(--gold);color:#111;border-color:var(--gold);"><i class="fas fa-file-csv"></i> تصدير</button>
-                        <button class="refresh-btn" onclick="openAddUserModal()" style="background:var(--gold);color:#111;border-color:var(--gold);"><i class="fas fa-user-plus"></i> إضافة</button>
+                        <button class="refresh-btn" data-needs-edit="1" onclick="openAddUserModal()" style="background:var(--gold);color:#111;border-color:var(--gold);"><i class="fas fa-user-plus"></i> إضافة</button>
                     </div>
                 </div>
                 <div class="filter-chips">
@@ -618,11 +664,10 @@
                 </div>
                 <div class="bulk-actions">
                     <label style="font-size:0.88rem;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"> تحديد الكل</label>
-                    <button onclick="bulkDelete()"><i class="fas fa-trash"></i> حذف المحدد</button>
+                    <button data-needs-edit="1" onclick="bulkDelete()"><i class="fas fa-trash"></i> حذف المحدد</button>
                     <select id="bulkPlatformFilter" onchange="filterByPlatformSelect(this.value)" style="min-width:140px;">
                         <option value="">كل المنصات</option>
                         <option value="comprehensive">المنصة الشاملة</option>
-                        <option value="portaltr">الشاملة تركي</option>
                         <option value="restaurantCourse">دورة المطاعم</option>
                         <option value="menuEngineering">هندسة المينيو</option>
                         <option value="newCourse">دورة الماليات</option>
@@ -756,38 +801,35 @@
                 </div>
             </div>
 
-            <!-- ===== Messages View (Email-like) ===== -->
+            <!-- ===== Messages View ===== -->
             <div id="messagesView" style="display:none;">
                 <div class="table-container" style="padding:0;overflow:hidden;">
-                    <div class="table-header" style="padding:14px 16px;margin:0;">
-                        <h3><i class="fas fa-envelope"></i> البريد الداخلي</h3>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                            <button class="btn-sm" onclick="openComposeMsgModal()"><i class="fas fa-pen"></i> رسالة جديدة</button>
-                            <button class="btn-outline-sm" id="btnMsgInbox" onclick="loadMessagesFolder('inbox')">الوارد</button>
-                            <button class="btn-outline-sm" id="btnMsgSent" onclick="loadMessagesFolder('sent')">المرسل</button>
+                    <div class="mail" id="mailRoot">
+                        <div class="mail-side">
+                            <button class="btn-sm mail-compose" data-perm="send_messages" onclick="openComposeMsgModal()"><i class="fas fa-pen"></i> رسالة جديدة</button>
+                            <button class="mail-folder active" data-f="inbox" onclick="loadMessagesFolder('inbox')"><i class="fas fa-inbox"></i> الوارد <b id="cntInbox" style="display:none"></b></button>
+                            <button class="mail-folder" data-f="starred" onclick="loadMessagesFolder('starred')"><i class="fas fa-star"></i> المميزة</button>
+                            <button class="mail-folder" data-f="sent" onclick="loadMessagesFolder('sent')"><i class="fas fa-paper-plane"></i> المرسل</button>
                         </div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:minmax(260px,1fr) minmax(320px,1.4fr);min-height:420px;" id="msgLayout">
-                        <div id="messagesListContainer" style="border-left:1px solid rgba(255,255,255,0.08);max-height:520px;overflow-y:auto;padding:8px;"><div class="loader"></div></div>
-                        <div id="messageReadPane" style="padding:16px;display:flex;align-items:center;justify-content:center;color:#888;min-height:320px;">
-                            <div style="text-align:center;"><i class="fas fa-envelope-open-text" style="font-size:2rem;opacity:0.4;"></i><p style="margin-top:10px;">اختر رسالة لعرضها</p></div>
+                        <div class="mail-list">
+                            <div class="mail-tools">
+                                <input type="text" id="mailSearch" class="search-box" placeholder="🔍 بحث في الرسائل" oninput="renderMessageList()" style="flex:1;min-width:0">
+                                <button class="btn-outline-sm" id="btnUnreadOnly" onclick="toggleUnreadOnly()" title="غير المقروءة فقط"><i class="fas fa-envelope"></i></button>
+                                <button class="btn-outline-sm" onclick="markAllRead()" title="تعليم الكل كمقروء"><i class="fas fa-check-double"></i></button>
+                            </div>
+                            <div id="messagesListContainer"><div class="loader"></div></div>
                         </div>
+                        <div class="mail-pane" id="messageReadPane"></div>
                     </div>
                 </div>
             </div>
-            <style>
-            @media (max-width: 800px) {
-                #msgLayout { grid-template-columns: 1fr !important; }
-                #messageReadPane { border-top: 1px solid rgba(255,255,255,0.08); }
-            }
-            </style>
         </div>
     </div>
 </div>
 
 <!-- Staff Modal -->
 <div id="staffModal" class="modal">
-    <div class="modal-content" style="max-width:560px;">
+    <div class="modal-content" style="max-width:680px;max-height:92vh;overflow-y:auto;">
         <h3 style="margin-bottom:14px;" id="staffModalTitle"><i class="fas fa-user-plus"></i> إضافة موظف</h3>
         <input type="hidden" id="staffEditEmail">
         <label>البريد الإلكتروني</label>
@@ -798,26 +840,7 @@
         <input type="text" id="staffPassword" dir="ltr" placeholder="كلمة مرور قوية">
         <label>رقم الهاتف (للتحقق عند الدخول)</label>
         <input type="tel" id="staffPhone" dir="ltr" placeholder="90555...">
-        <label style="margin-top:12px;display:block;color:var(--gold-light);">المنصات المسموحة</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;">
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="comprehensive"> المنصة الشاملة</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="portaltr"> الشاملة تركي</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="restaurantCourse"> دورة المطاعم</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="menuEngineering"> هندسة المينيو</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;"><input type="checkbox" class="perm-plat" value="newCourse"> دورة الماليات</label>
-        </div>
-        <label style="margin-top:8px;display:block;color:var(--gold-light);">الإجراءات المسموحة</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;">
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="add_subscriber"> إضافة مشترك</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="edit_subscriber"> تعديل مشترك</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="delete_subscriber"> حذف مشترك</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="manage_subscribers"> إدارة المشتركين (كل)</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="manage_bookings"> إدارة الحجوزات</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="booking_settings"> إعدادات الحجز</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="use_audit_tools"> أدوات التدقيق</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="send_messages"> إرسال رسائل</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;"><input type="checkbox" class="perm-act" value="view_reports"> التقارير</label>
-        </div>
+        <div id="permEditor"></div>
         <div class="modal-buttons">
             <button class="btn-save" onclick="saveStaffFromModal()">حفظ</button>
             <button class="btn-cancel" onclick="closeModal('staffModal')">إلغاء</button>
@@ -830,7 +853,7 @@
     <div class="modal-content">
         <h3 style="margin-bottom:14px;"><i class="fas fa-pen"></i> رسالة جديدة</h3>
         <label>إلى</label>
-        <select id="composeTo"><option value="">— اختر —</option><option value="all">جميع الموظفين</option></select>
+        <div class="rcp-list" id="composeToList"></div>
         <label>الموضوع</label>
         <input type="text" id="composeSubject" placeholder="موضوع الرسالة">
         <label>الأولوية</label>
@@ -854,7 +877,6 @@
         <select id="newUserPlatform">
             <option value="">اختر المنصة</option>
             <option value="comprehensive">المنصة الشاملة</option>
-            <option value="portaltr">الشاملة تركي</option>
             <option value="restaurantCourse">دورة إدارة المطاعم</option>
             <option value="menuEngineering">هندسة المينيو</option>
             <option value="newCourse">دورة الماليات</option>
@@ -877,7 +899,6 @@
         <label>المنصة</label>
         <select id="editUserPlatform">
             <option value="comprehensive">المنصة الشاملة</option>
-            <option value="portaltr">الشاملة تركي</option>
             <option value="restaurantCourse">دورة المطاعم</option>
             <option value="menuEngineering">هندسة المينيو</option>
             <option value="newCourse">دورة الماليات</option>
@@ -927,7 +948,7 @@
 <div class="toast-container" id="toastBox"></div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzHSxbzddg--qk_D-vMuNYdTkG6WPdv16o82rjDRhLCQDmuJqcmiKgp1hwOa7UvA3ViA/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEoWBpm5QZjGWRP7inhMo8I71fRO_sfGGW3tHHdhOVcSqt1T6k6tCrlJHHTfGHsbI1WQ/exec";
     // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لهندسة المينيو
     const ADMIN_KEY = "mF9$kL2#pQ8wZ4xR7vN1yT6";
     const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -946,10 +967,6 @@
             // Supabase (دالة admin) — المفتاح ADMIN_KEY في Supabase يجب أن يساوي ADMIN_KEY أعلاه
             url: 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin'
         },
-        portaltr: {
-            name: 'الشاملة تركي',
-            url: 'https://script.google.com/macros/s/AKfycbxqx4DrCfDhhGqYpQykvP51pFnPHOS3euVgDX4Uzk4DwA-fCGVgs4YlJX_419_MIFDHNg/exec'
-        },
         restaurantCourse: {
             name: 'دورة المطاعم',
             url: 'https://script.google.com/macros/s/AKfycbyMfXBSn3MOU2mxZ60Zux18RmnfN3VMOHDHrXkroNzVQC9W-FWfH43ko_h_zzyVzK_a/exec',
@@ -966,9 +983,9 @@
         }
     };
 
+    const LAST_LOGIN_PLATFORMS = ['comprehensive', 'menuEngineering'];
     const PLATFORM_NAMES = {
         comprehensive: "المنصة الشاملة",
-        portaltr: "الشاملة تركي",
         restaurantCourse: "دورة المطاعم",
         menuEngineering: "هندسة المينيو",
         newCourse: "دورة الماليات"
@@ -1070,54 +1087,63 @@
     }
     // ===== Multi-user state =====
     let currentUser = { email: '', name: '', role: '', permissions: {}, isSuperAdmin: false };
+    const INBOUND_PERMS = ['inbound_ratings', 'inbound_books', 'inbound_diagnostics', 'inbound_requests'];
+    function normPerms(p) {
+        p = p || {}; const a = new Set(p.actions || []);
+        const plats = (p.platforms || []).filter(k => PLATFORMS[k]);
+        let edit = p.platformEdit;
+        if (!Array.isArray(edit)) edit = ['manage_subscribers', 'add_subscriber', 'edit_subscriber', 'delete_subscriber'].some(x => a.has(x)) ? plats.slice() : [];
+        if (a.has('manage_bookings')) { a.add('bookings_view'); a.add('bookings_edit'); }
+        if (a.has('bookings_edit')) a.add('bookings_view');
+        if (a.has('view_reports')) INBOUND_PERMS.forEach(x => a.add(x));
+        if (plats.indexOf('comprehensive') !== -1) a.add('inbound_ratings');
+        return { platforms: plats, platformEdit: edit.filter(k => plats.indexOf(k) !== -1), actions: Array.from(a) };
+    }
+    function isSuper() { return currentUser.isSuperAdmin || currentUser.role === 'super'; }
     function hasPerm(action) {
-        if (currentUser.isSuperAdmin || currentUser.role === 'super') return true;
-        const acts = (currentUser.permissions && currentUser.permissions.actions) || [];
-        if (acts.indexOf(action) !== -1) return true;
-        // إدارة المشتركين الشاملة تشمل الإضافة/التعديل/الحذف
-        if (acts.indexOf('manage_subscribers') !== -1 &&
-            (action === 'add_subscriber' || action === 'edit_subscriber' || action === 'delete_subscriber')) return true;
-        return false;
+        if (isSuper()) return true;
+        if (action === 'manage_staff') return false;
+        const P = currentUser.permissions || {};
+        if (['add_subscriber', 'edit_subscriber', 'delete_subscriber', 'manage_subscribers'].indexOf(action) !== -1) return (P.platformEdit || []).length > 0;
+        return (P.actions || []).indexOf(action) !== -1;
     }
-    function hasPlatform(key) {
-        if (currentUser.isSuperAdmin || currentUser.role === 'super') return true;
-        const plats = (currentUser.permissions && currentUser.permissions.platforms) || [];
-        return plats.indexOf(key) !== -1;
-    }
+    function hasPlatform(key) { return isSuper() || ((currentUser.permissions || {}).platforms || []).indexOf(key) !== -1; }
+    function canEditPlatform(key) { return isSuper() || ((currentUser.permissions || {}).platformEdit || []).indexOf(key) !== -1; }
+    function setHidden(el, hide) { if (el) el.classList.toggle('perm-hidden', !!hide); }
     function applyPermissionsUI() {
-        document.querySelectorAll('.sidebar-btn[data-platform]').forEach(btn => {
-            btn.style.display = hasPlatform(btn.dataset.platform) ? '' : 'none';
+        document.querySelectorAll('.sidebar-btn[data-platform]').forEach(b => setHidden(b, !hasPlatform(b.dataset.platform)));
+        document.querySelectorAll('[data-perm]').forEach(b => setHidden(b, !hasPerm(b.dataset.perm)));
+        document.querySelectorAll('.sidebar-section[id]').forEach(sec => {
+            const btns = sec.querySelectorAll('.sidebar-btn');
+            if (btns.length) setHidden(sec, [...btns].every(b => b.classList.contains('perm-hidden')));
         });
-        const bookingsSec = document.getElementById('bookingsSidebarSection');
-        if (bookingsSec) bookingsSec.style.display = hasPerm('manage_bookings') ? '' : 'none';
-        const staffSec = document.getElementById('staffSidebarSection');
-        if (staffSec) staffSec.style.display = (currentUser.isSuperAdmin || hasPerm('manage_staff')) ? '' : 'none';
-        const dataSec = document.getElementById('dataSidebarSection');
-        if (dataSec) {
-            const full = currentUser.isSuperAdmin || currentUser.role === 'super' || hasPerm('view_reports');
-            dataSec.style.display = (full || hasPlatform('comprehensive')) ? '' : 'none';
-            dataSec.querySelectorAll('.inbound-btn').forEach(b => b.style.display = full ? '' : 'none');
-        }
-        const toolsSec = document.getElementById('toolsSidebarSection');
-        if (toolsSec) toolsSec.style.display = hasPerm('use_audit_tools') ? '' : 'none';
+        const anyEdit = Object.keys(PLATFORMS).some(canEditPlatform);
+        document.querySelectorAll('[data-needs-edit]').forEach(b => setHidden(b, !anyEdit));
         const roleLabel = document.getElementById('userRoleLabel');
         if (roleLabel) roleLabel.textContent = currentUser.isSuperAdmin ? 'المسؤول الرئيسي' : (currentUser.role === 'staff' ? 'موظف' : currentUser.role || '');
-        const nameLabel = document.getElementById('userDisplayName');
-        if (nameLabel) nameLabel.textContent = currentUser.name || '';
-        // إعدادات اللوحة للمسؤول فقط
-        document.querySelectorAll('.sidebar-btn').forEach(btn => {
-            const span = btn.querySelector('span');
-            if (span && span.textContent.trim() === 'إعدادات اللوحة') {
-                btn.style.display = (currentUser.isSuperAdmin || currentUser.role === 'super') ? '' : 'none';
+        const nameLabel = document.getElementById('userDisplayName'); if (nameLabel) nameLabel.textContent = currentUser.name || '';
+        const sel = document.getElementById('bulkPlatformFilter');
+        if (sel) [...sel.options].forEach(o => { if (o.value) o.hidden = !hasPlatform(o.value); });
+        ['newUserPlatform', 'editUserPlatform'].forEach(id => { const el = document.getElementById(id); if (el) [...el.options].forEach(o => { if (o.value) { o.hidden = !canEditPlatform(o.value); o.disabled = !canEditPlatform(o.value); } }); });
+    }
+    /** تحديث الصلاحيات من السيرفر حتى تظهر تعديلات المسؤول دون إعادة دخول */
+    async function refreshPermissions() {
+        const token = localStorage.getItem('userToken'); if (!token) return;
+        try {
+            const r = await apiStaffPost('validate', {});
+            if (r.status === 'success') {
+                localStorage.setItem('userPerms', JSON.stringify(r.permissions || {})); localStorage.setItem('userRole', r.role || 'staff');
+                localStorage.setItem('isSuperAdmin', (r.isSuperAdmin || r.role === 'super') ? '1' : '0');
+                loadCurrentUserFromStorage(); applyPermissionsUI();
             }
-        });
+        } catch (e) {}
     }
     function loadCurrentUserFromStorage() {
         currentUser = {
             email: localStorage.getItem('userEmail') || '',
             name: localStorage.getItem('userName') || '',
             role: localStorage.getItem('userRole') || 'staff',
-            permissions: JSON.parse(localStorage.getItem('userPerms') || '{}'),
+            permissions: normPerms(JSON.parse(localStorage.getItem('userPerms') || '{}')),
             isSuperAdmin: localStorage.getItem('isSuperAdmin') === '1'
         };
     }
@@ -1219,7 +1245,7 @@
         if (logoutTimer) clearTimeout(logoutTimer);
         ['userToken','userName','userEmail','userRole','userPerms','isSuperAdmin','daysLeft','loginTimestamp'].forEach(k => localStorage.removeItem(k));
         currentUser = { email: '', name: '', role: '', permissions: {}, isSuperAdmin: false };
-        stopAutoRefresh(); showLoginScreen(); showToast("تم تسجيل الخروج", "fa-sign-out-alt");
+        if (mailPollTimer) { clearInterval(mailPollTimer); mailPollTimer = null; } lastUnread = -1; stopAutoRefresh(); showLoginScreen(); showToast("تم تسجيل الخروج", "fa-sign-out-alt");
     };
 
     function showToast(msg, icon, type = '') {
@@ -1258,8 +1284,8 @@
     function translatePlatform(key) {
         return (PLATFORMS[key] && PLATFORMS[key].name) || PLATFORM_NAMES[key] || key;
     }
-    function getPlatformIcon(key) { return { portaltr: 'fa-globe-asia', comprehensive: 'fa-briefcase', restaurantCourse: 'fa-graduation-cap', menuEngineering: 'fa-utensils', newCourse: 'fa-book' }[key] || 'fa-cube'; }
-    function getPlatformColor(key) { return { portaltr: '#3498db', comprehensive: '#b8860b', restaurantCourse: '#2ecc71', menuEngineering: '#e67e22', newCourse: '#9b59b6' }[key] || '#888'; }
+    function getPlatformIcon(key) { return { comprehensive: 'fa-briefcase', restaurantCourse: 'fa-graduation-cap', menuEngineering: 'fa-utensils', newCourse: 'fa-book' }[key] || 'fa-cube'; }
+    function getPlatformColor(key) { return { comprehensive: '#b8860b', restaurantCourse: '#2ecc71', menuEngineering: '#e67e22', newCourse: '#9b59b6' }[key] || '#888'; }
     function getPlatformUrl(key) {
         const p = PLATFORMS[key];
         return p && p.url ? p.url : (typeof p === 'string' ? p : null);
@@ -1286,7 +1312,7 @@
 
     /** توحيد شكل مستخدم أي منصة + التقاط آخر دخول إن وُجد */
     function mapPlatformUser(u, key) {
-        const rawLogin = u.lastLogin || u.last_login || u.last_sign_in_at || u.lastSignInAt || u.lastSeen || u.last_seen || null;
+        const rawLogin = u.lastLogin || u.last_login || u.last_login_at || u.lastLoginAt || u.last_sign_in_at || u.lastSignInAt || u.last_sign_in || u.lastActive || u.last_active || u.lastAccess || u.lastSeen || u.last_seen || null;
         return {
             id: u.username || u.id,
             username: u.username,
@@ -1596,7 +1622,7 @@
             let progressHtml;
             if (hasProgress) {
                 progressHtml = `<div class="progress-cell"><div class="progress-wrapper"><div class="progress-track"><div class="progress-fill ${level}" style="width:${p}%;"></div></div><span class="progress-percent">${p}%</span></div><span class="progress-lessons">${u.completedLessons||0} / ${u.totalLessons||0} درس</span></div>`;
-            } else if (u.platformKey === 'menuEngineering') {
+            } else if (LAST_LOGIN_PLATFORMS.indexOf(u.platformKey) !== -1) {
                 const loginTxt = formatLastLogin(u.lastLogin);
                 progressHtml = loginTxt
                     ? `<span style="font-size:0.78rem;color:var(--gold-light);font-weight:700;" title="آخر دخول"><i class="fas fa-clock" style="margin-left:4px;opacity:.8;"></i>${escapeHtml(loginTxt)}</span>`
@@ -1614,10 +1640,8 @@
                 <td class="${days > 0 ? 'status-active' : 'status-expired'}">${days > 0 ? 'نشط' : 'منتهي'}</td>
                 <td>${progressHtml}</td>
                 <td style="color:${u.frozen ? '#e74c3c' : '#2ecc71'};font-weight:700;">${u.frozen ? '🔒' : '✅'}</td>
-                <td>
-                    <button class="action-btn edit-btn" onclick="openEditUserModal('${uid}')"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete-btn-action" onclick="deleteUser('${uid}')"><i class="fas fa-trash"></i></button>
-                </td>`;
+                <td>${canEditPlatform(u.platformKey) ? `<button class="action-btn edit-btn" onclick="openEditUserModal('${uid}')"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn-action" onclick="deleteUser('${uid}')"><i class="fas fa-trash"></i></button>` : '<span title="مشاهدة فقط" style="color:#666;font-size:.78rem;"><i class="fas fa-eye"></i></span>'}</td>`;
             frag.appendChild(tr);
         });
         tbody.appendChild(frag);
@@ -1638,6 +1662,7 @@
     window.addNewUser = async function() {
         const username = document.getElementById('newUsername').value.trim(), password = document.getElementById('newPassword').value, fullName = document.getElementById('newFullName').value.trim(), platformKey = document.getElementById('newUserPlatform').value, expiry = document.getElementById('newExpiryDate').value;
         if (!username || !password || !fullName || !platformKey || !expiry) { showToast("املأ جميع الحقول", "fa-times"); return; }
+        if (!canEditPlatform(platformKey)) { showToast('ليس لديك صلاحية تعديل هذه المنصة', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
             await callPlatform(platformKey, { fn: 'addUser', username, password, fullName, expiryDate: expiry, restaurantEmail: username });
@@ -1664,6 +1689,7 @@
         const uid = document.getElementById('editUserId').value, user = findUserByUniqueId(uid); if (!user) return;
         const username = document.getElementById('editUsername').value.trim(), password = document.getElementById('editPassword').value, fullName = document.getElementById('editFullName').value.trim(), platformKey = document.getElementById('editUserPlatform').value, expiry = document.getElementById('editExpiryDate').value;
         if (!username || !fullName || !platformKey || !expiry) { showToast("املأ الحقول", "fa-times"); return; }
+        if (!canEditPlatform(platformKey) || !canEditPlatform(user.platformKey)) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
             const payload = { fn: 'updateUser', username: user.id, newUsername: username, fullName, expiryDate: expiry, restaurantEmail: user.id };
@@ -1692,6 +1718,7 @@
         if (!confirm("هل أنت متأكد من الحذف؟")) return;
         const user = findUserByUniqueId(uid); if (!user) return;
         const platformKey = user.platformKey;
+        if (!canEditPlatform(platformKey)) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
             await callPlatform(platformKey, { fn: 'deleteUser', username: user.id, restaurantEmail: user.id });
@@ -1714,7 +1741,7 @@
         if (!confirm(`حذف ${selected.length} مشترك؟`)) return;
         let success = 0;
         for (const uid of selected) {
-            const user = findUserByUniqueId(uid); if (!user) continue;
+            const user = findUserByUniqueId(uid); if (!user || !canEditPlatform(user.platformKey)) continue;
             const platformKey = user.platformKey;
             try {
                 await callPlatform(platformKey, { fn: 'deleteUser', username: user.id, restaurantEmail: user.id });
@@ -1734,8 +1761,8 @@
     };
     window.exportToCSV = function() {
         if (!displayedUsers.length) return;
-        let csv = "الاسم,اسم المستخدم,المنصة,تاريخ الانتهاء,الأيام المتبقية,الحالة,مجمد\n";
-        displayedUsers.forEach(u => { csv += `"${u.name}","${u.username}","${u.platform}","${u.startDate}",${u.daysLeft},"${u.daysLeft > 0 ? 'نشط' : 'منتهي'}","${u.frozen ? 'نعم' : 'لا'}"\n`; });
+        let csv = "الاسم,اسم المستخدم,المنصة,تاريخ الانتهاء,الأيام المتبقية,الحالة,مجمد,آخر دخول\n";
+        displayedUsers.forEach(u => { csv += `"${u.name}","${u.username}","${u.platform}","${u.startDate}",${u.daysLeft},"${u.daysLeft > 0 ? 'نشط' : 'منتهي'}","${u.frozen ? 'نعم' : 'لا'}","${formatLastLogin(u.lastLogin) || ''}"\n`; });
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `المشتركين_${new Date().toISOString().slice(0, 10)}.csv`; a.click(); showToast("تم التصدير", "fa-file-csv");
     };
 
@@ -1965,6 +1992,7 @@
     }
 
     function loadAllData() {
+        refreshPermissions(); startMailPolling();
         updateSoundUI(); fetchDashboardData(false, false); startAutoRefresh(); updateDateTime(); applySettings();
         loadNotes(); loadTodos(); loadAppointments(); fetchPersonalDataFromServer();
         setInterval(() => checkAllAlerts(window.allUsersData), 60000);
@@ -2010,7 +2038,7 @@
     const RATING_CHOICES = [['تثبيت_التطبيق', 'ثبّت التطبيق'], ['الايقونة', 'الأيقونة واضحة'], ['نصيحة', 'ينصح بالأدوات'], ['دروس', 'يريد دروس فيديو']];
     const inbound = { source: null, sheets: [], sheetIdx: 0, search: '', cache: {}, ratings: null, rFilter: 'all', rSearch: '' };
 
-    function canViewInbound() { return currentUser.isSuperAdmin || currentUser.role === 'super' || hasPerm('view_reports'); }
+    function canViewInbound() { return INBOUND_PERMS.some(hasPerm); }
     function hideMainSections() {
         ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
         hideAllSpecialViews();
@@ -2032,7 +2060,7 @@
 
     // ---------- صفحات Google Script (الكتب / التشخيص / الطلبات) ----------
     window.showInboundView = function(key, btn) {
-        if (!canViewInbound()) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
+        if (!hasPerm('inbound_' + key)) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         hideMainSections(); markSidebar(btn);
         document.getElementById('inboundView').style.display = 'block'; closeMobileMenu();
         const src = DATA_SOURCES[key]; inbound.source = key; inbound.search = ''; inbound.sheetIdx = 0;
@@ -2114,7 +2142,7 @@
 
     // ---------- تقييمات المنصة الشاملة (Supabase: survey_responses) ----------
     window.showRatingsView = function(btn) {
-        if (!canViewInbound() && !hasPlatform('comprehensive')) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
+        if (!hasPerm('inbound_ratings')) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         hideMainSections(); markSidebar(btn);
         document.getElementById('ratingsView').style.display = 'block'; closeMobileMenu();
         if (inbound.ratings) renderRatings(); else loadRatings(false);
@@ -2199,6 +2227,7 @@
     });
 
     window.showBookingsView = function() {
+        if (!hasPerm('bookings_view')) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
         hideAllSpecialViews();
         document.getElementById('bookingsView').style.display = 'block'; closeMobileMenu();
@@ -2299,14 +2328,14 @@
                 <td>${b.date}</td>
                 <td>${b.time}</td>
                 <td>
-                    <select class="booking-status-select" data-id="${b.id}" data-prev="${b.status}"
+                    ${!hasPerm('bookings_edit') ? `<span style="color:${s.c};font-weight:700;">${s.t}</span>` : ''}<select class="booking-status-select" ${!hasPerm('bookings_edit') ? 'hidden' : ''} data-id="${b.id}" data-prev="${b.status}"
                         style="padding:6px 10px;border-radius:8px;border:1px solid #556;background:#1a2233;color:#f0f4fa;font-weight:700;font-family:inherit;font-size:0.85rem;cursor:pointer;min-width:120px;"
                         onchange="onBookingStatusChange(this)">
                         ${statusOpts}
                     </select>
                 </td>
                 <td>
-                    <button class="action-btn" onclick="deleteBooking('${b.id}', this)" title="حذف" style="background:#8f2b2b;"><i class="fas fa-trash"></i></button>
+                    ${hasPerm('bookings_edit') ? `<button class="action-btn" onclick="deleteBooking('${b.id}', this)" title="حذف" style="background:#8f2b2b;"><i class="fas fa-trash"></i></button>` : '<i class="fas fa-eye" style="color:#666"></i>'}
                 </td>`;
             tbody.appendChild(tr);
         });
@@ -2387,6 +2416,7 @@
 
     /* ================== Booking Settings ================== */
     window.openBookingSettingsModal = async function() {
+        if (!hasPerm('booking_settings')) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         document.getElementById('bookingSettingsModal').style.display = 'flex'; document.getElementById('bookingSettingsBody').innerHTML = '<div class="loader"></div>';
         const token = localStorage.getItem('userToken');
         try {
@@ -2508,8 +2538,6 @@
             if (!staffListCache.length) { container.innerHTML = '<p style="color:#888;text-align:center;padding:24px;">لا موظفين بعد</p>'; return; }
             container.innerHTML = staffListCache.map(s => {
                 const last = s.lastLogin ? new Date(s.lastLogin).toLocaleString('ar-EG') : 'لم يسجل دخولاً بعد';
-                const plats = (s.permissions?.platforms || []).map(p => ({comprehensive:'الشاملة',portaltr:'تركي',restaurantCourse:'المطاعم',menuEngineering:'المينيو',newCourse:'الماليات'}[p]||p)).join('، ') || '—';
-                const acts = (s.permissions?.actions || []).length;
                 const activeCls = s.active ? 'color:var(--success)' : 'color:var(--danger)';
                 return `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
                     <div style="flex:1;min-width:200px;">
@@ -2522,7 +2550,7 @@
                         <div style="font-size:0.78rem;color:#aaa;margin-top:4px;">
                             <i class="fas fa-clock"></i> آخر دخول: <strong>${last}</strong>
                         </div>
-                        <div style="font-size:0.78rem;color:#aaa;margin-top:2px;">المنصات: ${escapeHtml(plats)} | إجراءات: ${acts}</div>
+                        <div style="margin-top:6px;">${permChips(s)}</div>
                     </div>
                     <div style="display:flex;gap:6px;flex-wrap:wrap;">
                         ${s.role !== 'super' ? `
@@ -2536,29 +2564,69 @@
         } catch (e) { container.innerHTML = '<p style="color:#e74c3c;padding:16px;">خطأ في الاتصال</p>'; }
     };
 
+    /* ===== محرر الصلاحيات: مرتب حسب الشريط الجانبي ===== */
+    const PE_CHECKS = [
+        ['الحجوزات', 'fa-calendar-check', [['booking_settings', 'تعديل إعدادات أوقات العمل والحجز']]],
+        ['البيانات الواردة', 'fa-inbox', [['inbound_ratings', 'تقييمات المنصة الشاملة'], ['inbound_books', 'تحميل الكتب'], ['inbound_diagnostics', 'التشخيص والأدوات المجانية'], ['inbound_requests', 'طلبات المواقع']]],
+        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)']]]
+    ];
+    const PE_ACTS = PE_CHECKS.flatMap(g => g[2].map(x => x[0]));
+    const segHtml = (name, val) => `<div class="pe-seg">${['بدون', 'مشاهدة', 'تعديل'].map((l, i) => `<label><input type="radio" name="${name}" value="${i}" ${val === i ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>`;
+    function renderPermEditor(p) {
+        p = normPerms(p);
+        const lvl = k => p.platformEdit.indexOf(k) !== -1 ? 2 : p.platforms.indexOf(k) !== -1 ? 1 : 0;
+        const bk = p.actions.indexOf('bookings_edit') !== -1 ? 2 : p.actions.indexOf('bookings_view') !== -1 ? 1 : 0;
+        let h = `<div class="pe-presets"><span style="font-size:.78rem;color:#8a93a6;align-self:center">قوالب جاهزة:</span>
+            <button type="button" class="btn-outline-sm" onclick="applyPermPreset('none')">بدون</button>
+            <button type="button" class="btn-outline-sm" onclick="applyPermPreset('view')">مشاهدة فقط</button>
+            <button type="button" class="btn-outline-sm" onclick="applyPermPreset('support')">خدمة عملاء</button>
+            <button type="button" class="btn-outline-sm" onclick="applyPermPreset('full')">كل شيء</button></div>`;
+        h += `<div class="pe-group"><h5><span><i class="fas fa-layer-group"></i> المنصات والدورات</span><small>مشاهدة = عرض المشتركين فقط · تعديل = إضافة وتعديل وتجميد وحذف المشتركين</small></h5>`
+            + Object.keys(PLATFORMS).map(k => `<div class="pe-row"><span><i class="fas ${getPlatformIcon(k)}" style="color:${getPlatformColor(k)};width:18px"></i> ${translatePlatform(k)}</span>${segHtml('pl_' + k, lvl(k))}</div>`).join('') + '</div>';
+        h += `<div class="pe-group"><h5><span><i class="fas fa-calendar-check"></i> الحجوزات والمواعيد</span><small>مشاهدة = عرض التقويم والحجوزات · تعديل = تغيير الحالة (تأكيد / إنهاء / إلغاء) والحذف</small></h5><div class="pe-row"><span>حجوزات العملاء</span>${segHtml('bk', bk)}</div>`;
+        PE_CHECKS.forEach((g, gi) => {
+            if (gi === 0) h += g[2].map(([k, n]) => `<label class="pe-chk"><input type="checkbox" class="perm-act" value="${k}" ${p.actions.indexOf(k) !== -1 ? 'checked' : ''}> ${n}</label>`).join('') + '</div>';
+            else h += `<div class="pe-group"><h5><span><i class="fas ${g[1]}"></i> ${g[0]}</span></h5>` + g[2].map(([k, n]) => `<label class="pe-chk"><input type="checkbox" class="perm-act" value="${k}" ${p.actions.indexOf(k) !== -1 ? 'checked' : ''}> ${n}</label>`).join('') + '</div>';
+        });
+        document.getElementById('permEditor').innerHTML = h;
+    }
+    function collectPerms() {
+        const platforms = [], platformEdit = [], actions = [];
+        Object.keys(PLATFORMS).forEach(k => { const v = +((document.querySelector(`input[name="pl_${k}"]:checked`) || {}).value || 0); if (v >= 1) platforms.push(k); if (v === 2) platformEdit.push(k); });
+        const bk = +((document.querySelector('input[name="bk"]:checked') || {}).value || 0); if (bk >= 1) actions.push('bookings_view'); if (bk === 2) actions.push('bookings_edit');
+        document.querySelectorAll('#permEditor .perm-act:checked').forEach(c => actions.push(c.value));
+        return { platforms, platformEdit, actions };
+    }
+    window.applyPermPreset = function (name) {
+        const all = Object.keys(PLATFORMS), inb = ['inbound_ratings', 'inbound_books', 'inbound_diagnostics', 'inbound_requests'];
+        const P = {
+            none: { platforms: [], platformEdit: [], actions: [] },
+            view: { platforms: all, platformEdit: [], actions: ['bookings_view'].concat(inb) },
+            support: { platforms: all, platformEdit: all, actions: ['bookings_view', 'bookings_edit', 'send_messages'] },
+            full: { platforms: all, platformEdit: all, actions: ['bookings_view', 'bookings_edit'].concat(PE_ACTS) }
+        }[name];
+        renderPermEditor(P);
+    };
+    function permChips(s) {
+        if (s.role === 'super') return '<span class="pe-chip edit">كل الصلاحيات</span>';
+        const p = normPerms(s.permissions), A = p.actions, c = [];
+        p.platforms.forEach(k => { const e = p.platformEdit.indexOf(k) !== -1; c.push([translatePlatform(k) + (e ? ' · تعديل' : ' · مشاهدة'), e]); });
+        if (A.indexOf('bookings_edit') !== -1) c.push(['الحجوزات · تعديل', true]); else if (A.indexOf('bookings_view') !== -1) c.push(['الحجوزات · مشاهدة', false]);
+        PE_CHECKS.forEach(g => g[2].forEach(([k, n]) => { if (A.indexOf(k) !== -1) c.push([n.split(' (')[0], false]); }));
+        return c.length ? c.map(([t, e]) => `<span class="pe-chip${e ? ' edit' : ''}">${escapeHtml(t)}</span>`).join('') : '<span style="color:#888;font-size:.78rem">بدون صلاحيات</span>';
+    }
+
     window.openStaffModal = function(editEmail) {
         document.getElementById('staffModalTitle').innerHTML = editEmail ? '<i class="fas fa-edit"></i> تعديل موظف' : '<i class="fas fa-user-plus"></i> إضافة موظف';
         document.getElementById('staffEditEmail').value = editEmail || '';
-        const emailEl = document.getElementById('staffEmail');
-        emailEl.disabled = !!editEmail;
-        document.querySelectorAll('.perm-plat, .perm-act').forEach(c => c.checked = false);
-        if (editEmail) {
-            const s = staffListCache.find(x => x.email === editEmail);
-            if (s) {
-                emailEl.value = s.email;
-                document.getElementById('staffFullName').value = s.fullName || '';
-                document.getElementById('staffPassword').value = '';
-                document.getElementById('staffPassword').placeholder = 'اترك فارغاً للإبقاء على الحالية';
-                if (document.getElementById('staffPhone')) document.getElementById('staffPhone').value = s.phone || '';
-                (s.permissions?.platforms || []).forEach(p => { const el = document.querySelector(`.perm-plat[value="${p}"]`); if (el) el.checked = true; });
-                (s.permissions?.actions || []).forEach(a => { const el = document.querySelector(`.perm-act[value="${a}"]`); if (el) el.checked = true; });
-            }
-        } else {
-            emailEl.value = '';
-            document.getElementById('staffFullName').value = '';
-            document.getElementById('staffPassword').value = '';
-            document.getElementById('staffPassword').placeholder = 'كلمة مرور قوية';
-        }
+        const emailEl = document.getElementById('staffEmail'); emailEl.disabled = !!editEmail;
+        const s = editEmail ? staffListCache.find(x => x.email === editEmail) : null;
+        emailEl.value = s ? s.email : '';
+        document.getElementById('staffFullName').value = s ? (s.fullName || '') : '';
+        document.getElementById('staffPassword').value = '';
+        document.getElementById('staffPassword').placeholder = editEmail ? 'اترك فارغاً للإبقاء على الحالية' : 'كلمة مرور قوية';
+        if (document.getElementById('staffPhone')) document.getElementById('staffPhone').value = s ? (s.phone || '') : '';
+        renderPermEditor(s ? s.permissions : {});
         document.getElementById('staffModal').style.display = 'flex';
     };
 
@@ -2568,21 +2636,15 @@
         const fullName = document.getElementById('staffFullName').value.trim();
         const password = document.getElementById('staffPassword').value;
         const phone = (document.getElementById('staffPhone')?.value || '').trim();
-        const platforms = [...document.querySelectorAll('.perm-plat:checked')].map(c => c.value);
-        const actions = [...document.querySelectorAll('.perm-act:checked')].map(c => c.value);
+        const permissions = JSON.stringify(collectPerms());
         if (!email || !fullName) { showToast('الإيميل والاسم مطلوبان', 'fa-exclamation', 'danger'); return; }
         if (!editEmail && !password) { showToast('كلمة المرور مطلوبة للموظف الجديد', 'fa-exclamation', 'danger'); return; }
         const btns = document.querySelectorAll('#staffModal .btn-save');
         btns.forEach(b => { b.disabled = true; b.dataset.old = b.innerHTML; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...'; });
         try {
             let r;
-            if (editEmail) {
-                const payload = { email: editEmail, fullName, phone, permissions: JSON.stringify({ platforms, actions }) };
-                if (password) payload.password = password;
-                r = await apiStaffPost('updatestaff', payload);
-            } else {
-                r = await apiStaffPost('createstaff', { email, password, fullName, phone, permissions: JSON.stringify({ platforms, actions }) });
-            }
+            if (editEmail) { const payload = { email: editEmail, fullName, phone, permissions }; if (password) payload.password = password; r = await apiStaffPost('updatestaff', payload); }
+            else r = await apiStaffPost('createstaff', { email, password, fullName, phone, permissions });
             if (r.status === 'success') { showToast(editEmail ? 'تم التحديث' : 'تم إنشاء الموظف'); closeModal('staffModal'); loadStaffListUI(); }
             else showToast(r.message || 'فشل', 'fa-times', 'danger');
         } catch (e) { showToast('خطأ اتصال', 'fa-times', 'danger'); }
@@ -2607,179 +2669,145 @@
         } catch (e) { showToast('خطأ', 'fa-times', 'danger'); }
     };
 
-    /* Messages — email style + reply */
-    let currentMsgFolder = 'inbox';
-    let messagesCache = [];
-    let selectedMessageId = null;
-
-    window.loadMessagesFolder = async function(folder) {
-        currentMsgFolder = folder;
-        selectedMessageId = null;
-        const inboxBtn = document.getElementById('btnMsgInbox');
-        const sentBtn = document.getElementById('btnMsgSent');
-        if (inboxBtn) inboxBtn.style.borderColor = folder === 'inbox' ? 'var(--gold)' : '#3a3a3a';
-        if (sentBtn) sentBtn.style.borderColor = folder === 'sent' ? 'var(--gold)' : '#3a3a3a';
-        const container = document.getElementById('messagesListContainer');
-        const pane = document.getElementById('messageReadPane');
-        if (pane) pane.innerHTML = '<div style="text-align:center;color:#888;width:100%;"><i class="fas fa-envelope-open-text" style="font-size:2rem;opacity:0.4;"></i><p style="margin-top:10px;">اختر رسالة لعرضها</p></div>';
-        if (!container) return;
-        container.innerHTML = '<div class="loader"></div>';
+    /* ===== Messages v7: محادثات، تمييز، مستلمون متعددون، إشعار فوري ===== */
+    let currentMsgFolder = 'inbox', messagesCache = [], selectedThreadId = null, mailUnreadOnly = false, mailPollTimer = null, lastUnread = -1, replyCtx = null;
+    const initials = n => String(n || '?').trim().charAt(0).toUpperCase();
+    function fmtMsgTime(v) { const d = new Date(v), n = new Date(); if (!v || isNaN(d)) return ''; return d.toDateString() === n.toDateString() ? d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' }); }
+    function setUnreadBadge(n) { ['msgBadgeSidebar', 'cntInbox'].forEach(id => { const b = document.getElementById(id); if (b) { b.style.display = n > 0 ? '' : 'none'; b.textContent = n; } }); }
+    async function pollUnread() {
         try {
-            const r = await apiStaffPost('getmessages', { folder });
-            if (r.status !== 'success') { container.innerHTML = '<p style="color:#e74c3c;padding:16px;">فشل التحميل</p>'; return; }
-            messagesCache = r.data || [];
-            if (!messagesCache.length) { container.innerHTML = '<p style="color:#888;text-align:center;padding:24px;">لا رسائل</p>'; return; }
-            container.innerHTML = messagesCache.map(m => {
-                const unread = !m.isRead && folder === 'inbox';
-                const prio = m.priority === 'high' ? '<i class="fas fa-exclamation-circle" style="color:var(--danger);margin-left:4px;"></i>' : '';
-                const peer = folder === 'inbox' ? m.from : m.to;
-                return `<div class="msg-item" data-id="${m.id}" onclick="openReadMessage('${m.id}')"
-                    style="background:${unread?'rgba(184,134,11,0.08)':'rgba(255,255,255,0.03)'};border:1px solid ${unread?'rgba(184,134,11,0.35)':'rgba(255,255,255,0.06)'};border-right:3px solid ${unread?'var(--gold)':'transparent'};border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:0.15s;">
-                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
-                        <strong style="font-size:0.88rem;${unread?'color:var(--gold-light);':''}">${prio}${escapeHtml(peer || '—')}</strong>
-                        <span style="font-size:0.72rem;color:#888;white-space:nowrap;">${m.createdAt?new Date(m.createdAt).toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):''}</span>
-                    </div>
-                    <div style="color:${unread?'var(--gold-light)':'#ccc'};font-size:0.86rem;margin:3px 0;font-weight:${unread?700:500};">${escapeHtml(m.subject || '(بدون موضوع)')}</div>
-                    <div style="font-size:0.78rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml((m.body||'').substring(0,90))}</div>
-                </div>`;
-            }).join('');
-            if (folder === 'inbox') {
-                const unreadCount = messagesCache.filter(m => !m.isRead).length;
-                const badge = document.getElementById('msgBadgeSidebar');
-                if (badge) { if (unreadCount > 0) { badge.style.display = ''; badge.textContent = unreadCount; } else badge.style.display = 'none'; }
+            const r = await apiStaffPost('getunreadcount'); if (r.status !== 'success') return;
+            setUnreadBadge(r.count);
+            if (lastUnread >= 0 && r.count > lastUnread) {
+                const l = r.latest || {}; playBeep('info'); showToast('رسالة جديدة من ' + (l.fromName || ''), 'fa-envelope');
+                showSWNotification('رسالة جديدة', (l.fromName || '') + ': ' + (l.subject || ''), 'msg-' + (l.id || Date.now()));
+                if (document.getElementById('messagesView').style.display === 'block' && currentMsgFolder === 'inbox') loadMessagesFolder('inbox', true);
             }
-        } catch (e) { container.innerHTML = '<p style="color:#e74c3c;padding:16px;">خطأ اتصال</p>'; }
-    };
-
-    window.openReadMessage = async function(id) {
-        selectedMessageId = id;
-        const m = messagesCache.find(x => x.id === id);
-        const pane = document.getElementById('messageReadPane');
-        if (!m || !pane) return;
-        document.querySelectorAll('.msg-item').forEach(el => {
-            el.style.outline = el.dataset.id === id ? '1px solid var(--gold)' : 'none';
-        });
-        const when = m.createdAt ? new Date(m.createdAt).toLocaleString('ar-EG') : '—';
-        const prioLabel = m.priority === 'high' ? '<span style="background:rgba(231,76,60,0.2);color:#e74c3c;padding:2px 8px;border-radius:10px;font-size:0.75rem;">عالية</span>' : '';
-        pane.innerHTML = `
-            <div style="width:100%;max-width:100%;align-self:flex-start;">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                    <h3 style="color:var(--gold-light);margin:0;font-size:1.15rem;line-height:1.4;">${escapeHtml(m.subject || '(بدون موضوع)')} ${prioLabel}</h3>
-                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                        <button class="btn-sm" onclick="replyToMessage('${m.id}')"><i class="fas fa-reply"></i> رد</button>
-                        ${currentMsgFolder === 'inbox' ? `<button class="btn-outline-sm" onclick="replyAllHint('${m.id}')"><i class="fas fa-reply-all"></i> رد مع تحويل</button>` : ''}
-                    </div>
-                </div>
-                <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;margin-bottom:14px;font-size:0.85rem;">
-                    <div style="display:grid;gap:6px;">
-                        <div><span style="color:#888;">من:</span> <strong style="direction:ltr;display:inline-block;">${escapeHtml(m.from)}</strong></div>
-                        <div><span style="color:#888;">إلى:</span> <strong style="direction:ltr;display:inline-block;">${escapeHtml(m.to)}</strong></div>
-                        <div><span style="color:#888;">التاريخ:</span> ${when}</div>
-                    </div>
-                </div>
-                <div style="white-space:pre-wrap;line-height:1.7;color:#ddd;font-size:0.95rem;padding:4px 2px 16px;">${escapeHtml(m.body || '')}</div>
-                <div id="replyBox" style="display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;">
-                    <label style="color:var(--gold-light);font-size:0.85rem;">الرد</label>
-                    <textarea id="replyBody" rows="4" style="width:100%;padding:10px;border:1px solid #3a3a3a;border-radius:8px;background:rgba(0,0,0,0.3);color:#ddd;font-family:inherit;margin:8px 0;" placeholder="اكتب ردك هنا..."></textarea>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        <button class="btn-sm" id="btnSendReply" onclick="sendReply('${m.id}')"><i class="fas fa-paper-plane"></i> إرسال الرد</button>
-                        <button class="btn-outline-sm" onclick="document.getElementById('replyBox').style.display='none'">إلغاء</button>
-                    </div>
-                </div>
-            </div>`;
-        if (!m.isRead && currentMsgFolder === 'inbox') {
-            try {
-                await apiStaffPost('markmessageread', { id });
-                m.isRead = true;
-                const item = document.querySelector(`.msg-item[data-id="${id}"]`);
-                if (item) { item.style.background = 'rgba(255,255,255,0.03)'; item.style.borderRight = '3px solid transparent'; }
-                const badge = document.getElementById('msgBadgeSidebar');
-                if (badge) {
-                    const unreadCount = messagesCache.filter(x => !x.isRead).length;
-                    if (unreadCount > 0) { badge.style.display = ''; badge.textContent = unreadCount; } else badge.style.display = 'none';
-                }
-            } catch (e) {}
-        }
-    };
-
-
-    window.openComposeMsgModal = async function() {
-        const sel = document.getElementById('composeTo');
-        if (!sel) return;
-        sel.innerHTML = '<option value="">— اختر المستلم بالاسم أو البريد —</option><option value="all">📢 جميع الموظفين</option>';
-        try {
-            const r = await apiStaffPost('liststaff');
-            if (r.status === 'success' && r.data) {
-                r.data.forEach(s => {
-                    if (s.email && s.email !== (currentUser.email || '').toLowerCase()) {
-                        const opt = document.createElement('option');
-                        opt.value = s.email;
-                        opt.textContent = (s.fullName || s.email) + ' — ' + s.email;
-                        sel.appendChild(opt);
-                    }
-                });
-            }
+            lastUnread = r.count;
         } catch (e) {}
-        document.getElementById('composeSubject').value = '';
-        document.getElementById('composeBody').value = '';
-        document.getElementById('composePriority').value = 'normal';
-        document.getElementById('composeMsgModal').style.display = 'flex';
+    }
+    function startMailPolling() { if (mailPollTimer) return; pollUnread(); mailPollTimer = setInterval(() => { if (!document.hidden) pollUnread(); }, 45000); }
+    function showPaneEmpty() { const p = document.getElementById('messageReadPane'); if (p) p.innerHTML = '<div class="mail-empty" style="margin:auto"><i class="fas fa-envelope-open-text" style="font-size:2rem;opacity:.4"></i><p>اختر رسالة لعرضها</p></div>'; document.getElementById('mailRoot')?.classList.remove('show-pane'); }
+    window.mailBack = function () { selectedThreadId = null; document.getElementById('mailRoot').classList.remove('show-pane'); renderMessageList(); };
+    window.toggleUnreadOnly = function () { mailUnreadOnly = !mailUnreadOnly; document.getElementById('btnUnreadOnly').style.borderColor = mailUnreadOnly ? 'var(--gold)' : ''; renderMessageList(); };
+
+    window.loadMessagesFolder = async function (folder, keepSel) {
+        currentMsgFolder = folder || currentMsgFolder;
+        if (!keepSel) { selectedThreadId = null; showPaneEmpty(); }
+        document.querySelectorAll('.mail-folder').forEach(b => b.classList.toggle('active', b.dataset.f === currentMsgFolder));
+        const c = document.getElementById('messagesListContainer'); if (!c) return;
+        if (!keepSel) c.innerHTML = '<div class="loader"></div>';
+        try {
+            const r = await apiStaffPost('getmessages', { folder: currentMsgFolder });
+            if (r.status !== 'success') { c.innerHTML = `<div class="mail-empty" style="color:#e74c3c">${escapeHtml(r.message || 'فشل التحميل')}</div>`; return; }
+            messagesCache = r.data || [];
+            if (currentMsgFolder === 'inbox') setUnreadBadge(r.unread != null ? r.unread : messagesCache.filter(m => !m.isRead).length);
+            renderMessageList();
+        } catch (e) { c.innerHTML = '<div class="mail-empty" style="color:#e74c3c">خطأ في الاتصال</div>'; }
     };
 
-    window.sendComposeMessage = async function() {
-        const toEmail = document.getElementById('composeTo').value;
-        const subject = document.getElementById('composeSubject').value.trim();
-        const body = document.getElementById('composeBody').value.trim();
-        const priority = document.getElementById('composePriority').value;
-        if (!toEmail || !subject || !body) { showToast('أكمل جميع الحقول', 'fa-exclamation', 'danger'); return; }
+    window.renderMessageList = function () {
+        const c = document.getElementById('messagesListContainer'); if (!c) return;
+        const q = (document.getElementById('mailSearch')?.value || '').trim().toLowerCase(), sent = currentMsgFolder === 'sent', groups = {};
+        messagesCache.forEach(m => {
+            const g = groups[m.threadId] || (groups[m.threadId] = { latest: m, count: 0, unread: 0, ids: [], starred: false });
+            g.count++; g.ids.push(m.id); if (!m.isRead && !sent) g.unread++; if (m.starred) g.starred = true;
+            if (new Date(m.createdAt) > new Date(g.latest.createdAt)) g.latest = m;
+        });
+        const list = Object.values(groups).filter(g => (!mailUnreadOnly || g.unread) && (!q || [g.latest.subject, g.latest.body, g.latest.fromName, g.latest.toName].some(v => String(v || '').toLowerCase().includes(q))))
+            .sort((a, b) => new Date(b.latest.createdAt) - new Date(a.latest.createdAt));
+        if (!list.length) { c.innerHTML = `<div class="mail-empty"><i class="fas fa-inbox" style="font-size:1.6rem;opacity:.4"></i><p>${q || mailUnreadOnly ? 'لا نتائج' : 'لا توجد رسائل'}</p></div>`; return; }
+        c.innerHTML = list.map(g => {
+            const m = g.latest, peer = sent ? (m.toCount > 1 ? m.toCount + ' مستلمين' : m.toName) : m.fromName;
+            return `<div class="msg-item${g.unread ? ' unread' : ''}${m.threadId === selectedThreadId ? ' sel' : ''}" data-tid="${escapeHtml(m.threadId)}" onclick="openThread(this.dataset.tid)">
+                <span class="av">${escapeHtml(initials(peer))}</span>
+                <div class="mi-body"><div class="mi-top"><span class="mi-name">${m.priority === 'high' ? '<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ' : ''}${escapeHtml(peer)}${g.count > 1 ? ` <small style="color:#888">(${g.count})</small>` : ''}</span><span class="mi-time">${fmtMsgTime(m.createdAt)}</span></div>
+                <div class="mi-subj">${escapeHtml(m.subject || '(بدون موضوع)')}</div><div class="mi-snip">${escapeHtml(String(m.body || '').slice(0, 80))}</div></div>
+                ${sent ? '' : `<button class="mi-star${g.starred ? ' on' : ''}" data-ids="${g.ids.join(',')}" onclick="event.stopPropagation();toggleStar(this)" title="تمييز"><i class="fas fa-star"></i></button>`}</div>`;
+        }).join('');
+    };
+
+    window.toggleStar = async function (btn) {
+        const on = !btn.classList.contains('on'), ids = btn.dataset.ids.split(',');
+        try {
+            const r = await apiStaffPost('togglestar', { ids: ids.join(','), value: on ? '1' : '0' });
+            if (r.status !== 'success') { showToast(r.message || 'فشل', 'fa-times', 'danger'); return; }
+            messagesCache.forEach(m => { if (ids.indexOf(m.id) !== -1) m.starred = on; });
+            if (currentMsgFolder === 'starred' && !on) messagesCache = messagesCache.filter(m => ids.indexOf(m.id) === -1);
+            renderMessageList();
+        } catch (e) { showToast('خطأ اتصال', 'fa-times', 'danger'); }
+    };
+
+    window.openThread = async function (tid) {
+        selectedThreadId = tid; const pane = document.getElementById('messageReadPane');
+        document.getElementById('mailRoot').classList.add('show-pane'); pane.innerHTML = '<div class="loader"></div>'; renderMessageList();
+        try {
+            const r = await apiStaffPost('getthread', { threadId: tid });
+            if (r.status !== 'success' || !(r.data || []).length) { pane.innerHTML = '<div class="mail-empty">تعذر تحميل المحادثة</div>'; return; }
+            const me = (currentUser.email || '').toLowerCase(), msgs = r.data, subject = msgs[0].subject;
+            const incoming = [...msgs].reverse().find(m => m.from !== me), last = msgs[msgs.length - 1];
+            const seen = {}, bubbles = [];
+            msgs.forEach(m => { if (m.from === me) { const k = m.createdAt + '|' + m.body; if (seen[k]) { seen[k].to.push(m.toName); return; } seen[k] = { m, to: [m.toName] }; bubbles.push(seen[k]); } else bubbles.push({ m, to: [] }); });
+            replyCtx = { to: incoming ? incoming.from : last.to, parentId: (incoming || last).id, subject: /^Re:/i.test(subject) ? subject : 'Re: ' + subject, ids: msgs.map(m => m.id) };
+            if (!incoming && bubbles.some(b => b.to.length > 1)) replyCtx.to = '';
+            pane.innerHTML = `<div class="pane-head"><div style="display:flex;gap:8px;align-items:center;min-width:0"><button class="btn-outline-sm mail-back" onclick="mailBack()"><i class="fas fa-arrow-right"></i></button><h4>${escapeHtml(subject || '(بدون موضوع)')}</h4></div>
+                <div style="display:flex;gap:6px"><button class="btn-outline-sm" onclick="markThreadUnread()" title="تعليم كغير مقروء"><i class="fas fa-envelope"></i></button><button class="btn-outline-sm" style="border-color:#e74c3c;color:#e74c3c" onclick="deleteThread()" title="حذف المحادثة"><i class="fas fa-trash"></i></button></div></div>
+                <div class="thread" id="threadBox">${bubbles.map(({ m, to }) => { const mine = m.from === me; return `<div class="bub${mine ? ' me' : ''}"><div class="bub-h"><b>${mine ? 'أنا' : escapeHtml(m.fromName)}${mine && to.length ? ' ← ' + escapeHtml(to.slice(0, 3).join('، ')) + (to.length > 3 ? ' +' + (to.length - 3) : '') : ''}</b><span>${m.createdAt ? new Date(m.createdAt).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}${mine && m.isRead ? ' · ✓ قُرئت' : ''}</span></div><div class="bub-b">${escapeHtml(m.body)}</div></div>`; }).join('')}</div>
+                ${replyCtx.to ? `<div class="reply-box"><textarea id="replyBody" placeholder="اكتب ردك... (Ctrl+Enter للإرسال)"></textarea><button class="btn-sm" id="btnSendReply" onclick="sendReply()"><i class="fas fa-paper-plane"></i> رد</button></div>` : ''}`;
+            const tb = document.getElementById('threadBox'); tb.scrollTop = tb.scrollHeight;
+            document.getElementById('replyBody')?.addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') sendReply(); });
+            const unreadIds = msgs.filter(m => m.to === me && !m.isRead).map(m => m.id);
+            if (unreadIds.length) { apiStaffPost('markmessageread', { ids: unreadIds.join(',') }); messagesCache.forEach(m => { if (unreadIds.indexOf(m.id) !== -1) m.isRead = true; }); if (currentMsgFolder === 'inbox') setUnreadBadge(messagesCache.filter(m => !m.isRead).length); lastUnread = Math.max(0, lastUnread - unreadIds.length); renderMessageList(); }
+        } catch (e) { pane.innerHTML = '<div class="mail-empty" style="color:#e74c3c">خطأ في الاتصال</div>'; }
+    };
+
+    window.sendReply = async function () {
+        const ta = document.getElementById('replyBody'), body = (ta && ta.value || '').trim();
+        if (!body || !replyCtx) { showToast('اكتب نص الرد', 'fa-exclamation', 'danger'); return; }
+        await withButtonLoading('btnSendReply', 'إرسال...', async () => {
+            try {
+                const r = await apiStaffPost('sendmessage', { toEmail: replyCtx.to, subject: replyCtx.subject, body, parentId: replyCtx.parentId });
+                if (r.status === 'success') { showToast('تم إرسال الرد', 'fa-paper-plane'); openThread(selectedThreadId); } else showToast(r.message || 'فشل الإرسال', 'fa-times', 'danger');
+            } catch (e) { showToast('خطأ في الاتصال', 'fa-times', 'danger'); }
+        });
+    };
+    window.deleteThread = async function () {
+        if (!replyCtx || !confirm('حذف هذه المحادثة من صندوقك؟')) return;
+        try { const r = await apiStaffPost('deletemessage', { ids: replyCtx.ids.join(',') }); if (r.status === 'success') { showToast('تم الحذف', 'fa-trash'); loadMessagesFolder(currentMsgFolder); } else showToast(r.message || 'فشل', 'fa-times', 'danger'); } catch (e) { showToast('خطأ اتصال', 'fa-times', 'danger'); }
+    };
+    window.markThreadUnread = async function () {
+        if (!replyCtx) return;
+        try { await apiStaffPost('markmessageunread', { ids: replyCtx.ids.join(',') }); showToast('عُلّمت كغير مقروءة', 'fa-envelope'); pollUnread(); loadMessagesFolder(currentMsgFolder); } catch (e) {}
+    };
+    window.markAllRead = async function () {
+        try { const r = await apiStaffPost('markallread'); if (r.status === 'success') { showToast('تم تعليم الكل كمقروء', 'fa-check-double'); lastUnread = 0; loadMessagesFolder(currentMsgFolder, true); setUnreadBadge(0); } } catch (e) {}
+    };
+
+    window.openComposeMsgModal = async function () {
+        if (!hasPerm('send_messages')) { showToast('ليس لديك صلاحية إرسال رسائل جديدة (يمكنك الرد)', 'fa-lock', 'danger'); return; }
+        const box = document.getElementById('composeToList'); box.innerHTML = '<div class="loader"></div>';
+        ['composeSubject', 'composeBody'].forEach(id => document.getElementById(id).value = ''); document.getElementById('composePriority').value = 'normal';
+        document.getElementById('composeMsgModal').style.display = 'flex';
+        try {
+            const r = await apiStaffPost('liststaff'), me = (currentUser.email || '').toLowerCase();
+            const list = (r.data || []).filter(x => x.email && x.email !== me);
+            box.innerHTML = `<label class="rcp rcp-all"><input type="checkbox" id="composeAll"> جميع الموظفين (${list.length})</label>` + list.map(x => `<label class="rcp"><input type="checkbox" class="rcp-cb" value="${escapeHtml(x.email)}"><span class="av" style="width:26px;height:26px;font-size:.72rem">${escapeHtml(initials(x.fullName || x.email))}</span>${escapeHtml(x.fullName || x.email)}</label>`).join('');
+            document.getElementById('composeAll').onchange = e => document.querySelectorAll('.rcp-cb').forEach(c => { c.checked = e.target.checked; c.disabled = e.target.checked; });
+        } catch (e) { box.innerHTML = '<p style="color:#e74c3c;padding:8px">تعذر تحميل الموظفين</p>'; }
+    };
+    window.sendComposeMessage = async function () {
+        const all = document.getElementById('composeAll')?.checked, picked = [...document.querySelectorAll('.rcp-cb:checked')].map(c => c.value);
+        const toEmail = all ? 'all' : picked.join(','), subject = document.getElementById('composeSubject').value.trim(), body = document.getElementById('composeBody').value.trim(), priority = document.getElementById('composePriority').value;
+        if (!toEmail) { showToast('اختر مستلماً واحداً على الأقل', 'fa-exclamation', 'danger'); return; }
+        if (!subject || !body) { showToast('أكمل الموضوع والنص', 'fa-exclamation', 'danger'); return; }
         const btns = document.querySelectorAll('#composeMsgModal .btn-save');
         btns.forEach(b => { b.disabled = true; b.dataset.old = b.innerHTML; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...'; });
         try {
             const r = await apiStaffPost('sendmessage', { toEmail, subject, body, priority });
-            if (r.status === 'success') {
-                showToast('تم إرسال الرسالة', 'fa-paper-plane');
-                closeModal('composeMsgModal');
-                if (typeof currentMsgFolder !== 'undefined' && currentMsgFolder === 'sent') loadMessagesFolder('sent');
-            } else showToast(r.message || 'فشل', 'fa-times', 'danger');
+            if (r.status === 'success') { showToast('تم الإرسال إلى ' + (r.count || 1) + ' مستلم', 'fa-paper-plane'); closeModal('composeMsgModal'); if (currentMsgFolder === 'sent') loadMessagesFolder('sent'); }
+            else showToast(r.message || 'فشل', 'fa-times', 'danger');
         } catch (e) { showToast('خطأ', 'fa-times', 'danger'); }
-        btns.forEach(b => { b.disabled = false; b.innerHTML = b.dataset.old || '<i class="fas fa-paper-plane"></i> إرسال'; });
-    };
-
-    window.replyToMessage = function(id) {
-        const box = document.getElementById('replyBox');
-        if (!box) return;
-        box.style.display = 'block';
-        const ta = document.getElementById('replyBody');
-        if (ta) { ta.value = ''; ta.focus(); }
-    };
-
-    window.replyAllHint = function(id) {
-        replyToMessage(id);
-        showToast('الرد سيُرسل إلى المرسل الأصلي', 'fa-info-circle');
-    };
-
-    window.sendReply = async function(id) {
-        const m = messagesCache.find(x => x.id === id);
-        if (!m) return;
-        const bodyEl = document.getElementById('replyBody');
-        const body = (bodyEl && bodyEl.value || '').trim();
-        if (!body) { showToast('اكتب نص الرد', 'fa-exclamation', 'danger'); return; }
-        const toEmail = currentMsgFolder === 'inbox' ? m.from : m.to;
-        if (!toEmail || toEmail === 'all') { showToast('لا يمكن الرد على هذه الرسالة', 'fa-exclamation', 'danger'); return; }
-        const subject = (m.subject || '').startsWith('Re:') ? m.subject : ('Re: ' + (m.subject || ''));
-        const quoted = '\\n\\n──────────\\nفي ' + (m.createdAt ? new Date(m.createdAt).toLocaleString('ar-EG') : '') + ' كتب ' + m.from + ':\\n' + (m.body || '');
-        const fullBody = body + quoted;
-        const btn = document.getElementById('btnSendReply');
-        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...'; }
-        try {
-            const r = await apiStaffPost('sendmessage', { toEmail, subject, body: fullBody, priority: m.priority || 'normal' });
-            if (r.status === 'success') {
-                showToast('تم إرسال الرد', 'fa-paper-plane');
-                if (bodyEl) bodyEl.value = '';
-                document.getElementById('replyBox').style.display = 'none';
-            } else showToast(r.message || 'فشل الإرسال', 'fa-times', 'danger');
-        } catch (e) { showToast('خطأ في الاتصال', 'fa-times', 'danger'); }
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد'; }
+        btns.forEach(b => { b.disabled = false; b.innerHTML = b.dataset.old || 'إرسال'; });
     };
 
     /* Dashboard appointment stats */

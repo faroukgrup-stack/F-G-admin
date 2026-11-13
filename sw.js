@@ -1,7 +1,7 @@
 /* Service Worker - لوحة تحكم مجموعة فاروق v2
  * تخزين مؤقت + إشعارات المواعيد
  */
-const CACHE_NAME = 'farouk-admin-v3';
+const CACHE_NAME = 'farouk-admin-v4';
 const SHELL = [
   './index.html',
   './manifest.webmanifest',
@@ -35,6 +35,16 @@ self.addEventListener('fetch', (event) => {
     url.hostname.includes('googleapis.com') ||
     url.hostname.includes('googleusercontent.com')
   ) {
+    return;
+  }
+  // صفحات HTML: الشبكة أولاً حتى تصل التحديثات فوراً، والكاش للعمل دون اتصال
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request).then((res) => {
+        if (res && res.status === 200) { const c = res.clone(); caches.open(CACHE_NAME).then((ch) => ch.put(event.request, c)).catch(() => {}); }
+        return res;
+      }).catch(() => caches.match(event.request).then((r) => r || caches.match('./index.html')))
+    );
     return;
   }
   event.respondWith(
