@@ -20,6 +20,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        .mp-card { margin-bottom: 16px; }
+        .mp-muted { color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; margin-bottom: 10px; }
+        .mp-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .mp-input { padding: 8px 12px; border: 1px solid #3a3a3a; border-radius: 8px; background: rgba(0,0,0,0.3); color: #ddd; font-family: 'Tajawal', sans-serif; font-size: 0.9rem; }
+        .mp-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+        .mp-table th, .mp-table td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); text-align: right; vertical-align: middle; }
+        .mp-table th { color: var(--gold-light); white-space: nowrap; }
+        .mp-b { padding: 2px 9px; border-radius: 8px; font-size: 0.78rem; white-space: nowrap; display: inline-block; }
+        .mp-b.pending { background: #f59e0b33; color: #fbbf24; } .mp-b.approved { background: #10b98133; color: #6ee7b7; }
+        .mp-b.rejected, .mp-b.cancelled, .mp-b.revoked { background: #ef444433; color: #fca5a5; }
+        .mp-act { display: flex; gap: 5px; flex-wrap: wrap; }
+        .mp-act button { padding: 5px 10px; border: 0; border-radius: 7px; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 0.8rem; }
+        .mp-ok { background: var(--success); color: #fff; } .mp-no { background: var(--danger); color: #fff; } .mp-cp { background: var(--gold); color: #111; }
+        .mp-stats .stat-card { cursor: default; }
+        .mp-table details summary { cursor: pointer; color: var(--gold-light); }
         :root {
             --gold: #b8860b; --gold-light: #d4b15a; --gold-dark: #8a6d0b;
             --dark-bg: #0a0e16; --panel-bg: rgba(18,24,36,0.95);
@@ -483,7 +498,8 @@
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>المنصات الأساسية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" data-platform="comprehensive" onclick="loadData('comprehensive', this)"><i class="fas fa-briefcase" style="color:#b8860b"></i> <span>المنصة الشاملة</span></button>
                 <button class="sidebar-btn" data-platform="restaurantCourse" onclick="loadData('restaurantCourse', this)"><i class="fas fa-graduation-cap" style="color:#2ecc71"></i> <span>دورة المطاعم</span></button>
-                <button class="sidebar-btn" data-platform="menuEngineering" onclick="loadData('menuEngineering', this)"><i class="fas fa-utensils" style="color:#e67e22"></i> <span>هندسة المينيو</span></button>
+                <button class="sidebar-btn" data-platform="menuEngineering" onclick="loadData('menuEngineering', this)"><i class="fas fa-utensils" style="color:#e67e22"></i> <span>مطعمي برو</span></button>
+                <button class="sidebar-btn" data-platform="menuEngineering" id="btnMataamiPayments" onclick="showMataamiPaymentsView(this)" style="padding-right:30px;font-size:0.86rem;"><i class="fas fa-file-invoice-dollar" style="color:#e67e22"></i> <span>حسابات مطعمي برو</span> <span id="mpPendingBadge" style="display:none;background:#e74c3c;color:#fff;font-size:0.7rem;padding:1px 7px;border-radius:10px;margin-right:auto;"></span></button>
                 <button class="sidebar-btn" data-platform="newCourse" onclick="loadData('newCourse', this)"><i class="fas fa-book" style="color:#9b59b6"></i> <span>دورة الماليات</span></button>
             </div>
             <div class="sidebar-section" id="bookingsSidebarSection">
@@ -669,7 +685,7 @@
                         <option value="">كل المنصات</option>
                         <option value="comprehensive">المنصة الشاملة</option>
                         <option value="restaurantCourse">دورة المطاعم</option>
-                        <option value="menuEngineering">هندسة المينيو</option>
+                        <option value="menuEngineering">مطعمي برو</option>
                         <option value="newCourse">دورة الماليات</option>
                     </select>
                 </div>
@@ -790,6 +806,46 @@
                 </div>
             </div>
 
+            <!-- ===== Mataami Pro Payments View ===== -->
+            <div id="mataamiPaymentsView" style="display:none;">
+                <div class="cards-grid mp-stats" id="mpStats"></div>
+                <div class="table-container mp-card">
+                    <div class="table-header">
+                        <h3><i class="fas fa-file-invoice-dollar" style="color:#e67e22"></i> حسابات مطعمي برو — المدفوعات وتفعيل الباقات</h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <select id="mpStatus" class="search-box" style="min-width:160px;" onchange="mpLoad()">
+                                <option value="pending">بانتظار التأكيد</option><option value="">الكل</option><option value="approved">مفعّلة</option><option value="rejected">مرفوضة</option>
+                            </select>
+                            <input type="text" id="mpSearch" class="search-box" placeholder="بحث بالبريد أو رقم العملية" oninput="mpRender()">
+                            <button class="refresh-btn" onclick="mpLoad()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="mpExport()"><i class="fas fa-file-csv"></i> تصدير</button>
+                        </div>
+                    </div>
+                    <div id="mpList"><div class="loader"></div></div>
+                </div>
+                <div class="table-container mp-card" id="mpAddCard" data-mp-edit>
+                    <div class="table-header"><h3><i class="fas fa-plus-circle" style="color:#2ecc71"></i> تسجيل عملية دفع مؤكدة يدوياً</h3></div>
+                    <p class="mp-muted">إن لم تكن بوابة الدفع مربوطة بالـ Webhook بعد: انسخ رقم العملية والبريد من رسالة تأكيد Entervia وسجّلها هنا، فيتم تفعيل الباقة للحساب فوراً إن وُجد له طلب.</p>
+                    <div class="mp-row">
+                        <input id="mpTx" class="mp-input" placeholder="رقم العملية" dir="ltr">
+                        <input id="mpEm" class="mp-input" placeholder="بريد الحساب" dir="ltr">
+                        <input id="mpAm" class="mp-input" type="number" placeholder="المبلغ $" style="width:120px;">
+                        <select id="mpPl" class="mp-input"><option value="">حسب المبلغ</option><option value="basic">الأساسية 99$</option><option value="pro">الإنطلاقة 299$</option><option value="premium">المتقدمة 499$</option></select>
+                        <button class="btn-sm" style="background:var(--success);color:#fff;" onclick="mpAddTx()"><i class="fas fa-check"></i> تسجيل وتفعيل</button>
+                    </div>
+                </div>
+                <div class="table-container mp-card">
+                    <div class="table-header"><h3><i class="fas fa-link" style="color:#3498db"></i> روابط صفحة التفعيل بعد الدفع</h3></div>
+                    <p class="mp-muted">ضع هذه الروابط في بوابة الدفع Entervia كرابط النجاح / الصفحة الخارجية. لكل باقة مفتاح سري مختلف محفوظ في السيرفر فقط، وأي شخص يفتح activate.html بدون المفتاح الصحيح يُرفض. عند تسريب رابط: اضغط «تغيير المفتاح» ثم حدّث الرابط في Entervia.<br>وضع المراجعة الصارم: الحسابات القادمة من صفحة التفعيل لا تُفعَّل إلا بعد موافقتك (أو مطابقة عملية دفع مسجلة بنفس البريد).</p>
+                    <div class="mp-row" style="margin-bottom:10px;">
+                        <label class="mp-muted" for="mpSiteUrl" style="white-space:nowrap;">رابط موقع مطعمي برو:</label>
+                        <input id="mpSiteUrl" class="mp-input" dir="ltr" placeholder="https://your-mataami-pro-site.com/" style="flex:1;min-width:240px;">
+                        <button class="btn-outline-sm" onclick="mpSaveSite()"><i class="fas fa-save"></i> حفظ</button>
+                    </div>
+                    <div id="mpLand"><div class="loader"></div></div>
+                </div>
+            </div>
+
             <!-- ===== Staff View ===== -->
             <div id="staffView" style="display:none;">
                 <div class="table-container">
@@ -878,7 +934,7 @@
             <option value="">اختر المنصة</option>
             <option value="comprehensive">المنصة الشاملة</option>
             <option value="restaurantCourse">دورة إدارة المطاعم</option>
-            <option value="menuEngineering">هندسة المينيو</option>
+            <option value="menuEngineering">مطعمي برو</option>
             <option value="newCourse">دورة الماليات</option>
         </select>
         <label>تاريخ الانتهاء</label><input type="date" id="newExpiryDate" required>
@@ -900,7 +956,7 @@
         <select id="editUserPlatform">
             <option value="comprehensive">المنصة الشاملة</option>
             <option value="restaurantCourse">دورة المطاعم</option>
-            <option value="menuEngineering">هندسة المينيو</option>
+            <option value="menuEngineering">مطعمي برو</option>
             <option value="newCourse">دورة الماليات</option>
         </select>
         <label>تاريخ الانتهاء</label><input type="date" id="editExpiryDate" required>
@@ -949,7 +1005,7 @@
 
 <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEoWBpm5QZjGWRP7inhMo8I71fRO_sfGGW3tHHdhOVcSqt1T6k6tCrlJHHTfGHsbI1WQ/exec";
-    // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لهندسة المينيو
+    // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لمطعمي برو
     const ADMIN_KEY = "mF9$kL2#pQ8wZ4xR7vN1yT6";
     const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
     const CACHE_KEY = 'farouk_admin_cache_v3';
@@ -974,7 +1030,7 @@
             totalLessonsDefault: 81
         },
         menuEngineering: {
-            name: 'هندسة المينيو',
+            name: 'مطعمي برو',
             url: 'https://euboicafuubzpfujxxdn.supabase.co/functions/v1/api'
         },
         newCourse: {
@@ -987,7 +1043,7 @@
     const PLATFORM_NAMES = {
         comprehensive: "المنصة الشاملة",
         restaurantCourse: "دورة المطاعم",
-        menuEngineering: "هندسة المينيو",
+        menuEngineering: "مطعمي برو",
         newCourse: "دورة الماليات"
     };
 
@@ -1999,13 +2055,14 @@
         setInterval(() => { checkAppointmentTimes(); }, 30000);
         setTimeout(() => checkAppointmentTimes(), 2000);
         pushAppointmentsToSW();
+        if (typeof hasPlatform === 'function' && hasPlatform('menuEngineering')) { setTimeout(() => mpRefreshBadge(), 3000); setInterval(() => mpRefreshBadge(), 5 * 60 * 1000); }
     }
 
     /* ================== Bookings UI ================== */
     let bookingsData = [], bookingsLoaded = false, bookingFilter = 'all', calendarYear = null, calendarMonth = null, currentBookingSettings = null;
 
     function hideAllSpecialViews() {
-        ['bookingsView','staffView','messagesView','ratingsView','inboundView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        ['bookingsView','staffView','messagesView','ratingsView','inboundView','mataamiPaymentsView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     }
     // ════════════════════════════════════════════════════════════
     //  البيانات الواردة: تقييمات المنصة الشاملة + تحميل الكتب + التشخيص + الطلبات
@@ -2246,6 +2303,194 @@
         document.getElementById('staffView').style.display = 'block'; closeMobileMenu();
         loadStaffListUI();
     };
+
+    /* ════════════════════════════════════════════════════════════
+     *  حسابات مطعمي برو: المدفوعات وتفعيل الباقات (مدمجة من admin-payments.html)
+     *  تستخدم نفس مفتاح الإدارة ADMIN_KEY ونفس API منصة مطعمي برو
+     * ════════════════════════════════════════════════════════════ */
+    // رابط API الخاص بالمدفوعات (COST_API_URL في js/config.js لموقع مطعمي برو) — افتراضياً نفس رابط المنصة
+    const MATAAMI_PAY_API_URL = PLATFORMS.menuEngineering.url;
+    const MP_SITE_KEY = 'mataami_public_site_url';
+    const MP_PN = { basic: 'الأساسية', pro: 'الإنطلاقة', premium: 'المتقدمة' };
+    const MP_SN = { pending: 'بانتظار التأكيد', approved: 'مفعّلة', rejected: 'مرفوضة', cancelled: 'ملغاة', revoked: 'أُلغي التفعيل' };
+    const MP_SRC = { landing: 'صفحة التفعيل', app: 'من النظام', register: 'تسجيل', renew: 'تجديد' };
+    const mpH = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const mpDate = d => { try { return d ? new Date(d).toLocaleString('ar-EG') : '—'; } catch (e) { return d || '—'; } };
+    let mpData = { requests: [], paidTx: [] }, mpLoaded = false;
+    const mpCanEdit = () => canEditPlatform('menuEngineering');
+
+    async function mpApi(fn, p) {
+        const res = await fetch(MATAAMI_PAY_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body: JSON.stringify(Object.assign({ fn, adminKey: ADMIN_KEY }, p || {}))
+        });
+        const t = await res.text();
+        try { return JSON.parse(t); } catch (e) { return { success: false, error: 'رد غير صالح من السيرفر: ' + t.substring(0, 150) }; }
+    }
+
+    window.showMataamiPaymentsView = function (btn) {
+        if (!hasPlatform('menuEngineering')) { showToast('ليس لديك صلاحية منصة مطعمي برو', 'fa-lock', 'danger'); return; }
+        ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        hideAllSpecialViews();
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active');
+        document.getElementById('mataamiPaymentsView').style.display = 'block'; closeMobileMenu();
+        document.querySelectorAll('[data-mp-edit]').forEach(el => el.style.display = mpCanEdit() ? '' : 'none');
+        document.getElementById('mpSiteUrl').value = localStorage.getItem(MP_SITE_KEY) || '';
+        mpLoad();
+    };
+
+    window.mpLoad = async function () {
+        const list = document.getElementById('mpList');
+        list.innerHTML = '<div class="loader"></div>';
+        try {
+            const r = await mpApi('adminPayments', { status: document.getElementById('mpStatus').value });
+            if (!r.success) { list.innerHTML = '<p style="color:#e74c3c;padding:12px;">' + mpH(r.error || r.message || 'غير مصرح — تأكد أن ADMIN_SECRET_KEY في السيرفر يطابق مفتاح الإدارة') + '</p>'; return; }
+            mpData = { requests: r.requests || [], paidTx: r.paidTx || [] }; mpLoaded = true;
+            mpRender();
+        } catch (e) { list.innerHTML = '<p style="color:#e74c3c;padding:12px;">خطأ في الاتصال: ' + mpH(e.message) + '</p>'; }
+        mpLoadLanding();
+        mpRefreshBadge();
+    };
+
+    async function mpRefreshBadge() {
+        try {
+            const r = await mpApi('adminPayments', { status: 'pending' });
+            const n = r && r.success ? (r.requests || []).length : 0;
+            const b = document.getElementById('mpPendingBadge');
+            if (b) { b.textContent = n; b.style.display = n ? '' : 'none'; }
+            return r;
+        } catch (e) { return null; }
+    }
+
+    function mpRenderStats() {
+        const req = mpData.requests, tx = mpData.paidTx;
+        const pending = req.filter(x => x.status === 'pending').length;
+        const approved = req.filter(x => x.status === 'approved').length;
+        const revenue = tx.reduce((a, x) => a + (parseFloat(x.amount) || 0), 0);
+        const card = (t, v, sub, ic, col) => `<div class="stat-card"><div><h4>${t}</h4><span class="stat-number" style="color:${col}">${v}</span><div class="stat-sub">${sub}</div></div><i class="fas ${ic}"></i></div>`;
+        document.getElementById('mpStats').innerHTML =
+            card('طلبات معروضة', req.length, 'حسب الفلتر الحالي', 'fa-list', 'var(--gold-light)') +
+            card('بانتظار التأكيد', pending, 'تحتاج مراجعة', 'fa-hourglass-half', '#fbbf24') +
+            card('مفعّلة', approved, 'ضمن المعروض', 'fa-user-check', '#6ee7b7') +
+            card('مدفوعات مؤكدة', tx.length, 'إجمالي ' + revenue.toLocaleString('en-US') + '$', 'fa-dollar-sign', '#3498db');
+    }
+
+    window.mpRender = function () {
+        if (!mpLoaded) return;
+        mpRenderStats();
+        const q = (document.getElementById('mpSearch').value || '').trim().toLowerCase();
+        const match = x => !q || [x.email, x.tx_ref, x.tx_id, x.used_by].some(v => String(v || '').toLowerCase().includes(q));
+        const req = mpData.requests.filter(match), tx = mpData.paidTx.filter(match), edit = mpCanEdit();
+        let html = '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>التاريخ</th><th>الحساب</th><th>الباقة المطلوبة</th><th>المبلغ</th><th>المصدر</th><th>رقم العملية</th><th>الحالة</th><th>الباقة الحالية / الانتهاء</th><th>إجراءات</th></tr></thead><tbody>';
+        html += req.length ? req.map(x => {
+            let act = '';
+            if (x.source === 'landing' && x.status === 'approved') {
+                if (edit) act += `<button class="mp-no" data-a="rv" data-id="${mpH(x.id)}">إلغاء التفعيل</button>`;
+                act += x.meta && x.meta.verified ? ' <span class="mp-b approved">مطابق لدفع</span>' : ' <span class="mp-b pending">راجع الإيصال</span>';
+            }
+            if (x.status === 'pending' && edit) act += `<button class="mp-ok" data-a="ok" data-id="${mpH(x.id)}">تأكيد وتفعيل</button><button class="mp-no" data-a="no" data-id="${mpH(x.id)}">رفض</button>`;
+            return `<tr><td>${mpDate(x.created_at)}</td><td dir="ltr">${mpH(x.email)}</td><td>${MP_PN[x.plan] || mpH(x.plan)}</td><td>${mpH(x.amount)}$</td><td>${mpH(MP_SRC[x.source] || x.source)}</td><td dir="ltr">${mpH(x.tx_ref || '—')}</td><td><span class="mp-b ${mpH(x.status)}">${MP_SN[x.status] || mpH(x.status)}</span></td><td>${MP_PN[x.current_plan] || ''} · <span dir="ltr" style="white-space:nowrap;">${x.expiry_date ? mpH(String(x.expiry_date).slice(0, 10)) : ''}</span></td><td><div class="mp-act">${act || '—'}</div></td></tr>`;
+        }).join('') : '<tr><td colspan="9" style="text-align:center;color:#888;padding:16px;">لا توجد طلبات</td></tr>';
+        html += '</tbody></table></div>';
+        html += '<h3 style="margin:20px 0 10px;font-size:1rem;color:var(--gold-light);"><i class="fas fa-receipt"></i> عمليات الدفع المؤكدة (Webhook / يدوي)</h3>';
+        html += '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>التاريخ</th><th>رقم العملية</th><th>البريد</th><th>المبلغ</th><th>الباقة</th><th>استُخدمت لـ</th></tr></thead><tbody>';
+        html += tx.length ? tx.map(x => `<tr><td>${mpDate(x.created_at)}</td><td dir="ltr">${mpH(x.tx_id)}</td><td dir="ltr">${mpH(x.email)}</td><td>${mpH(x.amount)}$</td><td>${MP_PN[x.plan] || mpH(x.plan)}</td><td dir="ltr">${mpH(x.used_by || '—')}</td></tr>`).join('') : '<tr><td colspan="6" style="text-align:center;color:#888;padding:16px;">لا توجد عمليات</td></tr>';
+        html += '</tbody></table></div>';
+        document.getElementById('mpList').innerHTML = html;
+    };
+
+    document.addEventListener('click', async e => {
+        const b = e.target.closest('#mpList [data-a]'); if (!b) return;
+        if (!mpCanEdit()) { showToast('ليس لديك صلاحية التعديل', 'fa-lock', 'danger'); return; }
+        const id = b.dataset.id; let r;
+        if (b.dataset.a === 'ok') {
+            if (!confirm('تأكيد استلام الدفع وتفعيل الباقة لمدة سنة؟')) return;
+            r = await mpApi('adminApprovePayment', { id });
+            r.success ? showToast('تم التفعيل حتى ' + (r.expiry || ''), 'fa-check') : showToast(r.error || 'تعذر التفعيل', 'fa-times', 'danger');
+        } else if (b.dataset.a === 'rv') {
+            if (!confirm('إلغاء هذا التفعيل وإرجاع الحساب لوضعه السابق؟')) return;
+            r = await mpApi('adminRevokeLanding', { id });
+            r.success ? showToast('تم إلغاء التفعيل', 'fa-check') : showToast(r.error || 'تعذر', 'fa-times', 'danger');
+        } else {
+            const n = prompt('سبب الرفض (اختياري)'); if (n === null) return;
+            r = await mpApi('adminRejectPayment', { id, note: n });
+            r.success ? showToast('تم الرفض', 'fa-check') : showToast(r.error || 'تعذر', 'fa-times', 'danger');
+        }
+        mpLoad();
+    });
+
+    window.mpAddTx = async function () {
+        if (!mpCanEdit()) { showToast('ليس لديك صلاحية التعديل', 'fa-lock', 'danger'); return; }
+        const txId = document.getElementById('mpTx').value.trim(), email = document.getElementById('mpEm').value.trim().toLowerCase();
+        const amount = document.getElementById('mpAm').value, plan = document.getElementById('mpPl').value;
+        if (!txId || !email) { showToast('أدخل رقم العملية والبريد', 'fa-times'); return; }
+        try {
+            const r = await mpApi('adminAddPaidTx', { txId, email, amount, plan });
+            if (r.success) {
+                showToast(r.activated ? 'تم التفعيل حتى ' + r.expiry : 'تم تسجيل العملية — ستُفعَّل عند طلب صاحب الحساب', 'fa-check');
+                ['mpTx', 'mpEm', 'mpAm'].forEach(i => document.getElementById(i).value = '');
+            } else showToast(r.error || 'تعذر', 'fa-times', 'danger');
+        } catch (e) { showToast('خطأ في الاتصال', 'fa-times', 'danger'); }
+        mpLoad();
+    };
+
+    window.mpSaveSite = function () {
+        let v = document.getElementById('mpSiteUrl').value.trim();
+        if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+        localStorage.setItem(MP_SITE_KEY, v); document.getElementById('mpSiteUrl').value = v;
+        showToast('تم حفظ رابط الموقع', 'fa-check'); mpLoadLanding();
+    };
+
+    async function mpLoadLanding() {
+        const land = document.getElementById('mpLand');
+        try {
+            const r = await mpApi('adminLanding', {});
+            if (!r.success) { land.innerHTML = '<p style="color:#e74c3c;">' + mpH(r.error || 'غير مصرح') + '</p>'; return; }
+            const site = (localStorage.getItem(MP_SITE_KEY) || '').replace(/\/?$/, '/');
+            const edit = mpCanEdit(), plans = r.plans || [], tickets = r.tickets || [], keys = r.keys || {};
+            let html = site === '/' ? '<p style="color:#fbbf24;font-size:0.85rem;margin-bottom:8px;"><i class="fas fa-exclamation-triangle"></i> أدخل رابط موقع مطعمي برو أعلاه لتظهر الروابط كاملة.</p>' : '';
+            html += '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>الباقة</th><th>رابط التفعيل بعد الدفع</th><th></th></tr></thead><tbody>';
+            html += plans.map(p => {
+                const u = (site === '/' ? '' : site) + 'activate.html?plan=' + p.key + '&k=' + (keys[p.key] || '');
+                return `<tr><td style="white-space:nowrap;">${mpH(p.name)} ${mpH(p.price)}$</td><td dir="ltr" style="word-break:break-all;font-size:0.78rem;">${mpH(u)}</td><td><div class="mp-act"><button class="mp-cp" data-cp="${mpH(u)}">نسخ</button>${edit ? `<button class="mp-no" data-rot="${mpH(p.key)}">تغيير المفتاح</button>` : ''}</div></td></tr>`;
+            }).join('');
+            html += '</tbody></table></div>';
+            html += `<p class="mp-row" style="margin:12px 0;"><label style="display:flex;gap:6px;align-items:center;cursor:pointer;"><input type="checkbox" id="mpStrict" ${r.strict ? 'checked' : ''} ${edit ? '' : 'disabled'}> وضع المراجعة الصارم (لا تفعيل تلقائي بدون مطابقة دفع)</label></p>`;
+            html += `<table class="mp-table"><tr><td style="border:0;padding:0;"><details><summary>آخر زيارات صفحة التفعيل (${tickets.length})</summary><div style="overflow-x:auto;"><table class="mp-table" style="margin-top:8px;"><thead><tr><th>الوقت</th><th>الباقة</th><th>IP</th><th>النتيجة</th><th>الحساب</th></tr></thead><tbody>`;
+            html += tickets.map(t => `<tr><td>${mpDate(t.created_at)}</td><td>${MP_PN[t.plan] || mpH(t.plan)}</td><td dir="ltr">${mpH(t.ip)}</td><td>${t.action === 'denied' ? '<span class="mp-b rejected">مرفوض — مفتاح خاطئ</span>' : t.used_by ? '<span class="mp-b approved">' + (t.action === 'register' ? 'حساب جديد' : 'تفعيل على حساب') + '</span>' : '<span class="mp-b pending">فُتحت ولم تُستخدم</span>'}</td><td dir="ltr">${mpH(t.used_by)}</td></tr>`).join('');
+            html += '</tbody></table></div></details></td></tr></table>';
+            land.innerHTML = html;
+            const st = document.getElementById('mpStrict');
+            if (st) st.onchange = async ev => {
+                const rr = await mpApi('adminLandingStrict', { on: ev.target.checked });
+                rr.success ? showToast(ev.target.checked ? 'تم تفعيل وضع المراجعة الصارم' : 'تم إيقاف وضع المراجعة الصارم', 'fa-check') : (showToast(rr.error || 'تعذر', 'fa-times', 'danger'), ev.target.checked = !ev.target.checked);
+            };
+        } catch (e) { land.innerHTML = '<p style="color:#e74c3c;">خطأ في الاتصال</p>'; }
+    }
+
+    document.addEventListener('click', async e => {
+        const c = e.target.closest('#mpLand [data-cp]');
+        if (c) { try { await navigator.clipboard.writeText(c.dataset.cp); } catch (er) {} c.textContent = 'تم النسخ'; setTimeout(() => c.textContent = 'نسخ', 1500); return; }
+        const r = e.target.closest('#mpLand [data-rot]');
+        if (r) {
+            if (!mpCanEdit()) return;
+            if (!confirm('سيتوقف الرابط القديم فوراً ويجب تحديثه في بوابة الدفع. متابعة؟')) return;
+            const rr = await mpApi('adminLandingRotate', { plan: r.dataset.rot });
+            rr.success ? showToast('تم تغيير المفتاح — حدّث الرابط في Entervia', 'fa-check') : showToast(rr.error || 'تعذر', 'fa-times', 'danger');
+            mpLoadLanding();
+        }
+    });
+
+    window.mpExport = function () {
+        if (!mpLoaded) return;
+        const rows = [['التاريخ', 'الحساب', 'الباقة', 'المبلغ', 'المصدر', 'رقم العملية', 'الحالة', 'الانتهاء']].concat(
+            mpData.requests.map(x => [mpDate(x.created_at), x.email, MP_PN[x.plan] || x.plan, x.amount, MP_SRC[x.source] || x.source, x.tx_ref || '', MP_SN[x.status] || x.status, x.expiry_date ? String(x.expiry_date).slice(0, 10) : '']));
+        const csv = '\ufeff' + rows.map(r => r.map(v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"').join(',')).join('\n');
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        a.download = 'mataami-pro-payments-' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+    };
+
     window.showMessagesView = function() {
         ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
         hideAllSpecialViews();
