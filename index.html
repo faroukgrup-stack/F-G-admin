@@ -21,6 +21,9 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .mp-card { margin-bottom: 16px; }
+        .plan-badge { display: block; width: max-content; margin: 4px auto 0; padding: 1px 8px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; color: var(--pc); border: 1px solid var(--pc); background: rgba(255,255,255,0.04); white-space: nowrap; }
+        .plan-badge i { font-size: 0.65rem; margin-left: 3px; }
+        .fg-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
         .mp-muted { color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; margin-bottom: 10px; }
         .mp-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .mp-input { padding: 8px 12px; border: 1px solid #3a3a3a; border-radius: 8px; background: rgba(0,0,0,0.3); color: #ddd; font-family: 'Tajawal', sans-serif; font-size: 0.9rem; }
@@ -497,6 +500,7 @@
             <div class="sidebar-section" id="platformsSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>المنصات الأساسية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" data-platform="comprehensive" onclick="loadData('comprehensive', this)"><i class="fas fa-briefcase" style="color:#b8860b"></i> <span>المنصة الشاملة</span></button>
+                <button class="sidebar-btn" data-platform="comprehensive" id="btnFgAccounts" onclick="showFgAccountsView(this)" style="padding-right:30px;font-size:0.86rem;"><i class="fas fa-file-invoice-dollar" style="color:#b8860b"></i> <span>حسابات المنصة الشاملة</span> <span id="fgPendingBadge" style="display:none;background:#e74c3c;color:#fff;font-size:0.7rem;padding:1px 7px;border-radius:10px;margin-right:auto;"></span></button>
                 <button class="sidebar-btn" data-platform="restaurantCourse" onclick="loadData('restaurantCourse', this)"><i class="fas fa-graduation-cap" style="color:#2ecc71"></i> <span>دورة المطاعم</span></button>
                 <button class="sidebar-btn" data-platform="menuEngineering" onclick="loadData('menuEngineering', this)"><i class="fas fa-utensils" style="color:#e67e22"></i> <span>مطعمي برو</span></button>
                 <button class="sidebar-btn" data-platform="menuEngineering" id="btnMataamiPayments" onclick="showMataamiPaymentsView(this)" style="padding-right:30px;font-size:0.86rem;"><i class="fas fa-file-invoice-dollar" style="color:#e67e22"></i> <span>حسابات مطعمي برو</span> <span id="mpPendingBadge" style="display:none;background:#e74c3c;color:#fff;font-size:0.7rem;padding:1px 7px;border-radius:10px;margin-right:auto;"></span></button>
@@ -665,7 +669,7 @@
                 <div class="table-header">
                     <h3><i class="fas fa-list"></i> جدول المشتركين <span id="tableCount" style="font-size:0.85rem;color:var(--text-muted);font-weight:400;"></span></h3>
                     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                        <input type="text" id="searchInput" class="search-box" placeholder="🔍 بحث (اسم، مستخدم، منصة...)">
+                        <input type="text" id="searchInput" class="search-box" placeholder="🔍 بحث (اسم، مستخدم، منصة، باقة...)">
                         <button class="refresh-btn" onclick="exportToCSV()" style="background:var(--gold);color:#111;border-color:var(--gold);"><i class="fas fa-file-csv"></i> تصدير</button>
                         <button class="refresh-btn" data-needs-edit="1" onclick="openAddUserModal()" style="background:var(--gold);color:#111;border-color:var(--gold);"><i class="fas fa-user-plus"></i> إضافة</button>
                     </div>
@@ -698,7 +702,7 @@
                             <th onclick="sortTable('username')">اسم المستخدم <i class="fas fa-sort"></i></th>
                             <th onclick="sortTable('platform')">المنصة <i class="fas fa-sort"></i></th>
                             <th onclick="sortTable('startDate')">تاريخ الانتهاء <i class="fas fa-sort"></i></th>
-                            <th onclick="sortTable('daysLeft')">الأيام المتبقية <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable('daysLeft')">الأيام المتبقية / الباقة <i class="fas fa-sort"></i></th>
                             <th>الحالة</th>
                             <th onclick="sortTable('progressPercent')">التقدم <i class="fas fa-sort"></i></th>
                             <th>التجميد</th>
@@ -843,6 +847,71 @@
                         <button class="btn-outline-sm" onclick="mpSaveSite()"><i class="fas fa-save"></i> حفظ</button>
                     </div>
                     <div id="mpLand"><div class="loader"></div></div>
+                </div>
+            </div>
+
+            <!-- ===== حسابات المنصة الشاملة (قبول المشتركين — مدمجة من admin.html) ===== -->
+            <div id="fgAccountsView" style="display:none;">
+                <div class="cards-grid mp-stats" id="fgStats"></div>
+                <div class="table-container mp-card">
+                    <div class="table-header">
+                        <h3><i class="fas fa-file-invoice-dollar" style="color:#b8860b"></i> حسابات المنصة الشاملة — قبول المشتركين والاشتراكات</h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <button class="refresh-btn" onclick="fgLoadAll()"><i class="fas fa-sync-alt"></i> تحديث الكل</button>
+                        </div>
+                    </div>
+                    <div class="fg-tabs">
+                        <span class="filter-chip active" data-fgtab="claims" onclick="fgTab('claims')"><i class="fas fa-hourglass-half"></i> طلبات الاشتراك <span id="fgTabBadge" style="background:#fbbf24;color:#111;border-radius:10px;padding:0 7px;font-size:0.75rem;margin-right:4px;">0</span></span>
+                        <span class="filter-chip" data-fgtab="users" onclick="fgTab('users')"><i class="fas fa-users"></i> المشتركون</span>
+                        <span class="filter-chip" data-fgtab="payments" onclick="fgTab('payments')"><i class="fas fa-receipt"></i> سجل الدفعات</span>
+                    </div>
+
+                    <!-- الطلبات -->
+                    <div id="fgPane-claims">
+                        <p class="mp-muted"><b>طريقة التحقق:</b> قارن البريد ورقم العملية في الطلب مع الطلبات المدفوعة في لوحة Entervia (أو إيصال الدفع الذي وصل بريدك). عند المطابقة اضغط «اعتماد» فيُفعَّل الاشتراك سنة كاملة (من تاريخ الانتهاء الحالي إن كان مستقبلياً، وإلا من اليوم) ويُسجَّل في سجل الدفعات. «رابط موقَّع» = وصل المشترك عبر رابط إتمام الاشتراك الذي يحمل التوكن.</p>
+                        <div class="mp-row" style="margin-bottom:10px;">
+                            <select id="fgClaimStatus" class="search-box" style="min-width:160px;" onchange="fgLoadClaims()">
+                                <option value="pending">بانتظار التحقق</option><option value="approved">معتمدة</option><option value="rejected">مرفوضة</option>
+                            </select>
+                            <input type="text" id="fgClaimSearch" class="search-box" placeholder="بحث بالبريد أو الاسم أو رقم العملية" oninput="fgRenderClaims()">
+                            <button class="refresh-btn" onclick="fgLoadClaims()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="fgExportClaims()"><i class="fas fa-file-csv"></i> تصدير</button>
+                        </div>
+                        <div id="fgClaimsList"><div class="loader"></div></div>
+                    </div>
+
+                    <!-- المشتركون -->
+                    <div id="fgPane-users" style="display:none;">
+                        <div class="mp-row" style="margin-bottom:10px;">
+                            <input type="text" id="fgUserSearch" class="search-box" placeholder="بحث بالبريد أو الاسم" oninput="fgRenderUsers()" style="min-width:240px;">
+                            <select id="fgUserFilter" class="search-box" style="min-width:130px;" onchange="fgRenderUsers()">
+                                <option value="">الكل</option><option value="active">فعّال</option><option value="expired">منتهٍ</option><option value="frozen">مجمَّد</option>
+                            </select>
+                            <button class="refresh-btn" onclick="fgLoadUsers()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <span class="mp-muted" id="fgUserCount" style="margin:0;"></span>
+                        </div>
+                        <details data-fg-edit style="margin-bottom:12px;">
+                            <summary class="btn-outline-sm" style="list-style:none;display:inline-flex;gap:6px;align-items:center;cursor:pointer;"><i class="fas fa-user-plus"></i> إضافة مشترك يدوياً</summary>
+                            <div class="mp-row" style="margin-top:10px;">
+                                <input id="fgAddEmail" class="mp-input" type="email" placeholder="البريد" dir="ltr">
+                                <input id="fgAddName" class="mp-input" type="text" placeholder="الاسم الكامل">
+                                <input id="fgAddPass" class="mp-input" type="text" placeholder="كلمة مرور مؤقتة (6+)" dir="ltr">
+                                <input id="fgAddExp" class="mp-input" type="date">
+                                <button class="btn-sm" style="background:var(--success);color:#fff;" onclick="fgAddUser()"><i class="fas fa-plus"></i> إضافة</button>
+                            </div>
+                        </details>
+                        <div id="fgUsersList"><div class="loader"></div></div>
+                    </div>
+
+                    <!-- الدفعات -->
+                    <div id="fgPane-payments" style="display:none;">
+                        <div class="mp-row" style="margin-bottom:10px;">
+                            <input type="text" id="fgPayEmail" class="search-box" placeholder="تصفية بالبريد (اختياري)" dir="ltr" onkeydown="if(event.key==='Enter')fgLoadPays()">
+                            <button class="refresh-btn" onclick="fgLoadPays()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="fgExportPays()"><i class="fas fa-file-csv"></i> تصدير</button>
+                        </div>
+                        <div id="fgPaysList"><div class="loader"></div></div>
+                    </div>
                 </div>
             </div>
 
@@ -1008,7 +1077,7 @@
     // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لمطعمي برو
     const ADMIN_KEY = "mF9$kL2#pQ8wZ4xR7vN1yT6";
     const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
-    const CACHE_KEY = 'farouk_admin_cache_v3';
+    const CACHE_KEY = 'farouk_admin_cache_v4';
     const PERSONAL_DATA_KEY = 'farouk_personal_data_v1';
     const CACHE_TTL_MS = 5 * 60 * 1000;
     let logoutTimer = null;
@@ -1021,7 +1090,8 @@
         comprehensive: {
             name: 'المنصة الشاملة',
             // Supabase (دالة admin) — المفتاح ADMIN_KEY في Supabase يجب أن يساوي ADMIN_KEY أعلاه
-            url: 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin'
+            url: 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin',
+            auth: 'header' // المفتاح يُرسل في x-admin-key (كما في admin.html)
         },
         restaurantCourse: {
             name: 'دورة المطاعم',
@@ -1053,12 +1123,23 @@
         if (!platform || !platform.url) {
             throw new Error('رابط منصة ' + platformKey + ' غير مضبوط');
         }
-        const params = new URLSearchParams({ ...payload, adminKey: ADMIN_KEY });
-        const res = await fetch(platform.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-            body: params
-        });
+        let res;
+        if (platform.auth === 'header') {
+            // دالة admin في Supabase (المنصة الشاملة) تقبل المفتاح فقط عبر الترويسة x-admin-key وجسم JSON
+            res = await fetch(platform.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+                body: JSON.stringify(payload || {}),
+                cache: 'no-store'
+            });
+        } else {
+            const params = new URLSearchParams({ ...payload, adminKey: ADMIN_KEY });
+            res = await fetch(platform.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: params
+            });
+        }
         const text = await res.text();
         let data;
         try {
@@ -1379,8 +1460,26 @@
             daysLeft: parseInt(u.daysLeft) || 0,
             frozen: u.frozen === true || u.frozen === 'TRUE' || u.frozen === 'true',
             regDate: u.regDate || null,
-            lastLogin: rawLogin || null
+            lastLogin: rawLogin || null,
+            plan: u.plan || u.planKey || u.package || u.tier || u.subscription_plan || null,
+            planName: u.planName || u.plan_name || u.packageName || null
         };
+    }
+
+    /** نوع باقة مطعمي برو (basic / pro / premium) */
+    const PLAN_LABELS = { basic: 'الأساسية', pro: 'الإنطلاقة', premium: 'المتقدمة', trial: 'تجريبية', free: 'مجانية' };
+    const PLAN_COLORS = { basic: '#3498db', pro: '#2ecc71', premium: '#e8b95c', trial: '#9b59b6', free: '#888' };
+    function planLabel(u) {
+        if (!u || (!u.plan && !u.planName)) return '';
+        const k = String(u.plan || '').toLowerCase();
+        return u.planName || PLAN_LABELS[k] || String(u.plan);
+    }
+    function planBadge(u) {
+        if (!u || u.platformKey !== 'menuEngineering') return '';
+        const lbl = planLabel(u);
+        if (!lbl) return '<div class="plan-badge" style="--pc:#666">بدون باقة</div>';
+        const c = PLAN_COLORS[String(u.plan || '').toLowerCase()] || '#e67e22';
+        return `<div class="plan-badge" style="--pc:${c}" title="باقة مطعمي برو"><i class="fas fa-box"></i> ${escapeHtml(lbl)}</div>`;
     }
 
     function formatLastLogin(val) {
@@ -1692,7 +1791,7 @@
                 <td>${escapeHtml(u.username)}</td>
                 <td><span class="platform-badge" style="border-color:${getPlatformColor(u.platformKey)};"><i class="fas ${getPlatformIcon(u.platformKey)}" style="color:${getPlatformColor(u.platformKey)};margin-left:4px;"></i> ${u.platform}</span></td>
                 <td>${u.startDate}</td>
-                <td style="color:${color};font-weight:900;">${days}</td>
+                <td style="color:${color};font-weight:900;">${days}${planBadge(u)}</td>
                 <td class="${days > 0 ? 'status-active' : 'status-expired'}">${days > 0 ? 'نشط' : 'منتهي'}</td>
                 <td>${progressHtml}</td>
                 <td style="color:${u.frozen ? '#e74c3c' : '#2ecc71'};font-weight:700;">${u.frozen ? '🔒' : '✅'}</td>
@@ -1721,7 +1820,7 @@
         if (!canEditPlatform(platformKey)) { showToast('ليس لديك صلاحية تعديل هذه المنصة', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
-            await callPlatform(platformKey, { fn: 'addUser', username, password, fullName, expiryDate: expiry, restaurantEmail: username });
+            await callPlatform(platformKey, { fn: 'addUser', username, email: username, password, fullName, expiryDate: expiry, restaurantEmail: username });
             showToast("تمت الإضافة", "fa-check"); closeModal('addUserModal'); await fetchDashboardData(false, true);
         } catch (e) {
             try {
@@ -1748,7 +1847,7 @@
         if (!canEditPlatform(platformKey) || !canEditPlatform(user.platformKey)) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
-            const payload = { fn: 'updateUser', username: user.id, newUsername: username, fullName, expiryDate: expiry, restaurantEmail: user.id };
+            const payload = { fn: 'updateUser', id: user.id, username: user.id, email: user.id, newUsername: username, newEmail: username, fullName, expiryDate: expiry, restaurantEmail: user.id };
             if (password) payload.password = password;
             await callPlatform(platformKey, payload);
             showToast("تم التحديث", "fa-check"); closeModal('editUserModal'); await fetchDashboardData(false, true);
@@ -1777,7 +1876,7 @@
         if (!canEditPlatform(platformKey)) { showToast('ليس لديك صلاحية', 'fa-lock', 'danger'); return; }
         if (!getPlatformUrl(platformKey)) { showToast("رابط المنصة غير مضبوط", "fa-times"); return; }
         try {
-            await callPlatform(platformKey, { fn: 'deleteUser', username: user.id, restaurantEmail: user.id });
+            await callPlatform(platformKey, { fn: 'deleteUser', id: user.id, username: user.id, email: user.id, restaurantEmail: user.id });
             showToast("تم الحذف", "fa-check"); await fetchDashboardData(false, true);
         } catch (e) {
             try {
@@ -1800,7 +1899,7 @@
             const user = findUserByUniqueId(uid); if (!user || !canEditPlatform(user.platformKey)) continue;
             const platformKey = user.platformKey;
             try {
-                await callPlatform(platformKey, { fn: 'deleteUser', username: user.id, restaurantEmail: user.id });
+                await callPlatform(platformKey, { fn: 'deleteUser', id: user.id, username: user.id, email: user.id, restaurantEmail: user.id });
                 success++;
             } catch (e) {
                 try {
@@ -1817,8 +1916,8 @@
     };
     window.exportToCSV = function() {
         if (!displayedUsers.length) return;
-        let csv = "الاسم,اسم المستخدم,المنصة,تاريخ الانتهاء,الأيام المتبقية,الحالة,مجمد,آخر دخول\n";
-        displayedUsers.forEach(u => { csv += `"${u.name}","${u.username}","${u.platform}","${u.startDate}",${u.daysLeft},"${u.daysLeft > 0 ? 'نشط' : 'منتهي'}","${u.frozen ? 'نعم' : 'لا'}","${formatLastLogin(u.lastLogin) || ''}"\n`; });
+        let csv = "الاسم,اسم المستخدم,المنصة,الباقة,تاريخ الانتهاء,الأيام المتبقية,الحالة,مجمد,آخر دخول\n";
+        displayedUsers.forEach(u => { csv += `"${u.name}","${u.username}","${u.platform}","${planLabel(u)}","${u.startDate}",${u.daysLeft},"${u.daysLeft > 0 ? 'نشط' : 'منتهي'}","${u.frozen ? 'نعم' : 'لا'}","${formatLastLogin(u.lastLogin) || ''}"\n`; });
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `المشتركين_${new Date().toISOString().slice(0, 10)}.csv`; a.click(); showToast("تم التصدير", "fa-file-csv");
     };
 
@@ -2056,13 +2155,14 @@
         setTimeout(() => checkAppointmentTimes(), 2000);
         pushAppointmentsToSW();
         if (typeof hasPlatform === 'function' && hasPlatform('menuEngineering')) { setTimeout(() => mpRefreshBadge(), 3000); setInterval(() => mpRefreshBadge(), 5 * 60 * 1000); }
+        if (typeof hasPlatform === 'function' && hasPlatform('comprehensive')) { setTimeout(() => fgRefreshBadge(), 3500); setInterval(() => fgRefreshBadge(), 5 * 60 * 1000); }
     }
 
     /* ================== Bookings UI ================== */
     let bookingsData = [], bookingsLoaded = false, bookingFilter = 'all', calendarYear = null, calendarMonth = null, currentBookingSettings = null;
 
     function hideAllSpecialViews() {
-        ['bookingsView','staffView','messagesView','ratingsView','inboundView','mataamiPaymentsView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        ['bookingsView','staffView','messagesView','ratingsView','inboundView','mataamiPaymentsView','fgAccountsView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     }
     // ════════════════════════════════════════════════════════════
     //  البيانات الواردة: تقييمات المنصة الشاملة + تحميل الكتب + التشخيص + الطلبات
@@ -2208,7 +2308,7 @@
         const wrap = document.getElementById('ratingsTableWrap');
         wrap.innerHTML = '<div class="loader"></div>';
         try {
-            const res = await fetch(SUPABASE_ADMIN_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body: new URLSearchParams({ fn: 'getRatings', adminKey: ADMIN_KEY }) });
+            const res = await fetch(SUPABASE_ADMIN_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY }, body: JSON.stringify({ fn: 'getRatings' }), cache: 'no-store' });
             const data = await res.json().catch(() => ({}));
             if (res.status === 401) throw new Error('المفتاح غير مطابق: ADMIN_KEY في Supabase يجب أن يساوي المفتاح في لوحة الإدارة');
             if (data.status !== 'success') throw new Error(data.message === 'fn' ? 'دالة admin في Supabase قديمة: الصق النسخة الجديدة واضغط Deploy' : (data.message || 'تعذر جلب التقييمات'));
@@ -2491,6 +2591,207 @@
         a.download = 'mataami-pro-payments-' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
     };
 
+    /* ════════════════════════════════════════════════════════════
+     *  حسابات المنصة الشاملة: قبول المشتركين (مدمجة من admin.html)
+     *  دالة admin في Supabase — المفتاح ADMIN_KEY يُرسل في الترويسة x-admin-key
+     * ════════════════════════════════════════════════════════════ */
+    let fgData = { claims: [], users: [], pays: [], pendingCount: 0 }, fgState = { tab: 'claims', claimsLoaded: false, usersLoaded: false, paysLoaded: false };
+    const fgCanEdit = () => canEditPlatform('comprehensive');
+    const fgApi = (fn, extra) => callPlatform('comprehensive', Object.assign({ fn }, extra || {}));
+    const fgDays = d => { const n = parseInt(d, 10); return isNaN(n) ? 0 : n; };
+    const fgUserState = u => (u.frozen === true || u.frozen === 'true' || u.frozen === 'TRUE') ? 'frozen' : (fgDays(u.daysLeft) > 0 ? 'active' : 'expired');
+    const fgEmpty = (cols, msg) => `<tr><td colspan="${cols}" style="text-align:center;color:#888;padding:16px;">${msg}</td></tr>`;
+    const fgErr = msg => `<p style="color:#e74c3c;padding:12px;"><i class="fas fa-exclamation-triangle"></i> ${mpH(msg)}</p>`;
+
+    window.showFgAccountsView = function (btn) {
+        if (!hasPlatform('comprehensive')) { showToast('ليس لديك صلاحية المنصة الشاملة', 'fa-lock', 'danger'); return; }
+        hideMainSections(); markSidebar(btn);
+        document.getElementById('fgAccountsView').style.display = 'block'; closeMobileMenu();
+        document.querySelectorAll('[data-fg-edit]').forEach(el => el.style.display = fgCanEdit() ? '' : 'none');
+        fgTab(fgState.tab);
+        fgLoadAll();
+    };
+
+    window.fgTab = function (t) {
+        fgState.tab = t;
+        document.querySelectorAll('[data-fgtab]').forEach(c => c.classList.toggle('active', c.dataset.fgtab === t));
+        ['claims', 'users', 'payments'].forEach(n => { const el = document.getElementById('fgPane-' + n); if (el) el.style.display = n === t ? '' : 'none'; });
+        if (t === 'payments' && !fgState.paysLoaded) fgLoadPays();
+        if (t === 'users' && !fgState.usersLoaded) fgLoadUsers();
+    };
+
+    window.fgLoadAll = function () {
+        return Promise.allSettled([fgLoadClaims(), fgLoadUsers(), fgLoadPays(), fgRefreshBadge()]);
+    };
+
+    async function fgRefreshBadge() {
+        try {
+            const r = await fgApi('listClaims', { status: 'pending' });
+            const n = Array.isArray(r.data) ? r.data.length : 0;
+            fgData.pendingCount = n;
+            const b = document.getElementById('fgPendingBadge');
+            if (b) { b.textContent = n; b.style.display = n ? '' : 'none'; }
+            const tb = document.getElementById('fgTabBadge'); if (tb) tb.textContent = n;
+            fgRenderStats();
+            return n;
+        } catch (e) { return null; }
+    }
+    window.fgRefreshBadge = fgRefreshBadge;
+
+    function fgRenderStats() {
+        const el = document.getElementById('fgStats'); if (!el) return;
+        const u = fgData.users, active = u.filter(x => fgUserState(x) === 'active').length;
+        const exp30 = u.filter(x => fgUserState(x) === 'active' && fgDays(x.daysLeft) <= 30).length;
+        const renewals = fgData.pays.filter(p => p.action !== 'new').length;
+        const card = (t, v, sub, ic, col) => `<div class="stat-card"><div><h4>${t}</h4><span class="stat-number" style="color:${col}">${v}</span><div class="stat-sub">${sub}</div></div><i class="fas ${ic}"></i></div>`;
+        el.innerHTML =
+            card('بانتظار التحقق', fgData.pendingCount, 'طلبات تحتاج مراجعة', 'fa-hourglass-half', '#fbbf24') +
+            card('مشتركون فعّالون', fgState.usersLoaded ? active : '…', 'من ' + (fgState.usersLoaded ? u.length : '…') + ' مشترك', 'fa-user-check', '#6ee7b7') +
+            card('تنتهي خلال 30 يوماً', fgState.usersLoaded ? exp30 : '…', 'تحتاج تجديد قريباً', 'fa-exclamation-triangle', '#e67e22') +
+            card('سجل الدفعات', fgState.paysLoaded ? fgData.pays.length : '…', (fgState.paysLoaded ? renewals : '…') + ' تجديد', 'fa-receipt', '#3498db');
+    }
+
+    /* ── الطلبات ── */
+    window.fgLoadClaims = async function () {
+        const list = document.getElementById('fgClaimsList'), st = document.getElementById('fgClaimStatus').value;
+        list.innerHTML = '<div class="loader"></div>';
+        try {
+            const r = await fgApi('listClaims', { status: st });
+            fgData.claims = Array.isArray(r.data) ? r.data : []; fgState.claimsLoaded = true;
+            if (st === 'pending') {
+                fgData.pendingCount = fgData.claims.length;
+                const b = document.getElementById('fgPendingBadge'); if (b) { b.textContent = fgData.pendingCount; b.style.display = fgData.pendingCount ? '' : 'none'; }
+                const tb = document.getElementById('fgTabBadge'); if (tb) tb.textContent = fgData.pendingCount;
+            }
+            fgRenderClaims(); fgRenderStats();
+        } catch (e) { list.innerHTML = fgErr(e.message === 'غير مصرح' ? 'غير مصرح — تأكد أن ADMIN_KEY في Supabase يطابق مفتاح الإدارة' : (e.message || 'تعذر الاتصال')); }
+    };
+
+    window.fgRenderClaims = function () {
+        if (!fgState.claimsLoaded) return;
+        const q = (document.getElementById('fgClaimSearch').value || '').trim().toLowerCase(), edit = fgCanEdit();
+        const rows = fgData.claims.filter(c => !q || [c.email, c.full_name, c.tx_ref].some(v => String(v || '').toLowerCase().includes(q)));
+        let html = '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>التاريخ</th><th>البريد</th><th>الاسم</th><th>رقم العملية</th><th>النوع</th><th>التحقق</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
+        html += rows.length ? rows.map(c => {
+            const stp = c.status === 'pending' ? '<span class="mp-b pending">بانتظار التحقق</span>'
+                : c.status === 'approved' ? '<span class="mp-b approved">معتمد' + (c.new_expiry ? ' حتى <span dir="ltr">' + mpH(String(c.new_expiry).slice(0, 10)) + '</span>' : '') + '</span>'
+                : '<span class="mp-b rejected">مرفوض</span>';
+            let act = '';
+            if (c.status === 'pending') act = edit ? `<button class="mp-ok" data-fgc="ok" data-id="${mpH(c.id)}"><i class="fas fa-check"></i> اعتماد</button><button class="mp-no" data-fgc="no" data-id="${mpH(c.id)}"><i class="fas fa-times"></i> رفض</button>` : '<span style="color:#666;font-size:.78rem;"><i class="fas fa-eye"></i> مشاهدة فقط</span>';
+            else act = mpH(c.admin_note || '—');
+            return `<tr><td>${mpDate(c.created_at)}</td><td dir="ltr">${mpH(c.email)}</td><td>${mpH(c.full_name || '')}</td><td dir="ltr">${mpH(c.tx_ref || '—')}</td><td>${c.is_renewal ? '<span class="mp-b" style="background:#3b82f633;color:#bfdbfe;">تجديد</span>' : '<span class="mp-b approved">جديد</span>'}</td><td>${c.token_ok ? '<span class="mp-b approved">رابط موقَّع</span>' : '<span class="mp-b pending">بدون توكن</span>'}</td><td>${stp}</td><td><div class="mp-act">${act}</div></td></tr>`;
+        }).join('') : fgEmpty(8, 'لا توجد طلبات');
+        html += '</tbody></table></div>';
+        document.getElementById('fgClaimsList').innerHTML = html;
+    };
+
+    document.addEventListener('click', async e => {
+        const b = e.target.closest('#fgClaimsList [data-fgc]'); if (!b) return;
+        if (!fgCanEdit()) { showToast('ليس لديك صلاحية التعديل', 'fa-lock', 'danger'); return; }
+        const ok = b.dataset.fgc === 'ok', id = b.dataset.id; let note = null;
+        if (ok && !confirm('تأكيد: هل طابقت هذا الطلب مع دفعة مستلمة في Entervia؟ سيُفعَّل الاشتراك سنة كاملة.')) return;
+        if (!ok) { note = prompt('سبب الرفض (اختياري):', ''); if (note === null) return; }
+        b.disabled = true;
+        try {
+            const r = await fgApi(ok ? 'approveClaim' : 'rejectClaim', { id, note });
+            showToast(r.message || (ok ? 'تم الاعتماد' : 'تم الرفض'), 'fa-check');
+            fgLoadClaims(); fgLoadUsers(); fgLoadPays(); fgRefreshBadge();
+            if (ok) fetchDashboardData(true, true);
+        } catch (err) { showToast(err.message || 'تعذر تنفيذ العملية', 'fa-times', 'danger'); b.disabled = false; }
+    });
+
+    window.fgExportClaims = function () {
+        if (!fgState.claimsLoaded) return;
+        const head = ['التاريخ', 'البريد', 'الاسم', 'رقم العملية', 'النوع', 'التحقق', 'الحالة', 'الانتهاء الجديد', 'ملاحظة'];
+        const rows = fgData.claims.map(c => [mpDate(c.created_at), c.email, c.full_name || '', c.tx_ref || '', c.is_renewal ? 'تجديد' : 'جديد', c.token_ok ? 'رابط موقَّع' : 'بدون توكن', c.status, c.new_expiry || '', c.admin_note || '']);
+        downloadCSV('حسابات_المنصة_الشاملة_الطلبات', head, rows);
+    };
+
+    /* ── المشتركون ── */
+    window.fgLoadUsers = async function () {
+        const list = document.getElementById('fgUsersList');
+        if (!fgState.usersLoaded) list.innerHTML = '<div class="loader"></div>';
+        try {
+            const r = await fgApi('getUsers');
+            fgData.users = Array.isArray(r.data) ? r.data : []; fgState.usersLoaded = true;
+            fgRenderUsers(); fgRenderStats();
+        } catch (e) { list.innerHTML = fgErr(e.message || 'تعذر الاتصال'); }
+    };
+
+    window.fgRenderUsers = function () {
+        if (!fgState.usersLoaded) return;
+        const q = (document.getElementById('fgUserSearch').value || '').trim().toLowerCase(), f = document.getElementById('fgUserFilter').value, edit = fgCanEdit();
+        const list = fgData.users.filter(u => (!q || ((u.username || '') + ' ' + (u.fullName || '')).toLowerCase().includes(q)) && (!f || fgUserState(u) === f));
+        document.getElementById('fgUserCount').textContent = list.length + ' من ' + fgData.users.length;
+        let html = '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>البريد</th><th>الاسم</th><th>تاريخ الانتهاء</th><th>المتبقي</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
+        html += list.length ? list.map(u => {
+            const s = fgUserState(u), d = fgDays(u.daysLeft);
+            const col = d <= 0 ? '#e74c3c' : d <= 3 ? '#e67e22' : d <= 7 ? '#f39c12' : '#2ecc71';
+            const pill = s === 'active' ? '<span class="mp-b approved">فعّال</span>' : s === 'frozen' ? '<span class="mp-b rejected">مجمَّد</span>' : '<span class="mp-b pending">منتهٍ</span>';
+            const fz = s === 'frozen';
+            const act = edit ? `<button class="mp-cp" data-fgext="${mpH(u.username)}"><i class="fas fa-calendar-plus"></i> تمديد سنة</button><button class="${fz ? 'mp-ok' : 'mp-no'}" data-fgfrz="${mpH(u.username)}" data-v="${fz ? '0' : '1'}"><i class="fas ${fz ? 'fa-unlock' : 'fa-lock'}"></i> ${fz ? 'إلغاء التجميد' : 'تجميد'}</button>` : '<span style="color:#666;font-size:.78rem;"><i class="fas fa-eye"></i></span>';
+            return `<tr><td dir="ltr">${mpH(u.username)}</td><td>${mpH(u.fullName || '')}</td><td dir="ltr" style="white-space:nowrap;">${mpH(u.expiryDate || '—')}</td><td style="color:${col};font-weight:900;">${d}</td><td>${pill}</td><td><div class="mp-act">${act}</div></td></tr>`;
+        }).join('') : fgEmpty(6, 'لا نتائج');
+        html += '</tbody></table></div>';
+        document.getElementById('fgUsersList').innerHTML = html;
+    };
+
+    document.addEventListener('click', async e => {
+        const ext = e.target.closest('#fgUsersList [data-fgext]'), frz = e.target.closest('#fgUsersList [data-fgfrz]');
+        if (!ext && !frz) return;
+        if (!fgCanEdit()) { showToast('ليس لديك صلاحية التعديل', 'fa-lock', 'danger'); return; }
+        try {
+            let r;
+            if (ext) {
+                const tx = prompt('تمديد سنة للمشترك ' + ext.dataset.fgext + '\nرقم العملية (اختياري):', '');
+                if (tx === null) return;
+                ext.disabled = true;
+                r = await fgApi('extendYear', { id: ext.dataset.fgext, txId: tx || null });
+                fgLoadPays();
+            } else {
+                frz.disabled = true;
+                r = await fgApi('freeze', { id: frz.dataset.fgfrz, frozen: frz.dataset.v === '1' });
+            }
+            showToast(r.message || 'تم', 'fa-check');
+            fgLoadUsers(); fetchDashboardData(true, true);
+        } catch (err) { showToast(err.message || 'تعذر', 'fa-times', 'danger'); if (ext) ext.disabled = false; if (frz) frz.disabled = false; }
+    });
+
+    window.fgAddUser = async function () {
+        if (!fgCanEdit()) { showToast('ليس لديك صلاحية التعديل', 'fa-lock', 'danger'); return; }
+        const email = document.getElementById('fgAddEmail').value.trim().toLowerCase(), fullName = document.getElementById('fgAddName').value.trim();
+        const password = document.getElementById('fgAddPass').value, expiryDate = document.getElementById('fgAddExp').value;
+        if (!email || !password || !expiryDate) { showToast('أدخل البريد وكلمة المرور وتاريخ الانتهاء', 'fa-times'); return; }
+        if (password.length < 6) { showToast('كلمة المرور 6 أحرف على الأقل', 'fa-times'); return; }
+        try {
+            const r = await fgApi('addUser', { email, fullName, password, expiryDate });
+            showToast(r.message || 'تمت الإضافة', 'fa-check');
+            ['fgAddEmail', 'fgAddName', 'fgAddPass', 'fgAddExp'].forEach(i => document.getElementById(i).value = '');
+            fgLoadUsers(); fetchDashboardData(true, true);
+        } catch (err) { showToast(err.message || 'تعذر الإضافة', 'fa-times', 'danger'); }
+    };
+
+    /* ── الدفعات ── */
+    window.fgLoadPays = async function () {
+        const list = document.getElementById('fgPaysList');
+        list.innerHTML = '<div class="loader"></div>';
+        try {
+            const r = await fgApi('getPayments', { email: (document.getElementById('fgPayEmail').value || '').trim() || null });
+            fgData.pays = Array.isArray(r.data) ? r.data : []; fgState.paysLoaded = true;
+            let html = '<div style="overflow-x:auto;"><table class="mp-table"><thead><tr><th>التاريخ</th><th>البريد</th><th>رقم العملية</th><th>النوع</th><th>الانتهاء الجديد</th></tr></thead><tbody>';
+            html += fgData.pays.length ? fgData.pays.map(p => `<tr><td>${mpDate(p.created_at)}</td><td dir="ltr">${mpH(p.email)}</td><td dir="ltr">${mpH(p.tx_id || '—')}</td><td>${p.action === 'new' ? '<span class="mp-b approved">اشتراك جديد</span>' : '<span class="mp-b" style="background:#3b82f633;color:#bfdbfe;">تجديد</span>'}</td><td dir="ltr">${mpH(p.new_expiry || '')}</td></tr>`).join('') : fgEmpty(5, 'لا توجد دفعات');
+            html += '</tbody></table></div>';
+            list.innerHTML = html; fgRenderStats();
+        } catch (e) { list.innerHTML = fgErr(e.message || 'تعذر الاتصال'); }
+    };
+
+    window.fgExportPays = function () {
+        if (!fgState.paysLoaded) return;
+        downloadCSV('حسابات_المنصة_الشاملة_الدفعات', ['التاريخ', 'البريد', 'رقم العملية', 'النوع', 'الانتهاء الجديد'],
+            fgData.pays.map(p => [mpDate(p.created_at), p.email, p.tx_id || '', p.action === 'new' ? 'اشتراك جديد' : 'تجديد', p.new_expiry || '']));
+    };
+
+
     window.showMessagesView = function() {
         ['statsSection','chartsSection','toolsSection','tableSection'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
         hideAllSpecialViews();
@@ -2740,7 +3041,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const si = document.getElementById('searchInput');
-        if (si) si.addEventListener('input', e => { clearTimeout(searchDebounceTimer); searchDebounceTimer = setTimeout(() => { const q = e.target.value.toLowerCase().trim(); if (!q) return applyFilterAndSort(); let filtered = [...window.allUsersData]; if (currentFilter !== 'all') filtered = filtered.filter(u => currentFilter === 'active' ? u.daysLeft > 0 : (currentFilter === 'expired' ? u.daysLeft <= 0 : (currentFilter === 'frozen' ? u.frozen : u.platformKey === currentFilter))); displayedUsers = filtered.filter(u => (u.name||'').toLowerCase().includes(q) || (u.username||'').toLowerCase().includes(q) || (u.platform||'').toLowerCase().includes(q) || (u.startDate||'').includes(q)); currentPage = 1; document.getElementById('tableCount').textContent = `(${displayedUsers.length})`; renderPaginated(); }, 200); });
+        if (si) si.addEventListener('input', e => { clearTimeout(searchDebounceTimer); searchDebounceTimer = setTimeout(() => { const q = e.target.value.toLowerCase().trim(); if (!q) return applyFilterAndSort(); let filtered = [...window.allUsersData]; if (currentFilter !== 'all') filtered = filtered.filter(u => currentFilter === 'active' ? u.daysLeft > 0 : (currentFilter === 'expired' ? u.daysLeft <= 0 : (currentFilter === 'frozen' ? u.frozen : u.platformKey === currentFilter))); displayedUsers = filtered.filter(u => (u.name||'').toLowerCase().includes(q) || (u.username||'').toLowerCase().includes(q) || (u.platform||'').toLowerCase().includes(q) || planLabel(u).toLowerCase().includes(q) || String(u.plan||'').toLowerCase().includes(q) || (u.startDate||'').includes(q)); currentPage = 1; document.getElementById('tableCount').textContent = `(${displayedUsers.length})`; renderPaginated(); }, 200); });
         const bs = document.getElementById('bookingSearch');
         if (bs) bs.addEventListener('input', () => { clearTimeout(searchDebounceTimer); searchDebounceTimer = setTimeout(renderBookingsTable, 200); });
     });
