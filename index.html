@@ -501,7 +501,8 @@
             <div class="sidebar-section">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الرئيسية</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn active" onclick="loadData('all', this)"><i class="fas fa-chart-pie"></i> <span>نظرة عامة</span></button>
-                <button class="sidebar-btn" onclick="openSettingsModal()"><i class="fas fa-cog"></i> <span>إعدادات اللوحة</span></button>
+                <button class="sidebar-btn" onclick="openSettingsModal()"><i class="fas fa-cog"></i> <span>الإعدادات</span></button>
+                <button class="sidebar-btn" onclick="FGAccount.open()"><i class="fas fa-user-shield"></i> <span>حسابي وكلمة المرور</span></button>
                 <button class="sidebar-btn" onclick="showMessagesView()"><i class="fas fa-envelope"></i> <span>الرسائل</span> <span id="msgBadgeSidebar" style="display:none;background:#e74c3c;color:#fff;font-size:0.7rem;padding:1px 7px;border-radius:10px;margin-right:auto;"></span></button>
             </div>
             <div class="sidebar-section" id="platformsSidebarSection">
@@ -527,15 +528,23 @@
             </div>
             <div class="sidebar-section" id="toolsSidebarSection" data-perm="use_audit_tools">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الأدوات الاستشارية</span><i class="fas fa-chevron-down"></i></div>
-                <button class="sidebar-btn" onclick="window.open('business-audit-60q.html','_blank')"><i class="fas fa-clipboard-list"></i> <span>التدقيق السريع</span></button>
-                <button class="sidebar-btn" onclick="window.open('restaurant-audit-150q.html','_blank')"><i class="fas fa-utensils"></i> <span>تقييم المطاعم</span></button>
-                <button class="sidebar-btn" onclick="window.open('business-audit-150q.html','_blank')"><i class="fas fa-briefcase"></i> <span>تقييم الأعمال</span></button>
-                <button class="sidebar-btn" onclick="window.open('investment-readiness.html','_blank')"><i class="fas fa-chart-pie"></i> <span>جاذبية الاستثمار</span></button>
+                <button class="sidebar-btn" onclick="FGFrame.open('business-audit-60q.html', 'التدقيق السريع', 'fa-clipboard-list', this)"><i class="fas fa-clipboard-list"></i> <span>التدقيق السريع</span></button>
+                <button class="sidebar-btn" onclick="FGFrame.open('restaurant-audit-150q.html', 'تقييم المطاعم', 'fa-utensils', this)"><i class="fas fa-utensils"></i> <span>تقييم المطاعم</span></button>
+                <button class="sidebar-btn" onclick="FGFrame.open('business-audit-150q.html', 'تقييم الأعمال', 'fa-briefcase', this)"><i class="fas fa-briefcase"></i> <span>تقييم الأعمال</span></button>
+                <button class="sidebar-btn" onclick="FGFrame.open('investment-readiness.html', 'جاذبية الاستثمار', 'fa-chart-pie', this)"><i class="fas fa-chart-pie"></i> <span>جاذبية الاستثمار</span></button>
+            </div>
+            <div class="sidebar-section" id="bizSidebarSection">
+                <div class="sidebar-section-title" onclick="toggleSection(this)"><span>إدارة الشركة</span><i class="fas fa-chevron-down"></i></div>
+                <button class="sidebar-btn" data-perm="biz_reports" onclick="FGBiz.show('dashboard', this)"><i class="fas fa-tachometer-alt" style="color:#d4af37"></i> <span>لوحة الأداء (KPIs)</span></button>
+                <button class="sidebar-btn" data-perm="biz_crm" onclick="FGBiz.show('clients', this)"><i class="fas fa-address-book" style="color:#3498db"></i> <span>العملاء (CRM)</span></button>
+                <button class="sidebar-btn" data-perm="biz_projects" onclick="FGBiz.show('projects', this)"><i class="fas fa-project-diagram" style="color:#9b59b6"></i> <span>المشاريع</span></button>
+                <button class="sidebar-btn" onclick="FGBiz.show('tasks', this)"><i class="fas fa-tasks" style="color:#2ecc71"></i> <span>المهام وتوزيع العمل</span> <span id="bizTaskBadge" style="display:none;background:#e67e22;color:#fff;font-size:0.7rem;padding:1px 7px;border-radius:10px;margin-right:auto;"></span></button>
+                <button class="sidebar-btn" data-perm="biz_finance" onclick="FGBiz.show('finance', this)"><i class="fas fa-coins" style="color:#f1c40f"></i> <span>المالية (إيرادات ومصروفات)</span></button>
             </div>
             <div class="sidebar-section" id="certSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>التدريب والشهادات</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" data-perm="certificates" onclick="showCertificatesView()"><i class="fas fa-award" style="color:#d4af37"></i> <span>توليد وإدارة الشهادات</span></button>
-                <button class="sidebar-btn" data-perm="certificates" onclick="window.open('verify.html','_blank')"><i class="fas fa-qrcode" style="color:#2ecc71"></i> <span>التحقق من شهادة</span></button>
+                <button class="sidebar-btn" data-perm="certificates" onclick="FGFrame.open('verify.html', 'التحقق من شهادة', 'fa-qrcode', this)"><i class="fas fa-qrcode" style="color:#2ecc71"></i> <span>التحقق من شهادة</span></button>
             </div>
             <div class="sidebar-section" id="staffSidebarSection" data-perm="manage_staff">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الإدارة</span><i class="fas fa-chevron-down"></i></div>
@@ -791,6 +800,8 @@
                             <input type="text" id="ratingsSearch" class="search-box" placeholder="بحث بالاسم أو الاقتراحات">
                             <button class="refresh-btn" onclick="loadRatings(true)"><i class="fas fa-sync-alt"></i> تحديث</button>
                             <button class="btn-outline-sm" onclick="exportRatings()"><i class="fas fa-file-csv"></i> تصدير</button>
+                            <button class="btn-outline-sm del-sel" data-perm="delete_records" onclick="deleteSelectedRatings()"><i class="fas fa-trash"></i> حذف المحدد <span id="ratingsSelCount"></span></button>
+                            <button class="btn-outline-sm del-sel" data-perm="delete_records" onclick="purgeRatings()"><i class="fas fa-broom"></i> حذف الأقدم من...</button>
                         </div>
                     </div>
                     <div class="filter-chips">
@@ -816,12 +827,33 @@
                             <input type="text" id="inboundSearch" class="search-box" placeholder="بحث في كل الحقول">
                             <button class="refresh-btn" onclick="loadInbound(true)"><i class="fas fa-sync-alt"></i> تحديث</button>
                             <button class="btn-outline-sm" onclick="exportInbound()"><i class="fas fa-file-csv"></i> تصدير</button>
+                            <button class="btn-outline-sm del-sel" data-perm="delete_records" onclick="deleteSelectedInbound()"><i class="fas fa-trash"></i> حذف المحدد <span id="inboundSelCount"></span></button>
+                            <button class="btn-outline-sm del-sel" data-perm="delete_records" onclick="purgeInbound()"><i class="fas fa-broom"></i> حذف الأقدم من...</button>
                         </div>
                     </div>
                     <div class="filter-chips" id="inboundTabs"></div>
                     <div id="inboundTableWrap"></div>
                 </div>
             </div>
+
+            <!-- ===== V8.1: عرض الصفحات داخل إطار اللوحة (الشهادات / التحقق / الأدوات) ===== -->
+            <div id="frameView" style="display:none;">
+                <div class="table-container frame-card">
+                    <div class="table-header">
+                        <h3 id="frameTitle"></h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <button class="refresh-btn" onclick="FGFrame.reload()"><i class="fas fa-sync-alt"></i> تحديث</button>
+                            <button class="btn-outline-sm" onclick="FGFrame.print()"><i class="fas fa-print"></i> طباعة</button>
+                            <button class="btn-outline-sm" onclick="FGFrame.fullscreen()"><i class="fas fa-expand"></i> ملء الشاشة</button>
+                            <button class="btn-outline-sm" onclick="FGFrame.popout()" title="فتح في نافذة مستقلة"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                    </div>
+                    <iframe id="frameEl" class="fg-frame" title="محتوى" allow="clipboard-write; fullscreen"></iframe>
+                </div>
+            </div>
+
+            <!-- ===== V8.1: إدارة الشركة ===== -->
+            <div id="bizView" style="display:none;"></div>
 
             <!-- ===== Mataami Pro Payments View ===== -->
             <div id="mataamiPaymentsView" style="display:none;">
@@ -998,6 +1030,8 @@
         <select id="composePriority"><option value="normal">عادية</option><option value="high">عالية</option></select>
         <label>نص الرسالة</label>
         <textarea id="composeBody" rows="5" style="width:100%;padding:10px;border:1px solid #3a3a3a;border-radius:8px;background:rgba(0,0,0,0.3);color:#ddd;font-family:inherit;"></textarea>
+        <div class="att-bar"><button type="button" class="btn-outline-sm" onclick="FGAtt.pick('compose')"><i class="fas fa-paperclip"></i> إرفاق ملف</button><span class="att-hint">حتى 10 ملفات · 20 ميغابايت للملف</span></div>
+        <div class="att-list" id="att-compose"></div>
         <div class="modal-buttons">
             <button class="btn-save" onclick="sendComposeMessage()"><i class="fas fa-paper-plane"></i> إرسال</button>
             <button class="btn-cancel" onclick="closeModal('composeMsgModal')">إلغاء</button>
@@ -1056,6 +1090,10 @@
         <label>اسم اللوحة</label><input type="text" id="settingsAppTitle">
         <label>الوصف المختصر</label><input type="text" id="settingsAppSubtitle">
         <label>اللون الرئيسي</label><input type="color" id="settingsPrimaryColor">
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #333;display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn-outline-sm" onclick="closeModal('settingsModal');FGAccount.open()"><i class="fas fa-key"></i> تغيير كلمة المرور / بيانات حسابي</button>
+            <button type="button" class="btn-outline-sm" onclick="closeModal('settingsModal');FGCleanup.open()"><i class="fas fa-broom"></i> تنظيف البيانات القديمة</button>
+        </div>
         <div class="modal-buttons">
             <button class="btn-save" onclick="saveSettings()">حفظ</button>
             <button class="btn-cancel" onclick="closeModal('settingsModal')">إلغاء</button>
@@ -2139,7 +2177,7 @@
 
     window.openSettingsModal = function() {
         if (!(currentUser && (currentUser.isSuperAdmin || currentUser.role === 'super'))) {
-            showToast('إعدادات اللوحة للمسؤول الرئيسي فقط', 'fa-lock', 'danger');
+            FGAccount.open(); // V8.1: الموظف يرى إعدادات حسابه (تغيير كلمة المرور)
             return;
         }
         document.getElementById('settingsLogoUrl').value = localStorage.getItem('logoUrl') || ''; document.getElementById('settingsAppTitle').value = localStorage.getItem('appTitle') || 'مجموعة فاروق'; document.getElementById('settingsAppSubtitle').value = localStorage.getItem('appSubtitle') || 'للاستشارات والأعمال'; document.getElementById('settingsPrimaryColor').value = localStorage.getItem('primaryColor') || '#b8860b'; document.getElementById('settingsModal').style.display = 'flex';
@@ -2174,7 +2212,7 @@
     let bookingsData = [], bookingsLoaded = false, bookingFilter = 'all', calendarYear = null, calendarMonth = null, currentBookingSettings = null;
 
     function hideAllSpecialViews() {
-        ['bookingsView','staffView','messagesView','ratingsView','inboundView','mataamiPaymentsView','fgAccountsView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        ['bookingsView','staffView','messagesView','ratingsView','inboundView','mataamiPaymentsView','fgAccountsView','frameView','bizView'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     }
     // ════════════════════════════════════════════════════════════
     //  البيانات الواردة: تقييمات المنصة الشاملة + تحميل الكتب + التشخيص + الطلبات
@@ -2296,8 +2334,9 @@
         document.getElementById('inboundCount').textContent = `(${rows.length})`;
         if (!rows.length) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>لا توجد سجلات</div>'; return; }
         const shown = rows.slice(0, 500);
-        wrap.innerHTML = `<table><thead><tr><th>#</th>${cols.map(c => `<th>${escapeHtml(s.headers[c])}</th>`).join('')}<th>التفاصيل / التقرير</th></tr></thead><tbody>`
-            + shown.map((x, n) => `<tr><td>${x.i + 1}</td>${cols.map(c => `<td class="cell-clip" title="${escapeHtml(x.r[c])}">${escapeHtml(x.r[c])}</td>`).join('')}<td style="white-space:nowrap"><button class="action-btn edit-btn" onclick="openInboundRecord(${x.i})" title="عرض كل البيانات"><i class="fas fa-eye"></i></button> <button class="action-btn edit-btn" onclick="openInboundReport(${x.i})" title="${inbound.source === 'diagnostics' ? 'التقرير الكامل / طباعة' : 'طباعة السجل'}" style="color:#d4b15a"><i class="fas ${inbound.source === 'diagnostics' ? 'fa-file-medical-alt' : 'fa-print'}"></i></button></td></tr>`).join('')
+        const canDel = hasPerm('delete_records') && Array.isArray(s.ids);
+        wrap.innerHTML = `<table><thead><tr>${canDel ? '<th><input type="checkbox" onchange="selectAllRows(this,\'ib-cb\')"></th>' : ''}<th>#</th>${cols.map(c => `<th>${escapeHtml(s.headers[c])}</th>`).join('')}<th>التفاصيل / التقرير</th></tr></thead><tbody>`
+            + shown.map((x, n) => `<tr>${canDel ? `<td><input type="checkbox" class="ib-cb" value="${s.ids[x.i]}" onchange="updateSelCounts()"></td>` : ''}<td>${x.i + 1}</td>${cols.map(c => `<td class="cell-clip" title="${escapeHtml(x.r[c])}">${escapeHtml(x.r[c])}</td>`).join('')}<td style="white-space:nowrap"><button class="action-btn edit-btn" onclick="openInboundRecord(${x.i})" title="عرض كل البيانات"><i class="fas fa-eye"></i></button> <button class="action-btn edit-btn" onclick="openInboundReport(${x.i})" title="${inbound.source === 'diagnostics' ? 'التقرير الكامل / طباعة' : 'طباعة السجل'}" style="color:#d4b15a"><i class="fas ${inbound.source === 'diagnostics' ? 'fa-file-medical-alt' : 'fa-print'}"></i></button>${canDel ? ` <button class="action-btn delete-btn-action" onclick="deleteInbound([${s.ids[x.i]}])" title="حذف السجل"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`).join('')
             + '</tbody></table>' + (rows.length > 500 ? `<div class="empty-state">يعرض أحدث 500 سجل من ${rows.length}. استخدم البحث أو التصدير لرؤية الباقي.</div>` : '');
     }
     window.openInboundRecord = function(i) {
@@ -2375,16 +2414,17 @@
         const wrap = document.getElementById('ratingsTableWrap');
         if (!rows.length) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i>لا توجد تقييمات</div>'; return; }
         const langName = { ar: 'العربية', en: 'English', tr: 'Türkçe' };
-        wrap.innerHTML = '<table><thead><tr><th>التاريخ</th><th>الاسم</th><th>اللغة</th><th>التقييم العام</th><th>المتوسط</th><th>التصنيف</th><th>ينصح</th><th>الاقتراحات</th><th>التفاصيل</th></tr></thead><tbody>'
+        const canDel = hasPerm('delete_records');
+        wrap.innerHTML = '<table><thead><tr>' + (canDel ? '<th><input type="checkbox" onchange="selectAllRows(this,\'rt-cb\')"></th>' : '') + '<th>التاريخ</th><th>الاسم</th><th>اللغة</th><th>التقييم العام</th><th>المتوسط</th><th>التصنيف</th><th>ينصح</th><th>الاقتراحات</th><th>التفاصيل</th></tr></thead><tbody>'
             + rows.slice(0, 500).map(r => {
                 const a = r.answers || {}, avg = r.avg_rating == null ? null : Number(r.avg_rating), cls = ratingClass(r.status, avg);
                 const d = r.created_at ? new Date(r.created_at).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) : '';
-                return `<tr><td>${escapeHtml(d)}</td><td>${escapeHtml(a['الاسم'] || '—')}</td><td>${langName[r.lang] || escapeHtml(r.lang)}</td><td>${stars(a['التقييم_العام'])}</td><td>${avg != null ? avg.toFixed(1) : '—'}</td><td><span class="r-badge ${cls}">${escapeHtml(r.status || '—')}</span></td><td>${escapeHtml(a['نصيحة'] || '—')}</td><td class="cell-clip" title="${escapeHtml(a['الاقتراحات'] || '')}">${escapeHtml(a['الاقتراحات'] || '—')}</td><td><button class="action-btn edit-btn" onclick="openRatingRecord(${r.id})" title="عرض كل الإجابات"><i class="fas fa-eye"></i></button></td></tr>`;
+                return `<tr>${canDel ? `<td><input type="checkbox" class="rt-cb" value="${escapeHtml(String(r.id))}" onchange="updateSelCounts()"></td>` : ''}<td>${escapeHtml(d)}</td><td>${escapeHtml(a['الاسم'] || '—')}</td><td>${langName[r.lang] || escapeHtml(r.lang)}</td><td>${stars(a['التقييم_العام'])}</td><td>${avg != null ? avg.toFixed(1) : '—'}</td><td><span class="r-badge ${cls}">${escapeHtml(r.status || '—')}</span></td><td>${escapeHtml(a['نصيحة'] || '—')}</td><td class="cell-clip" title="${escapeHtml(a['الاقتراحات'] || '')}">${escapeHtml(a['الاقتراحات'] || '—')}</td><td style="white-space:nowrap"><button class="action-btn edit-btn" onclick="openRatingRecord('${escapeHtml(String(r.id))}')" title="عرض كل الإجابات"><i class="fas fa-eye"></i></button>${canDel ? ` <button class="action-btn delete-btn-action" onclick="deleteRatings(['${escapeHtml(String(r.id))}'])" title="حذف التقييم"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
             }).join('') + '</tbody></table>';
     }
     window.setRatingsFilter = function(f, el) { inbound.rFilter = f; document.querySelectorAll('#ratingsView .filter-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); renderRatings(); };
     window.openRatingRecord = function(id) {
-        const r = (inbound.ratings || []).find(x => x.id === id); if (!r) return;
+        const r = (inbound.ratings || []).find(x => String(x.id) === String(id)); if (!r) return;
         const a = r.answers || {}, used = new Set();
         const pairs = [['التاريخ', r.created_at ? new Date(r.created_at).toLocaleString('ar-EG') : ''], ['اللغة', r.lang], ['المتوسط', r.avg_rating], ['التصنيف', r.status]];
         [['الاسم', 'الاسم'], ['التقييم_العام', 'التقييم العام']].concat(RATING_QUESTIONS, RATING_CHOICES, [['الاقتراحات', 'الاقتراحات']]).forEach(([k, l]) => { used.add(k); pairs.push([l, a[k]]); });
@@ -3132,7 +3172,8 @@
     const PE_CHECKS = [
         ['الحجوزات', 'fa-calendar-check', [['booking_settings', 'تعديل إعدادات أوقات العمل والحجز']]],
         ['البيانات الواردة', 'fa-inbox', [['inbound_ratings', 'تقييمات المنصة الشاملة'], ['inbound_books', 'تحميل الكتب'], ['inbound_diagnostics', 'التشخيص والأدوات المجانية'], ['inbound_requests', 'طلبات المواقع']]],
-        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)'], ['certificates', 'إصدار وإدارة شهادات التدريب']]]
+        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)'], ['certificates', 'إصدار وإدارة شهادات التدريب'], ['delete_records', 'حذف السجلات (التقييمات والبيانات الواردة والأدوات)']]],
+        ['إدارة الشركة', 'fa-building', [['biz_reports', 'لوحة الأداء والتقارير (KPIs)'], ['biz_crm', 'العملاء (CRM)'], ['biz_projects', 'المشاريع وتوزيع المهام على الموظفين'], ['biz_finance', 'المالية (الإيرادات والمصروفات والمستحقات)']]]
     ];
     const PE_ACTS = PE_CHECKS.flatMap(g => g[2].map(x => x[0]));
     const segHtml = (name, val) => `<div class="pe-seg">${['بدون', 'مشاهدة', 'تعديل'].map((l, i) => `<label><input type="radio" name="${name}" value="${i}" ${val === i ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>`;
@@ -3316,8 +3357,9 @@
             if (!incoming && bubbles.some(b => b.to.length > 1)) replyCtx.to = '';
             pane.innerHTML = `<div class="pane-head"><div style="display:flex;gap:8px;align-items:center;min-width:0"><button class="btn-outline-sm mail-back" onclick="mailBack()"><i class="fas fa-arrow-right"></i></button><h4>${escapeHtml(subject || '(بدون موضوع)')}</h4></div>
                 <div style="display:flex;gap:6px"><button class="btn-outline-sm" onclick="markThreadUnread()" title="تعليم كغير مقروء"><i class="fas fa-envelope"></i></button><button class="btn-outline-sm" style="border-color:#e74c3c;color:#e74c3c" onclick="deleteThread()" title="حذف المحادثة"><i class="fas fa-trash"></i></button></div></div>
-                <div class="thread" id="threadBox">${bubbles.map(({ m, to }) => { const mine = m.from === me; return `<div class="bub${mine ? ' me' : ''}"><div class="bub-h"><b>${mine ? 'أنا' : escapeHtml(m.fromName)}${mine && to.length ? ' ← ' + escapeHtml(to.slice(0, 3).join('، ')) + (to.length > 3 ? ' +' + (to.length - 3) : '') : ''}</b><span>${m.createdAt ? new Date(m.createdAt).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}${mine && m.isRead ? ' · ✓ قُرئت' : ''}</span></div><div class="bub-b">${escapeHtml(m.body)}</div></div>`; }).join('')}</div>
-                ${replyCtx.to ? `<div class="reply-box"><textarea id="replyBody" placeholder="اكتب ردك... (Ctrl+Enter للإرسال)"></textarea><button class="btn-sm" id="btnSendReply" onclick="sendReply()"><i class="fas fa-paper-plane"></i> رد</button></div>` : ''}`;
+                <div class="thread" id="threadBox">${bubbles.map(({ m, to }) => { const mine = m.from === me; return `<div class="bub${mine ? ' me' : ''}"><div class="bub-h"><b>${mine ? 'أنا' : escapeHtml(m.fromName)}${mine && to.length ? ' ← ' + escapeHtml(to.slice(0, 3).join('، ')) + (to.length > 3 ? ' +' + (to.length - 3) : '') : ''}</b><span>${m.createdAt ? new Date(m.createdAt).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}${mine && m.isRead ? ' · ✓ قُرئت' : ''}</span></div><div class="bub-b">${m.body === '📎' && (m.attachments || []).length ? '' : escapeHtml(m.body)}</div>${FGAtt.html(m)}</div>`; }).join('')}</div>
+                ${replyCtx.to ? `<div class="att-list" id="att-reply" style="padding:0 12px"></div><div class="reply-box"><button type="button" class="btn-outline-sm" title="إرفاق ملف" onclick="FGAtt.pick('reply')" style="align-self:stretch"><i class="fas fa-paperclip"></i></button><textarea id="replyBody" placeholder="اكتب ردك... (Ctrl+Enter للإرسال)"></textarea><button class="btn-sm" id="btnSendReply" onclick="sendReply()"><i class="fas fa-paper-plane"></i> رد</button></div>` : ''}`;
+            FGAtt.reset('reply');
             const tb = document.getElementById('threadBox'); tb.scrollTop = tb.scrollHeight;
             document.getElementById('replyBody')?.addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') sendReply(); });
             const unreadIds = msgs.filter(m => m.to === me && !m.isRead).map(m => m.id);
@@ -3327,10 +3369,11 @@
 
     window.sendReply = async function () {
         const ta = document.getElementById('replyBody'), body = (ta && ta.value || '').trim();
-        if (!body || !replyCtx) { showToast('اكتب نص الرد', 'fa-exclamation', 'danger'); return; }
+        if ((!body && !FGAtt.count('reply')) || !replyCtx) { showToast('اكتب نص الرد أو أرفق ملفاً', 'fa-exclamation', 'danger'); return; }
         await withButtonLoading('btnSendReply', 'إرسال...', async () => {
             try {
-                const r = await apiStaffPost('sendmessage', { toEmail: replyCtx.to, subject: replyCtx.subject, body, parentId: replyCtx.parentId });
+                const attachments = await FGAtt.uploadAll('reply'); if (attachments === null) return;
+                const r = await apiStaffPost('sendmessage', { toEmail: replyCtx.to, subject: replyCtx.subject, body, parentId: replyCtx.parentId, attachments: JSON.stringify(attachments) });
                 if (r.status === 'success') { showToast('تم إرسال الرد', 'fa-paper-plane'); openThread(selectedThreadId); } else showToast(r.message || 'فشل الإرسال', 'fa-times', 'danger');
             } catch (e) { showToast('خطأ في الاتصال', 'fa-times', 'danger'); }
         });
@@ -3350,7 +3393,7 @@
     window.openComposeMsgModal = async function () {
         if (!hasPerm('send_messages')) { showToast('ليس لديك صلاحية إرسال رسائل جديدة (يمكنك الرد)', 'fa-lock', 'danger'); return; }
         const box = document.getElementById('composeToList'); box.innerHTML = '<div class="loader"></div>';
-        ['composeSubject', 'composeBody'].forEach(id => document.getElementById(id).value = ''); document.getElementById('composePriority').value = 'normal';
+        ['composeSubject', 'composeBody'].forEach(id => document.getElementById(id).value = ''); document.getElementById('composePriority').value = 'normal'; FGAtt.reset('compose');
         document.getElementById('composeMsgModal').style.display = 'flex';
         try {
             const r = await apiStaffPost('liststaff'), me = (currentUser.email || '').toLowerCase();
@@ -3363,11 +3406,13 @@
         const all = document.getElementById('composeAll')?.checked, picked = [...document.querySelectorAll('.rcp-cb:checked')].map(c => c.value);
         const toEmail = all ? 'all' : picked.join(','), subject = document.getElementById('composeSubject').value.trim(), body = document.getElementById('composeBody').value.trim(), priority = document.getElementById('composePriority').value;
         if (!toEmail) { showToast('اختر مستلماً واحداً على الأقل', 'fa-exclamation', 'danger'); return; }
-        if (!subject || !body) { showToast('أكمل الموضوع والنص', 'fa-exclamation', 'danger'); return; }
+        if (!subject || (!body && !FGAtt.count('compose'))) { showToast('أكمل الموضوع والنص (أو أرفق ملفاً)', 'fa-exclamation', 'danger'); return; }
         const btns = document.querySelectorAll('#composeMsgModal .btn-save');
         btns.forEach(b => { b.disabled = true; b.dataset.old = b.innerHTML; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...'; });
         try {
-            const r = await apiStaffPost('sendmessage', { toEmail, subject, body, priority });
+            const attachments = await FGAtt.uploadAll('compose');
+            if (attachments === null) { btns.forEach(b => { b.disabled = false; b.innerHTML = b.dataset.old || 'إرسال'; }); return; }
+            const r = await apiStaffPost('sendmessage', { toEmail, subject, body, priority, attachments: JSON.stringify(attachments) });
             if (r.status === 'success') { showToast('تم الإرسال إلى ' + (r.count || 1) + ' مستلم', 'fa-paper-plane'); closeModal('composeMsgModal'); if (currentMsgFolder === 'sent') loadMessagesFolder('sent'); }
             else showToast(r.message || 'فشل', 'fa-times', 'danger');
         } catch (e) { showToast('خطأ', 'fa-times', 'danger'); }
@@ -3407,7 +3452,7 @@
     window.__fgPollUnread = pollUnread;
     window.showCertificatesView = function () {
         if (!hasPerm('certificates')) { showToast('ليس لديك صلاحية الشهادات', 'fa-lock', 'danger'); return; }
-        window.open('certificates.html', '_blank'); closeMobileMenu();
+        FGFrame.open('certificates.html?embed=1', 'توليد وإدارة الشهادات', 'fa-award', document.querySelector('[onclick^="showCertificatesView"]')); closeMobileMenu();
     };
     window.showAuditLog = async function () {
         if (!currentUser.isSuperAdmin) { showToast('سجل العمليات للمسؤول الرئيسي فقط', 'fa-lock', 'danger'); return; }
@@ -3420,6 +3465,7 @@
         document.body.appendChild(m);
     };
 </script>
+<script src="js/fg-v81.js?v=8.1"></script>
 
 <script>
 // تسجيل PWA Service Worker

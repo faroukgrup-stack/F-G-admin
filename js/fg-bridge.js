@@ -181,6 +181,7 @@
       else if (link === 'bookings' && window.showBookingsView) window.showBookingsView();
       else if (link.indexOf('inbound:') === 0 && window.showInboundView) window.showInboundView(link.split(':')[1], document.querySelector('.inbound-btn[onclick*="' + link.split(':')[1] + '"]'));
       else if (link === 'certificates' && window.showCertificatesView) window.showCertificatesView();
+      else if (link.indexOf('biz:') === 0 && window.FGBiz) window.FGBiz.show(link.split(':')[1]);
       else if (link === 'fgAccounts' && window.showFgAccountsView) window.showFgAccountsView(document.getElementById('btnFgAccounts'));
       else if (link === 'mataamiPayments' && window.showMataamiPaymentsView) window.showMataamiPaymentsView(document.getElementById('btnMataamiPayments'));
       else if (window.loadData) window.loadData('all', document.querySelector('.sidebar-btn'));

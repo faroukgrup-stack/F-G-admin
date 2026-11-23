@@ -225,13 +225,18 @@ td .a{background:none;border:1px solid #333;color:#ccc;border-radius:8px;padding
   .wm{font-size:60px}
 }
 
+/* V8.1: وضع التضمين داخل إطار اللوحة */
+body.embed{background:transparent}
+body.embed .top{position:static;background:transparent;border-bottom:none;padding:8px 12px}
+body.embed .top h1,body.embed .back-link{display:none}
+body.embed .gate a{display:none!important}
 @media print{.top,.tabs,.form,#listPane,#coursesPane{display:none!important}body{background:#fff}.pane{padding:0;max-width:none}}
 </style>
 </head>
 <body>
 <div id="gate" class="gate" style="display:none"><i class="fas fa-lock" style="font-size:2rem;color:#d4af37"></i><h2 style="margin-top:10px">يلزم تسجيل الدخول</h2><p>هذه الصفحة لموظفي مجموعة فاروق المصرّح لهم بإصدار الشهادات.</p><a class="btn gold" href="index.html" style="text-decoration:none;display:inline-block">الذهاب إلى لوحة الإدارة</a></div>
 <div id="app" style="display:none">
-  <div class="top no-print"><h1><i class="fas fa-award"></i> مركز الشهادات — مجموعة فاروق</h1><div style="display:flex;gap:8px"><span id="who" style="color:#888;font-size:.8rem;align-self:center"></span><a href="index.html"><i class="fas fa-arrow-right"></i> اللوحة</a></div></div>
+  <div class="top no-print"><h1><i class="fas fa-award"></i> مركز الشهادات — مجموعة فاروق</h1><div style="display:flex;gap:8px"><span id="who" style="color:#888;font-size:.8rem;align-self:center"></span><a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> اللوحة</a></div></div>
   <div class="tabs no-print"><button data-t="issuePane" class="on">إصدار شهادة</button><button data-t="listPane">سجل الشهادات</button><button data-t="coursesPane" id="tabCourses" style="display:none">الدورات</button></div>
 
   <div class="pane on" id="issuePane">
@@ -276,6 +281,7 @@ td .a{background:none;border:1px solid #333;color:#ccc;border-radius:8px;padding
 </div>
 
 <script>
+if (window.self !== window.top || /[?&]embed=1/.test(location.search)) document.body.classList.add('embed');
 const MEDAL=`<svg viewBox="0 0 56 76" xmlns="http://www.w3.org/2000/svg">
 <path d="M19 41 L12 76 L23 62 L28 76 L33 62 L44 76 L37 41" fill="#c41e3a"/>
 <circle cx="28" cy="25" r="23" fill="#d4af37"/><circle cx="28" cy="25" r="19.5" fill="#f0d060"/>
