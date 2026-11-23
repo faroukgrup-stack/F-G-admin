@@ -11,7 +11,7 @@
   const C = window.FG_CONFIG || {};
   const BASE = String(C.SUPABASE_URL || '').replace(/\/$/, '');
   const FN = BASE + '/functions/v1';
-  const configured = BASE && !/ckjfhjpjhakoggxqpcxr/.test(BASE) && C.SUPABASE_ANON_KEY && !/YOUR_/.test(C.SUPABASE_ANON_KEY);
+  const configured = BASE && !/YOUR_/.test(BASE) && C.SUPABASE_ANON_KEY && !/YOUR_/.test(C.SUPABASE_ANON_KEY);
   if (!window.supabase || !window.supabase.createClient) { console.error('[FG] supabase-js not loaded'); }
   const sb = configured && window.supabase ? window.supabase.createClient(BASE, C.SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'fg-admin-auth' }

@@ -1,7 +1,7 @@
 /* Service Worker - لوحة إدارة مجموعة فاروق V8.0 (Supabase)
  * تخزين مؤقت + إشعارات المواعيد + Web Push (رسائل/مهام/مواعيد/حجوزات) حتى والتطبيق مغلق
  */
-const CACHE_NAME = 'farouk-admin-v8-0';
+const CACHE_NAME = 'farouk-admin-v8-0-1';
 const SHELL = [
   './index.html',
   './manifest.webmanifest',
