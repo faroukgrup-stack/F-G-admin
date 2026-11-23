@@ -1,12 +1,14 @@
-/* Service Worker - لوحة تحكم مجموعة فاروق v2
- * تخزين مؤقت + إشعارات المواعيد
+/* Service Worker - لوحة إدارة مجموعة فاروق V8.0 (Supabase)
+ * تخزين مؤقت + إشعارات المواعيد + Web Push (رسائل/مهام/مواعيد/حجوزات) حتى والتطبيق مغلق
  */
-const CACHE_NAME = 'farouk-admin-v4';
+const CACHE_NAME = 'farouk-admin-v8-0';
 const SHELL = [
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './js/fg-config.js',
+  './js/fg-bridge.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,7 +31,11 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+  if (event.request.method !== 'GET') return;
   if (
+    url.hostname.includes('supabase.co') ||
+    url.hostname.includes('supabase.in') ||
+    url.pathname.includes('/functions/v1/') ||
     url.hostname.includes('workers.dev') ||
     url.hostname.includes('script.google.com') ||
     url.hostname.includes('googleapis.com') ||
@@ -38,7 +44,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   // صفحات HTML: الشبكة أولاً حتى تصل التحديثات فوراً، والكاش للعمل دون اتصال
-  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.includes('/js/fg-')) {
     event.respondWith(
       fetch(event.request).then((res) => {
         if (res && res.status === 200) { const c = res.clone(); caches.open(CACHE_NAME).then((ch) => ch.put(event.request, c)).catch(() => {}); }
@@ -108,15 +114,48 @@ async function scheduleFutureNotifications(apps) {
   }
 }
 
+/* ===== Web Push من الخادم (Supabase → reminders/admin-core/public-api) ===== */
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { title: 'مجموعة فاروق', body: event.data ? event.data.text() : '' }; }
+  event.waitUntil((async () => {
+    // إذا كانت اللوحة مفتوحة ومرئية فالنافذة المنبثقة داخل الصفحة تكفي (تصل لحظياً)
+    const list = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const visible = list.some((c) => c.visibilityState === 'visible' && c.focused);
+    if (visible) return;
+    await self.registration.showNotification(d.title || 'تنبيه — مجموعة فاروق', {
+      body: d.body || '',
+      icon: './icon-192.png',
+      badge: './icon-192.png',
+      tag: d.tag || 'fg-push',
+      renotify: true,
+      requireInteraction: d.priority === 'high',
+      vibrate: d.priority === 'high' ? [300, 120, 300, 120, 300] : [200, 100, 200],
+      data: { url: './index.html', link: d.link || 'dashboard' }
+    });
+    try { if (self.navigator && self.navigator.setAppBadge) self.navigator.setAppBadge(); } catch (e) {}
+  })());
+});
+
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || './index.html';
+  const data = event.notification.data || {};
+  const link = data.link || '';
+  const target = (data.url || './index.html') + (link ? '#fg=' + encodeURIComponent(link) : '');
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const c of list) {
-        if (c.url.indexOf('admin') !== -1 && 'focus' in c) return c.focus();
+        if (new URL(c.url).origin === self.location.origin && 'focus' in c) {
+          if (link) c.postMessage({ type: 'FG_NAVIGATE', link });
+          return c.focus();
+        }
       }
       if (clients.openWindow) return clients.openWindow(target);
     })
   );
+});
+
+// تجديد اشتراك Push تلقائياً إذا أبطله المتصفح
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil(clients.matchAll({ type: 'window' }).then((list) => list.forEach((c) => c.postMessage({ type: 'FG_RESUBSCRIBE' }))));
 });

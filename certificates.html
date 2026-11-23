@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>الشهادات | مجموعة فاروق</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,600&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+<script src="js/fg-config.js"></script>
+<script src="js/fg-bridge.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Tajawal,Segoe UI,Tahoma,sans-serif;background:#0b0d14;color:#f0f2f5;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(184,134,11,.25);background:#0f1320;position:sticky;top:0;z-index:50;gap:10px;flex-wrap:wrap}
+.top h1{font-size:1.1rem;color:#d4af37}
+.top a,.top button{color:#ccc;text-decoration:none;font-family:inherit;background:none;border:1px solid #333;border-radius:10px;padding:7px 12px;cursor:pointer;font-size:.85rem}
+.tabs{display:flex;gap:8px;justify-content:center;margin:18px auto 0;flex-wrap:wrap}
+.tabs button{background:#141821;border:1px solid rgba(184,134,11,.25);color:#ccc;padding:9px 18px;border-radius:30px;font-family:inherit;cursor:pointer;font-size:.9rem}
+.tabs button.on{background:linear-gradient(135deg,#b8860b,#d4af37);color:#0b0d14;font-weight:700}
+.pane{display:none;padding:18px;max-width:1200px;margin:0 auto}.pane.on{display:block}
+.form{background:#141821;border:1px solid rgba(184,134,11,.25);border-radius:16px;padding:22px;max-width:720px;margin:0 auto 22px}
+.form h2{color:#d4af37;font-size:1rem;margin-bottom:14px;text-align:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.form label{font-size:.78rem;color:#9aa3b5;display:block;margin-bottom:4px}
+.form input,.form select,.form textarea{width:100%;padding:11px 14px;font-size:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.35);color:#fff;font-family:inherit}
+.form input:focus,.form select:focus{outline:none;border-color:#d4af37}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.btn{padding:11px 22px;font-size:14px;border:none;border-radius:40px;cursor:pointer;font-weight:700;font-family:inherit}
+.btn.gold{background:linear-gradient(135deg,#b8860b,#d4af37);color:#0b0d14}.btn.dark{background:#2c3e50;color:#fff}.btn:disabled{opacity:.5}
+#statusMsg{margin-top:10px;color:#d4af37;font-weight:600;font-size:13px;min-height:18px;text-align:center}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:36px;width:100%;padding-bottom:40px}
+.lbl{font-family:Cinzel,serif;font-size:12px;color:#d4af37;letter-spacing:2px}
+table{width:100%;border-collapse:collapse;font-size:.85rem;background:#141821;border-radius:12px;overflow:hidden}
+th,td{padding:9px 10px;border-bottom:1px solid #222a3a;text-align:right}
+th{background:#1a2030;color:#d4af37;font-weight:700}
+tr.rev td{opacity:.45;text-decoration:line-through}
+td .a{background:none;border:1px solid #333;color:#ccc;border-radius:8px;padding:4px 8px;cursor:pointer;margin-left:4px;font-family:inherit;font-size:.75rem}
+.tools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tools input,.tools select{padding:9px 12px;border-radius:10px;border:1px solid #333;background:#0f1320;color:#fff;font-family:inherit}
+.gate{max-width:420px;margin:80px auto;text-align:center;background:#141821;border:1px solid rgba(184,134,11,.3);border-radius:16px;padding:28px}
+.gate p{color:#9aa3b5;margin:10px 0 18px}
+.tbl-wrap{overflow-x:auto}
+/* ================================================================
+   الشهادة – إطار كامل + خلفية كريمية + اسم كبير
+   ================================================================ */
+.cert{
+  width:297mm;height:210mm;
+  position:relative;overflow:hidden;flex-shrink:0;
+  box-shadow:0 14px 40px rgba(0,0,0,.35);
+  color:#1a1410;
+
+  /* خلفية الشهادة: تدرّج كريمي + لمسات ذهبية */
+  background:
+    radial-gradient(circle at 12% 12%, rgba(212,175,55,.10), transparent 38%),
+    radial-gradient(circle at 88% 88%, rgba(212,175,55,.10), transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(201,162,39,.06), transparent 40%),
+    radial-gradient(circle at 12% 88%, rgba(201,162,39,.06), transparent 40%),
+    linear-gradient(135deg,#fdf7e9 0%,#fbf1da 45%,#f8ecd0 100%);
+}
+
+/* ===== الإطار المزدوج الكامل ===== */
+.frame-outer{
+  position:absolute;top:6mm;left:6mm;right:6mm;bottom:6mm;
+  border:2.5px solid #c9a227;
+  box-shadow:inset 0 0 0 1px rgba(201,162,39,.35);
+  pointer-events:none;z-index:3;
+}
+.frame-mid{
+  position:absolute;top:9mm;left:9mm;right:9mm;bottom:9mm;
+  border:0.8px solid #c9a227;
+  opacity:.75;
+  pointer-events:none;z-index:3;
+}
+.frame-inner{
+  position:absolute;top:11.5mm;left:11.5mm;right:11.5mm;bottom:11.5mm;
+  border:0.5px solid rgba(201,162,39,.45);
+  pointer-events:none;z-index:3;
+}
+
+/* ===== زخارف الأركان (معينات ذهبية) ===== */
+.crn{
+  position:absolute;width:11mm;height:11mm;z-index:4;
+  pointer-events:none;
+}
+.crn::before,.crn::after{
+  content:'';position:absolute;top:50%;left:50%;
+  background:#c9a227;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.crn::before{width:4mm;height:4mm}
+.crn::after{width:1.8mm;height:1.8mm;background:#fdf7e9}
+.crn.tl{top:5.2mm;left:5.2mm}
+.crn.tr{top:5.2mm;right:5.2mm}
+.crn.bl{bottom:5.2mm;left:5.2mm}
+.crn.br{bottom:5.2mm;right:5.2mm}
+
+/* ===== علامة مائية ===== */
+.wm{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-8deg);
+  font-family:Cinzel,serif;font-size:96px;font-weight:700;
+  color:rgba(184,134,11,.05);
+  letter-spacing:10px;white-space:nowrap;
+  pointer-events:none;z-index:0;
+}
+
+/* الميدالية */
+.medal{position:absolute;top:17mm;left:17mm;width:58px;height:78px;z-index:5}
+.medal svg{width:100%;height:100%}
+
+/* ===== جسم الشهادة ===== */
+.body{
+  position:relative;z-index:4;
+  height:100%;
+  display:grid;
+  grid-template-rows:
+    28mm   /* شعار */
+    24mm   /* العنوان السكريبت */
+    10mm   /* presented to */
+    24mm   /* اسم المتدرب (أكبر) */
+    9mm    /* for successfully */
+    15mm   /* الدورة */
+    24mm   /* الوصف */
+    1fr    /* فراغ مرن */
+    30mm;  /* التذييل */
+  padding:16mm 22mm 14mm;
+  text-align:center;
+}
+
+/* 1. الشعار */
+.r-logo{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:1mm}
+.logo{width:120px;max-height:52px;object-fit:contain}
+.logo-fb{display:none;font-family:Cinzel,serif;font-size:17px;color:#8b6914;font-weight:700;letter-spacing:2px}
+.org{font-family:Cinzel,serif;font-size:11px;color:#7a6a55;letter-spacing:3px;margin-top:2mm;text-transform:uppercase}
+
+/* 2. العنوان */
+.r-title{display:flex;align-items:center;justify-content:center}
+.ctitle{font-family:'Great Vibes',cursive;font-size:52px;color:#b8860b;line-height:1;font-weight:400}
+.ctitle.ar{font-family:'Noto Naskh Arabic',serif;font-size:40px;font-weight:700}
+
+/* 3. presented */
+.r-pres{display:flex;align-items:center;justify-content:center}
+.pres{font-family:Cinzel,serif;font-size:12px;letter-spacing:4px;color:#6b5a45;text-transform:uppercase}
+.pres.ar{font-family:'Noto Naskh Arabic',serif;font-size:14px;letter-spacing:1px;text-transform:none}
+
+/* 4. الاسم — كبير جداً */
+.r-name{display:flex;align-items:center;justify-content:center}
+.tname{
+  font-family:'Playfair Display',serif;
+  font-weight:700;
+  font-size:52px;          /* ← كبّرناه من 34px */
+  color:#1a1410;
+  letter-spacing:1.5px;
+  line-height:1.1;
+  padding-bottom:2mm;
+  border-bottom:1.2px solid rgba(201,162,39,.55);
+  display:inline-block;
+}
+.tname.ar{
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:48px;
+}
+
+/* 5. for completing */
+.r-for{display:flex;align-items:center;justify-content:center}
+.for{font-family:Cinzel,serif;font-size:11px;letter-spacing:3px;color:#6b5a45;text-transform:uppercase}
+.for.ar{font-family:'Noto Naskh Arabic',serif;font-size:14px;letter-spacing:.5px;text-transform:none}
+
+/* 6. الدورة */
+.r-course{display:flex;align-items:center;justify-content:center}
+.course{font-family:'Playfair Display',serif;font-weight:700;font-size:26px;color:#b8860b;letter-spacing:.3px}
+.course.ar{font-family:'Noto Naskh Arabic',serif;font-size:24px}
+
+/* 7. الوصف */
+.r-desc{display:flex;align-items:flex-start;justify-content:center;padding-top:1.5mm}
+.desc{font-family:'Cormorant Garamond',serif;font-size:15px;color:#4a3c2e;line-height:1.6;max-width:92%}
+.desc.ar{font-family:'Noto Naskh Arabic',serif;font-size:15px;line-height:1.75;direction:rtl}
+
+/* 9. التذييل */
+.r-foot{
+  display:grid;
+  grid-template-columns:80px 1fr 1fr 1fr;
+  align-items:center;
+  gap:4mm;
+  border-top:1px solid rgba(201,162,39,.5);
+  padding-top:4mm;
+}
+.qr{width:70px;height:70px;border:1.5px solid #c9a227;padding:2px;background:#fff}
+.fi{text-align:center}
+.fv{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;color:#1a1410}
+.fl{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:#8a7a65;margin-top:1px}
+.fl.ar{font-family:'Noto Naskh Arabic',serif;font-style:normal;font-size:12px}
+
+.fi-sig{text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.sn{font-family:'Great Vibes',cursive;font-size:28px;color:#1a1410;line-height:1.05}
+.st{font-family:'Cormorant Garamond',serif;font-size:11px;color:#6b5a45}
+.st.ar{font-family:'Noto Naskh Arabic',serif;font-size:12px}
+.stamp{width:68px;height:68px;object-fit:contain;border-radius:50%;opacity:.92;mix-blend-mode:multiply}
+.stamp-fb{display:none;width:68px;height:68px;border-radius:50%;border:2.5px solid #8b2020;color:#8b2020;font-size:9px;font-weight:700;font-family:Cinzel,serif;align-items:center;justify-content:center;text-align:center;line-height:1.15}
+
+/* ===== طباعة ===== */
+@media print{
+  @page{size:A4 landscape;margin:0}
+  html,body{margin:0;padding:0;background:#fff;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .no-print,.form,.lbl{display:none!important}
+  .wrap{display:block!important;gap:0;margin:0;padding:0}
+  .cert{
+    width:297mm;height:210mm;margin:0;box-shadow:none;
+    page-break-after:always;break-after:page;page-break-inside:avoid;
+  }
+  .cert:last-child{page-break-after:auto;break-after:auto}
+}
+@media(max-width:1000px){
+  .cert{width:100%;height:auto;min-height:210mm;aspect-ratio:297/210}
+  .ctitle{font-size:40px}
+  .tname{font-size:36px}
+  .tname.ar{font-size:34px}
+  .course{font-size:20px}
+  .wm{font-size:60px}
+}
+
+@media print{.top,.tabs,.form,#listPane,#coursesPane{display:none!important}body{background:#fff}.pane{padding:0;max-width:none}}
+</style>
+</head>
+<body>
+<div id="gate" class="gate" style="display:none"><i class="fas fa-lock" style="font-size:2rem;color:#d4af37"></i><h2 style="margin-top:10px">يلزم تسجيل الدخول</h2><p>هذه الصفحة لموظفي مجموعة فاروق المصرّح لهم بإصدار الشهادات.</p><a class="btn gold" href="index.html" style="text-decoration:none;display:inline-block">الذهاب إلى لوحة الإدارة</a></div>
+<div id="app" style="display:none">
+  <div class="top no-print"><h1><i class="fas fa-award"></i> مركز الشهادات — مجموعة فاروق</h1><div style="display:flex;gap:8px"><span id="who" style="color:#888;font-size:.8rem;align-self:center"></span><a href="index.html"><i class="fas fa-arrow-right"></i> اللوحة</a></div></div>
+  <div class="tabs no-print"><button data-t="issuePane" class="on">إصدار شهادة</button><button data-t="listPane">سجل الشهادات</button><button data-t="coursesPane" id="tabCourses" style="display:none">الدورات</button></div>
+
+  <div class="pane on" id="issuePane">
+    <div class="form no-print">
+      <h2>إصدار شهادة تدريب جديدة (نسخة إنجليزية + عربية)</h2>
+      <div class="grid">
+        <div style="grid-column:1/-1"><label>الدورة</label><select id="course"></select></div>
+        <div><label>Full Name (English)</label><input id="nameEn" dir="ltr" placeholder="Full Name"></div>
+        <div><label>الاسم الكامل (عربي)</label><input id="nameAr" placeholder="الاسم بالعربي"></div>
+        <div><label>البريد الإلكتروني (اختياري)</label><input id="email" type="email" dir="ltr" placeholder="name@example.com"></div>
+        <div><label>الدرجة (اختياري)</label><input id="score" placeholder="مثال: 92%"></div>
+        <div><label>تاريخ الإصدار</label><input id="date" type="date"></div>
+      </div>
+      <div class="btns"><button class="btn gold" id="issueBtn"><i class="fas fa-certificate"></i> إصدار وحفظ</button><button class="btn dark" onclick="window.print()"><i class="fas fa-print"></i> طباعة / حفظ PDF</button></div>
+      <div id="statusMsg"></div>
+    </div>
+    <div id="output" class="wrap"></div>
+  </div>
+
+  <div class="pane" id="listPane">
+    <div class="tools"><input id="q" placeholder="بحث بالاسم أو الكود أو البريد" style="flex:1;min-width:200px"><select id="fCourse"><option value="">كل الدورات</option></select><button class="btn dark" id="reload" style="padding:8px 14px"><i class="fas fa-sync-alt"></i></button><button class="btn dark" id="csv" style="padding:8px 14px"><i class="fas fa-file-csv"></i> تصدير</button></div>
+    <div class="tbl-wrap"><table><thead><tr><th>الكود</th><th>الاسم</th><th>الدورة</th><th>التاريخ</th><th>البريد</th><th>الدرجة</th><th>المصدر</th><th></th></tr></thead><tbody id="rows"><tr><td colspan="8">...</td></tr></tbody></table></div>
+  </div>
+
+  <div class="pane" id="coursesPane">
+    <div class="form">
+      <h2>إضافة / تعديل دورة</h2>
+      <div class="grid">
+        <div><label>المعرّف (إنجليزي)</label><input id="cKey" dir="ltr" placeholder="finance"></div>
+        <div><label>بادئة الكود</label><input id="cPrefix" dir="ltr" placeholder="FGB-FIN"></div>
+        <div><label>اسم الدورة (عربي)</label><input id="cTitleAr"></div>
+        <div><label>Course Title (English)</label><input id="cTitleEn" dir="ltr"></div>
+        <div style="grid-column:1/-1"><label>الوصف (عربي)</label><textarea id="cDescAr" rows="2"></textarea></div>
+        <div style="grid-column:1/-1"><label>Description (English)</label><textarea id="cDescEn" rows="2" dir="ltr"></textarea></div>
+        <div><label>الترتيب</label><input id="cSort" type="number" value="10"></div>
+        <div><label>الحالة</label><select id="cActive"><option value="true">مفعّلة</option><option value="false">موقوفة</option></select></div>
+      </div>
+      <div class="btns"><button class="btn gold" id="saveCourse">حفظ الدورة</button></div>
+    </div>
+    <div class="tbl-wrap"><table><thead><tr><th>المعرّف</th><th>البادئة</th><th>الاسم</th><th>الحالة</th><th></th></tr></thead><tbody id="cRows"></tbody></table></div>
+  </div>
+</div>
+
+<script>
+const MEDAL=`<svg viewBox="0 0 56 76" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 41 L12 76 L23 62 L28 76 L33 62 L44 76 L37 41" fill="#c41e3a"/>
+<circle cx="28" cy="25" r="23" fill="#d4af37"/><circle cx="28" cy="25" r="19.5" fill="#f0d060"/>
+<circle cx="28" cy="25" r="16.5" fill="none" stroke="#b8860b" stroke-width="1.3"/>
+<circle cx="28" cy="25" r="13" fill="none" stroke="#a07818" stroke-width=".7"/>
+<path d="M15 17 Q10 25 15 33 Q17 27 15 17" fill="#b8860b" opacity=".7"/>
+<path d="M41 17 Q46 25 41 33 Q39 27 41 17" fill="#b8860b" opacity=".7"/>
+<polygon points="28,11 29.7,18.2 36.5,18.2 31.2,22.5 33.2,29.8 28,25.5 22.8,29.8 24.8,22.5 19.5,18.2 26.3,18.2" fill="#a07818"/>
+</svg>`;
+
+
+const VERIFY = (window.FG_CONFIG && FG_CONFIG.VERIFY_URL) || 'https://training.farouk-grup.com/verify';
+const LOGO = 'https://lh3.googleusercontent.com/d/1e6u-DPTinDJl_Q9wW3QvGgzFbXO_2sXa';
+const STAMP = 'https://lh3.googleusercontent.com/d/1pLlZmF5a6n3YVWfu4uPP19cgMbR9P_St';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let courses = [], certs = [], me = null;
+
+function build(isAr, name, dateStr, code, qr, c) {
+  const a = isAr ? ' ar' : '';
+  const T = isAr ? ['شهادة إتمام','تُقدَّم بكل فخر إلى','لإتمامه بنجاح دورة','التاريخ','رقم الشهادة','مدير التدريب'] : ['Certificate of Completion','PROUDLY PRESENTED TO','FOR SUCCESSFULLY COMPLETING','Date','Certificate no.','Training Director'];
+  const course = isAr ? c.title_ar : c.title_en, desc = isAr ? c.desc_ar : c.desc_en;
+  return `<div class="cert" dir="${isAr?'rtl':'ltr'}"><div class="wm">FAROUK GRUP</div><div class="frame-outer"></div><div class="frame-mid"></div><div class="frame-inner"></div>
+    <div class="crn tl"></div><div class="crn tr"></div><div class="crn bl"></div><div class="crn br"></div><div class="medal">${MEDAL}</div>
+    <div class="body">
+      <div class="r-logo"><img class="logo" src="${LOGO}" alt="Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fb">FAROUK GRUP</div><div class="org">Farouk Grup &nbsp;|&nbsp; Professional Development</div></div>
+      <div class="r-title"><div class="ctitle${a}">${T[0]}</div></div>
+      <div class="r-pres"><div class="pres${a}">${T[1]}</div></div>
+      <div class="r-name"><div class="tname${a}">${esc(name)}</div></div>
+      <div class="r-for"><div class="for${a}">${T[2]}</div></div>
+      <div class="r-course"><div class="course${a}">${esc(course)}</div></div>
+      <div class="r-desc"><div class="desc${a}">${esc(desc)}</div></div>
+      <div class="r-gap"></div>
+      <div class="r-foot"><div>${qr?`<img class="qr" src="${qr}" alt="QR">`:''}</div>
+        <div class="fi"><div class="fv">${dateStr}</div><div class="fl${a}">${T[3]}</div></div>
+        <div class="fi"><div class="fv">${code}</div><div class="fl${a}">${T[4]}</div></div>
+        <div class="fi-sig"><div><div class="sn">Farouk Azem</div><div class="st${a}">${T[5]}</div></div>
+          <img class="stamp" src="${STAMP}" alt="Stamp" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="stamp-fb">FAROUK<br>GRUP<br>★</div></div>
+      </div></div></div>`;
+}
+function render(cert) {
+  const c = courses.find(x => x.key === cert.course_key) || { title_ar: '', title_en: '', desc_ar: '', desc_en: '' };
+  const ds = new Date(cert.issue_date + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  QRCode.toDataURL(VERIFY + '?code=' + encodeURIComponent(cert.code), { width: 140, margin: 1, color: { dark: '#1a1410', light: '#ffffff' } }, (e, qr) => {
+    const en = cert.name && cert.name !== cert.name_ar ? cert.name.split(' / ')[0] : '';
+    const ar = cert.name_ar || (cert.name.split(' / ')[1] || '');
+    let h = '';
+    if (en) h += '<div class="lbl no-print">ENGLISH VERSION</div>' + build(false, en, ds, cert.code, e ? '' : qr, c);
+    if (ar) h += '<div class="lbl no-print">النسخة العربية</div>' + build(true, ar, ds, cert.code, e ? '' : qr, c);
+    document.getElementById('output').innerHTML = h;
+  });
+}
+function tab(id) { document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === id)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === id)); if (id === 'listPane') loadCerts(); }
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => tab(b.dataset.t));
+
+async function loadCourses() {
+  const r = await FG.core('listcourses'); courses = r.data || [];
+  document.getElementById('course').innerHTML = courses.filter(c => c.active).map(c => `<option value="${c.key}">${esc(c.title_ar)} — ${esc(c.prefix)}</option>`).join('');
+  document.getElementById('fCourse').innerHTML = '<option value="">كل الدورات</option>' + courses.map(c => `<option value="${c.key}">${esc(c.title_ar)}</option>`).join('');
+  document.getElementById('cRows').innerHTML = courses.map(c => `<tr><td dir="ltr">${esc(c.key)}</td><td dir="ltr">${esc(c.prefix)}</td><td>${esc(c.title_ar)}<br><small style="color:#888">${esc(c.title_en)}</small></td><td>${c.active ? 'مفعّلة' : 'موقوفة'}</td><td><button class="a" onclick="editCourse('${c.key}')">تعديل</button></td></tr>`).join('');
+}
+window.editCourse = k => { const c = courses.find(x => x.key === k); if (!c) return; cKey.value = c.key; cPrefix.value = c.prefix; cTitleAr.value = c.title_ar; cTitleEn.value = c.title_en; cDescAr.value = c.desc_ar; cDescEn.value = c.desc_en; cSort.value = c.sort; cActive.value = String(c.active); window.scrollTo(0, 0); };
+document.getElementById('saveCourse').onclick = async () => {
+  const r = await FG.core('savecourse', { key: cKey.value.trim(), prefix: cPrefix.value.trim().toUpperCase(), title_ar: cTitleAr.value.trim(), title_en: cTitleEn.value.trim(), desc_ar: cDescAr.value.trim(), desc_en: cDescEn.value.trim(), sort: cSort.value, active: cActive.value });
+  alert(r.status === 'success' ? 'تم حفظ الدورة' : (r.message || 'فشل')); loadCourses();
+};
+
+document.getElementById('issueBtn').onclick = async () => {
+  const b = document.getElementById('issueBtn'), st = document.getElementById('statusMsg');
+  const nameEn = nameEnI.value.trim(), nameAr = nameArI.value.trim();
+  if (!nameEn && !nameAr) { st.textContent = '⚠️ أدخل اسم المتدرب (عربي أو إنجليزي أو كلاهما)'; return; }
+  b.disabled = true; st.textContent = 'جاري الإصدار...';
+  const r = await FG.core('issuecertificate', { course: document.getElementById('course').value, nameEn, nameAr, email: emailI.value.trim(), score: scoreI.value.trim(), date: dateI.value });
+  b.disabled = false;
+  if (r.status !== 'success') { st.textContent = '⚠️ ' + (r.message || 'فشل الإصدار'); return; }
+  st.textContent = '✅ تم الإصدار والحفظ — الكود: ' + r.data.code;
+  render(r.data);
+};
+const nameEnI = document.getElementById('nameEn'), nameArI = document.getElementById('nameAr'), emailI = document.getElementById('email'), scoreI = document.getElementById('score'), dateI = document.getElementById('date');
+dateI.value = new Date().toISOString().slice(0, 10);
+
+async function loadCerts() {
+  const r = await FG.core('listcertificates');
+  if (r.status !== 'success') { document.getElementById('rows').innerHTML = `<tr><td colspan="8">${esc(r.message)}</td></tr>`; return; }
+  certs = r.data || []; drawCerts();
+}
+function filtered() { const q = document.getElementById('q').value.trim().toLowerCase(), fc = document.getElementById('fCourse').value; return certs.filter(c => (!fc || c.course_key === fc) && (!q || [c.code, c.name, c.name_ar, c.email].join(' ').toLowerCase().includes(q))); }
+function drawCerts() {
+  const L = filtered(), cn = k => (courses.find(c => c.key === k) || {}).title_ar || k || '—', src = { admin: 'اللوحة', exam: 'اختبار', import: 'مستورد' };
+  document.getElementById('rows').innerHTML = L.length ? L.map(c => `<tr class="${c.revoked ? 'rev' : ''}"><td dir="ltr">${esc(c.code)}</td><td>${esc(c.name)}${c.name_ar && c.name_ar !== c.name ? '<br><small>' + esc(c.name_ar) + '</small>' : ''}</td><td>${esc(cn(c.course_key))}</td><td>${esc(c.issue_date)}</td><td dir="ltr">${esc(c.email)}</td><td>${esc(c.score)}</td><td>${src[c.source] || c.source}</td>
+    <td style="white-space:nowrap"><button class="a" onclick="reprint('${c.code}')"><i class="fas fa-print"></i> عرض</button><button class="a" onclick="revoke('${c.code}',${c.revoked ? 0 : 1})">${c.revoked ? 'استعادة' : 'إلغاء'}</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:#777">لا توجد شهادات</td></tr>';
+}
+document.getElementById('q').oninput = drawCerts; document.getElementById('fCourse').onchange = drawCerts; document.getElementById('reload').onclick = loadCerts;
+document.getElementById('csv').onclick = () => {
+  const h = ['code','name','name_ar','course','date','email','score','source','revoked'], cell = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const csv = [h.join(',')].concat(filtered().map(c => [c.code, c.name, c.name_ar, c.course_key, c.issue_date, c.email, c.score, c.source, c.revoked].map(cell).join(','))).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv' })); a.download = 'certificates.csv'; a.click();
+};
+window.reprint = code => { const c = certs.find(x => x.code === code); if (!c) return; tab('issuePane'); document.getElementById('statusMsg').textContent = 'عرض الشهادة ' + code; render(c); window.scrollTo(0, 400); };
+window.revoke = async (code, v) => { if (!confirm(v ? 'إلغاء هذه الشهادة؟ لن تظهر صالحة عند التحقق.' : 'استعادة الشهادة؟')) return; const r = await FG.core('revokecertificate', { code, value: String(v) }); if (r.status !== 'success') alert(r.message); loadCerts(); };
+
+(async () => {
+  if (!(await FG.hasSession())) { document.getElementById('gate').style.display = 'block'; return; }
+  const r = await FG.core('validate');
+  if (r.status !== 'success') { document.getElementById('gate').style.display = 'block'; return; }
+  me = r; const perms = r.permissions || {};
+  if (!(r.role === 'super' || (perms.actions || []).includes('certificates'))) { document.getElementById('gate').innerHTML = '<i class="fas fa-ban" style="font-size:2rem;color:#e74c3c"></i><h2 style="margin-top:10px">ليس لديك صلاحية الشهادات</h2><p>اطلب من المسؤول الرئيسي منحك صلاحية «الشهادات».</p><a class="btn gold" href="index.html" style="text-decoration:none;display:inline-block">العودة</a>'; document.getElementById('gate').style.display = 'block'; return; }
+  document.getElementById('app').style.display = 'block'; document.getElementById('who').textContent = r.name || r.email;
+  if (r.role === 'super') document.getElementById('tabCourses').style.display = '';
+  await loadCourses();
+  const qc = new URLSearchParams(location.search).get('code'); if (qc) { await loadCerts(); reprint(qc); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التحقق من الشهادات | مجموعة فاروق — Certificate Verification</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="js/fg-config.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tajawal,sans-serif;background:radial-gradient(circle at 20% 10%,rgba(184,134,11,.12),transparent 40%),#0a0e16;color:#eee;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:min(520px,100%);background:#121826;border:1px solid rgba(184,134,11,.4);border-radius:20px;padding:30px 24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+img.logo{width:120px;margin-bottom:10px}
+h1{color:#d4b15a;font-size:1.25rem;margin-bottom:4px}
+.sub{color:#8a93a6;font-size:.85rem;margin-bottom:20px}
+form{display:flex;gap:8px}
+input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid #333;background:#0a0e16;color:#fff;font-size:1rem;font-family:monospace;text-transform:uppercase;direction:ltr;text-align:center}
+button{padding:12px 18px;border:none;border-radius:12px;background:linear-gradient(135deg,#b8860b,#d4b15a);color:#111;font-weight:700;font-family:inherit;cursor:pointer}
+#res{margin-top:22px;min-height:40px}
+.ok{border:1px solid rgba(46,204,113,.5);background:rgba(46,204,113,.08);border-radius:14px;padding:18px}
+.bad{border:1px solid rgba(231,76,60,.5);background:rgba(231,76,60,.08);border-radius:14px;padding:18px;color:#ff8a7a}
+.ok i{font-size:2.2rem;color:#2ecc71}.bad i{font-size:2.2rem}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed #2a3244;font-size:.92rem;text-align:right}
+.row span:first-child{color:#8a93a6}
+.row:last-child{border:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="https://lh3.googleusercontent.com/d/1e6u-DPTinDJl_Q9wW3QvGgzFbXO_2sXa" alt="FAROUK GRUP">
+  <h1>التحقق من صحة الشهادة</h1>
+  <div class="sub">Certificate Verification — FAROUK GRUP</div>
+  <form id="f"><input id="code" placeholder="FGB-FIN-2026-XXXXXXXX" autocomplete="off"><button type="submit"><i class="fas fa-search"></i> تحقق</button></form>
+  <div id="res"></div>
+</div>
+<script>
+const API = String(FG_CONFIG.SUPABASE_URL).replace(/\/$/, '') + '/functions/v1/public-api/cert';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function check(code) {
+  const res = document.getElementById('res');
+  code = String(code || '').trim().toUpperCase(); if (!code) return;
+  res.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+  try {
+    const r = await (await fetch(API + '?action=verify&code=' + encodeURIComponent(code))).json();
+    if (r.status === 'valid') {
+      res.innerHTML = `<div class="ok"><i class="fas fa-check-circle"></i><h3 style="margin:8px 0 12px;color:#2ecc71">شهادة صحيحة وموثقة · Valid</h3>
+        <div class="row"><span>الاسم / Name</span><span>${esc(r.nameAr || '')}${r.nameAr && r.name && r.name !== r.nameAr ? ' — ' : ''}${r.name !== r.nameAr ? esc(r.name) : ''}</span></div>
+        <div class="row"><span>الدورة / Course</span><span>${esc(r.course)}<br><small style="color:#8a93a6">${esc(r.courseEn)}</small></span></div>
+        <div class="row"><span>التاريخ / Date</span><span>${esc(r.date)}</span></div>
+        <div class="row"><span>الرقم / Code</span><span dir="ltr">${esc(r.code)}</span></div></div>`;
+    } else res.innerHTML = '<div class="bad"><i class="fas fa-times-circle"></i><h3 style="margin-top:8px">لم يتم العثور على شهادة صالحة بهذا الرقم</h3><p style="font-size:.85rem;margin-top:6px">Certificate not found or revoked</p></div>';
+  } catch (e) { res.innerHTML = '<div class="bad">تعذر الاتصال، حاول لاحقاً</div>'; }
+}
+document.getElementById('f').onsubmit = e => { e.preventDefault(); check(document.getElementById('code').value); };
+const q = new URLSearchParams(location.search).get('code'); if (q) { document.getElementById('code').value = q; check(q); }
+</script>
+</body>
+</html>
