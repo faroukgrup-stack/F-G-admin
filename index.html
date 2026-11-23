@@ -23,6 +23,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/fg-config.js"></script>
     <script src="js/fg-bridge.js"></script>
+    <script src="js/fg-report.js?v=8.1"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .mp-card { margin-bottom: 16px; }
@@ -2295,13 +2296,19 @@
         document.getElementById('inboundCount').textContent = `(${rows.length})`;
         if (!rows.length) { wrap.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>لا توجد سجلات</div>'; return; }
         const shown = rows.slice(0, 500);
-        wrap.innerHTML = `<table><thead><tr><th>#</th>${cols.map(c => `<th>${escapeHtml(s.headers[c])}</th>`).join('')}<th>التفاصيل</th></tr></thead><tbody>`
-            + shown.map((x, n) => `<tr><td>${x.i + 1}</td>${cols.map(c => `<td class="cell-clip" title="${escapeHtml(x.r[c])}">${escapeHtml(x.r[c])}</td>`).join('')}<td><button class="action-btn edit-btn" onclick="openInboundRecord(${x.i})" title="عرض كل البيانات"><i class="fas fa-eye"></i></button></td></tr>`).join('')
+        wrap.innerHTML = `<table><thead><tr><th>#</th>${cols.map(c => `<th>${escapeHtml(s.headers[c])}</th>`).join('')}<th>التفاصيل / التقرير</th></tr></thead><tbody>`
+            + shown.map((x, n) => `<tr><td>${x.i + 1}</td>${cols.map(c => `<td class="cell-clip" title="${escapeHtml(x.r[c])}">${escapeHtml(x.r[c])}</td>`).join('')}<td style="white-space:nowrap"><button class="action-btn edit-btn" onclick="openInboundRecord(${x.i})" title="عرض كل البيانات"><i class="fas fa-eye"></i></button> <button class="action-btn edit-btn" onclick="openInboundReport(${x.i})" title="${inbound.source === 'diagnostics' ? 'التقرير الكامل / طباعة' : 'طباعة السجل'}" style="color:#d4b15a"><i class="fas ${inbound.source === 'diagnostics' ? 'fa-file-medical-alt' : 'fa-print'}"></i></button></td></tr>`).join('')
             + '</tbody></table>' + (rows.length > 500 ? `<div class="empty-state">يعرض أحدث 500 سجل من ${rows.length}. استخدم البحث أو التصدير لرؤية الباقي.</div>` : '');
     }
     window.openInboundRecord = function(i) {
         const s = inbound.sheets[inbound.sheetIdx]; const r = s.rows[i]; if (!r) return;
         openRecordModal(sheetLabel(s.name) + ' — سجل ' + (i + 1), s.headers.map((h, k) => [h, r[k]]));
+    };
+    window.openInboundReport = function(i) {
+        const s = inbound.sheets[inbound.sheetIdx]; const r = s && s.rows[i]; if (!r) return;
+        if (!window.FGReport) { showToast('ملف التقارير js/fg-report.js غير محمّل', 'fa-exclamation-triangle', 'danger'); return; }
+        const sheet = inbound.source === 'diagnostics' ? s.name : '__generic__';
+        FGReport.open(sheet, s.headers, r, i + 1, sheetLabel(s.name));
     };
     window.exportInbound = function() {
         const s = inbound.sheets[inbound.sheetIdx]; if (!s) return;
