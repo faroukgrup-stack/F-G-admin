@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فاروق - لوحة التحكم">
-    <title>لوحة تحكم المبيعات والاشتراكات | FAROUK GRUP</title>
+    <title>لوحة إدارة مجموعة فاروق V8.0 | FAROUK GRUP</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -17,7 +17,12 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="robots" content="noindex,nofollow">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- V8.0: Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/fg-config.js"></script>
+    <script src="js/fg-bridge.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         .mp-card { margin-bottom: 16px; }
@@ -453,6 +458,7 @@
             <button type="button" class="login-btn" id="backToLoginBtn" style="margin-top:8px;background:transparent;border:1px solid #555;color:#ccc;"><i class="fas fa-arrow-right"></i> رجوع</button>
         </div>
         <div class="error-msg" id="errorMsg"></div>
+        <a href="#" onclick="FG.forgotPassword();return false;" style="display:inline-block;margin-top:10px;color:#9aa3b5;font-size:.82rem;text-decoration:none"><i class="fas fa-key"></i> نسيت كلمة المرور؟</a>
     </div>
 </div>
 
@@ -525,9 +531,15 @@
                 <button class="sidebar-btn" onclick="window.open('business-audit-150q.html','_blank')"><i class="fas fa-briefcase"></i> <span>تقييم الأعمال</span></button>
                 <button class="sidebar-btn" onclick="window.open('investment-readiness.html','_blank')"><i class="fas fa-chart-pie"></i> <span>جاذبية الاستثمار</span></button>
             </div>
+            <div class="sidebar-section" id="certSidebarSection">
+                <div class="sidebar-section-title" onclick="toggleSection(this)"><span>التدريب والشهادات</span><i class="fas fa-chevron-down"></i></div>
+                <button class="sidebar-btn" data-perm="certificates" onclick="showCertificatesView()"><i class="fas fa-award" style="color:#d4af37"></i> <span>توليد وإدارة الشهادات</span></button>
+                <button class="sidebar-btn" data-perm="certificates" onclick="window.open('verify.html','_blank')"><i class="fas fa-qrcode" style="color:#2ecc71"></i> <span>التحقق من شهادة</span></button>
+            </div>
             <div class="sidebar-section" id="staffSidebarSection" data-perm="manage_staff">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>الإدارة</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" onclick="showStaffView()"><i class="fas fa-users-cog"></i> <span>إدارة الموظفين</span></button>
+                <button class="sidebar-btn" onclick="showAuditLog()"><i class="fas fa-history"></i> <span>سجل العمليات</span></button>
             </div>
             <div class="sidebar-footer">
                 <button class="sidebar-btn logout-btn" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span></button>
@@ -1073,9 +1085,9 @@
 <div class="toast-container" id="toastBox"></div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEoWBpm5QZjGWRP7inhMo8I71fRO_sfGGW3tHHdhOVcSqt1T6k6tCrlJHHTfGHsbI1WQ/exec";
+    const GOOGLE_SCRIPT_URL = FG.CORE_URL; // V8.0: Supabase Edge Function (admin-core)
     // يجب أن يطابق ADMIN_KEY في Script Properties للمنصة الشاملة و ADMINSECRETKEY لمطعمي برو
-    const ADMIN_KEY = "mF9$kL2#pQ8wZ4xR7vN1yT6";
+    const ADMIN_KEY = ''; // V8.0: لا مفاتيح في الواجهة — المفاتيح محفوظة كأسرار في Supabase وتُستخدم عبر admin-proxy
     const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
     const CACHE_KEY = 'farouk_admin_cache_v4';
     const PERSONAL_DATA_KEY = 'farouk_personal_data_v1';
@@ -1090,22 +1102,22 @@
         comprehensive: {
             name: 'المنصة الشاملة',
             // Supabase (دالة admin) — المفتاح ADMIN_KEY في Supabase يجب أن يساوي ADMIN_KEY أعلاه
-            url: 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin',
+            url: FG.PROXY_URL + '/comprehensive',
             auth: 'header' // المفتاح يُرسل في x-admin-key (كما في admin.html)
         },
         restaurantCourse: {
             name: 'دورة المطاعم',
-            url: 'https://script.google.com/macros/s/AKfycbyMfXBSn3MOU2mxZ60Zux18RmnfN3VMOHDHrXkroNzVQC9W-FWfH43ko_h_zzyVzK_a/exec',
+            url: FG.PROXY_URL + '/restaurantCourse',
             supportsProgress: true,
             totalLessonsDefault: 81
         },
         menuEngineering: {
             name: 'مطعمي برو',
-            url: 'https://euboicafuubzpfujxxdn.supabase.co/functions/v1/api'
+            url: FG.PROXY_URL + '/menuEngineering'
         },
         newCourse: {
             name: 'دورة الماليات',
-            url: 'https://script.google.com/macros/s/AKfycbxuYQQa06ZDYYUd8y8Res02KIxLoNEIpl0FQ35LAuAOwNIz0wPG7pFKmsUur4oYNs-d/exec'
+            url: FG.PROXY_URL + '/newCourse'
         }
     };
 
@@ -1300,13 +1312,8 @@
             const btn = document.getElementById('loginBtn');
             if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري الدخول...'; btn.disabled = true; }
             if (err) err.textContent = '';
-            const body = new URLSearchParams({ action: 'login', username: username, password: password });
-            const res = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-                body: body
-            });
-            const r = await res.json();
+            // V8.0: تسجيل الدخول عبر Supabase Auth ثم التحقق من ملف الموظف وصلاحياته
+            const r = await FG.signIn(username, password);
             if (r.status === 'otp_required') {
                 pendingLoginEmail = r.email || username;
                 const step2 = document.getElementById('loginStep2');
@@ -1365,11 +1372,13 @@
         startSessionTimer();
         initAudio();
         loadAllData();
+        FG.startRealtime();
         showToast('مرحباً ' + (r.name || ''), 'fa-smile');
     }
-    function initialSessionCheck() {
+    async function initialSessionCheck() {
         const token = localStorage.getItem('userToken');
         if (!token) { showLoginScreen(); return; }
+        if (!(await FG.hasSession())) { ['userToken','loginTimestamp'].forEach(k => localStorage.removeItem(k)); showLoginScreen(); return; }
         if (isSessionExpired()) { localStorage.removeItem('userToken'); localStorage.removeItem('loginTimestamp'); showLoginScreen(); return; }
         loadCurrentUserFromStorage();
         document.getElementById('loginOverlay').style.display = 'none';
@@ -1377,9 +1386,11 @@
         document.getElementById('dashboard').style.display = 'block';
         applyPermissionsUI();
         startSessionTimer(); initAudio(); loadAllData();
+        refreshPermissions(); FG.startRealtime();
     }
     window.logoutAdmin = function() {
         if (logoutTimer) clearTimeout(logoutTimer);
+        FG.signOut();
         ['userToken','userName','userEmail','userRole','userPerms','isSuperAdmin','daysLeft','loginTimestamp'].forEach(k => localStorage.removeItem(k));
         currentUser = { email: '', name: '', role: '', permissions: {}, isSuperAdmin: false };
         if (mailPollTimer) { clearInterval(mailPollTimer); mailPollTimer = null; } lastUnread = -1; stopAutoRefresh(); showLoginScreen(); showToast("تم تسجيل الخروج", "fa-sign-out-alt");
@@ -2167,24 +2178,24 @@
     // ════════════════════════════════════════════════════════════
     //  البيانات الواردة: تقييمات المنصة الشاملة + تحميل الكتب + التشخيص + الطلبات
     // ════════════════════════════════════════════════════════════
-    const SUPABASE_ADMIN_URL = 'https://ljysoujfhrcolncyhyfd.supabase.co/functions/v1/admin';
+    const SUPABASE_ADMIN_URL = FG.PROXY_URL + '/comprehensive';
     const DATA_SOURCES = {
         books: {
             title: 'تحميل الكتب', icon: 'fa-book-open',
-            url: 'https://script.google.com/macros/s/AKfycbyzSA9Q8Hmi6ayHCz9gi0dlXOzWaVTsPIKuP_udG3krQoEKaUF0R3KCRQIquNqwfGgS3g/exec',
-            labels: { book1: 'الكتاب 1', book2: 'الكتاب 2', book3: 'الكتاب 3', book4: 'الكتاب 4', general: 'عام' },
+            url: FG.CORE_URL + '/inbound/books',
+            labels: { book1: 'الكتاب 1', book2: 'الكتاب 2', book3: 'الكتاب 3', book4: 'الكتاب 4', book5: 'الكتاب 5', general: 'عام' },
             preview: ['التاريخ', 'الوقت', 'الاسم', 'الإيميل', 'رقم الهاتف', 'الكتاب', 'الصفحة']
         },
         diagnostics: {
             title: 'التشخيص والأدوات المجانية', icon: 'fa-stethoscope',
-            url: 'https://script.google.com/macros/s/AKfycbyW6Jql8vrS2HzVDt5KHjaTL5fMZWlzr8XB1zU3sQp6gILqWHPJUjwDk2uZS4hkYxoh/exec',
+            url: FG.CORE_URL + '/inbound/diagnostics',
             labels: { FormResponses: 'تشخيص المطاعم', ManagementResponses: 'مقياس الإداري', FeasibilityResponses: 'تقييم الجدوى' },
             preview: ['Timestamp', 'Restaurant Name', 'Owner Name', 'Name', 'Project Name', 'Email', 'Phone', 'City', 'Final Score (%)', 'Total Score', 'Level', 'Score', 'Grade']
         },
         requests: {
             title: 'طلبات المواقع', icon: 'fa-inbox',
-            url: 'https://script.google.com/macros/s/AKfycbxEEOiKwJ2Tz3eD6hPHfAk25beh9FTU-nW_Oj36P1mz7A1m1btBCInkRCGBm0ZQpgelDQ/exec',
-            labels: { FormResponses: 'طلبات الاستشارة' },
+            url: FG.CORE_URL + '/inbound/requests',
+            labels: { FormResponses: 'نموذج تواصل معنا', Consultation: 'طلبات حجز الاستشارة', Poll: 'استبيان الورش' },
             preview: ['التاريخ', 'الاسم', 'البريد الإلكتروني', 'رقم الهاتف', 'مجال الاستشارة', 'تفاصيل الاستفسار']
         }
     };
@@ -2310,7 +2321,7 @@
         try {
             const res = await fetch(SUPABASE_ADMIN_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY }, body: JSON.stringify({ fn: 'getRatings' }), cache: 'no-store' });
             const data = await res.json().catch(() => ({}));
-            if (res.status === 401) throw new Error('المفتاح غير مطابق: ADMIN_KEY في Supabase يجب أن يساوي المفتاح في لوحة الإدارة');
+            if (res.status === 401) throw new Error('غير مصرح — تأكد من صلاحيتك ومن ضبط سر COMPREHENSIVE_ADMIN_KEY في Supabase');
             if (data.status !== 'success') throw new Error(data.message === 'fn' ? 'دالة admin في Supabase قديمة: الصق النسخة الجديدة واضغط Deploy' : (data.message || 'تعذر جلب التقييمات'));
             inbound.ratings = data.data || [];
             renderRatings();
@@ -2664,7 +2675,7 @@
                 const tb = document.getElementById('fgTabBadge'); if (tb) tb.textContent = fgData.pendingCount;
             }
             fgRenderClaims(); fgRenderStats();
-        } catch (e) { list.innerHTML = fgErr(e.message === 'غير مصرح' ? 'غير مصرح — تأكد أن ADMIN_KEY في Supabase يطابق مفتاح الإدارة' : (e.message || 'تعذر الاتصال')); }
+        } catch (e) { list.innerHTML = fgErr(e.message === 'غير مصرح' ? 'غير مصرح — تأكد من صلاحيتك ومن ضبط سر COMPREHENSIVE_ADMIN_KEY في Supabase' : (e.message || 'تعذر الاتصال')); }
     };
 
     window.fgRenderClaims = function () {
@@ -3114,7 +3125,7 @@
     const PE_CHECKS = [
         ['الحجوزات', 'fa-calendar-check', [['booking_settings', 'تعديل إعدادات أوقات العمل والحجز']]],
         ['البيانات الواردة', 'fa-inbox', [['inbound_ratings', 'تقييمات المنصة الشاملة'], ['inbound_books', 'تحميل الكتب'], ['inbound_diagnostics', 'التشخيص والأدوات المجانية'], ['inbound_requests', 'طلبات المواقع']]],
-        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)']]]
+        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)'], ['certificates', 'إصدار وإدارة شهادات التدريب']]]
     ];
     const PE_ACTS = PE_CHECKS.flatMap(g => g[2].map(x => x[0]));
     const segHtml = (name, val) => `<div class="pe-seg">${['بدون', 'مشاهدة', 'تعديل'].map((l, i) => `<label><input type="radio" name="${name}" value="${i}" ${val === i ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>`;
@@ -3384,6 +3395,23 @@
             updateAppointmentStats();
         };
     }
+
+    /* ===================== V8.0 إضافات Supabase ===================== */
+    window.__fgPollUnread = pollUnread;
+    window.showCertificatesView = function () {
+        if (!hasPerm('certificates')) { showToast('ليس لديك صلاحية الشهادات', 'fa-lock', 'danger'); return; }
+        window.open('certificates.html', '_blank'); closeMobileMenu();
+    };
+    window.showAuditLog = async function () {
+        if (!currentUser.isSuperAdmin) { showToast('سجل العمليات للمسؤول الرئيسي فقط', 'fa-lock', 'danger'); return; }
+        const r = await FG.core('auditlog');
+        if (r.status !== 'success') { showToast(r.message || 'تعذر التحميل', 'fa-exclamation-triangle', 'danger'); return; }
+        const m = document.createElement('div'); m.className = 'fg-modal';
+        m.innerHTML = `<div class="card" style="width:min(900px,100%);max-height:85vh;overflow:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="color:#f3d98b"><i class="fas fa-history"></i> سجل العمليات (آخر 500)</h3><button type="button" style="width:auto;padding:6px 14px" onclick="this.closest('.fg-modal').remove()">إغلاق</button></div>
+          <table style="width:100%;border-collapse:collapse;font-size:.8rem">${(r.data || []).map(a => `<tr style="border-bottom:1px solid #222"><td style="padding:6px;white-space:nowrap;color:#888">${new Date(a.created_at).toLocaleString('ar-EG')}</td><td style="padding:6px" dir="ltr">${FG.esc(a.actor)}</td><td style="padding:6px;color:#d4b15a">${FG.esc(a.action)}</td><td style="padding:6px">${FG.esc(a.details)}</td></tr>`).join('') || '<tr><td>لا يوجد</td></tr>'}</table></div>`;
+        m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+        document.body.appendChild(m);
+    };
 </script>
 
 <script>
