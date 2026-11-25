@@ -27,7 +27,7 @@
 
   /* ---------- اعتراض fetch: إضافة التوكن لطلبات دوال اللوحة ---------- */
   const origFetch = window.fetch.bind(window);
-  const isOurs = u => u.indexOf(FN + '/admin-core') === 0 || u.indexOf(FN + '/admin-proxy') === 0;
+  const isOurs = u => u.indexOf(FN + '/admin-core') === 0 || u.indexOf(FN + '/admin-proxy') === 0 || u.indexOf(FN + '/ai-assistant') === 0;
   window.fetch = async function (input, init) {
     const url = typeof input === 'string' ? input : (input && input.url) || '';
     if (!isOurs(url)) return origFetch(input, init);

@@ -7,5 +7,5 @@ window.FG_CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_-hqdT3YgEtc8UyhiscKeiw_SwfwUL8T',
   // رابط صفحة التحقق العامة من الشهادات (يُطبع في QR)
   VERIFY_URL: 'https://training.farouk-grup.com/verify',
-  APP_VERSION: '8.1'
+  APP_VERSION: '8.2'
 };

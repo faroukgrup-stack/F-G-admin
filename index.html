@@ -522,6 +522,7 @@
             <div class="sidebar-section" id="dataSidebarSection">
                 <div class="sidebar-section-title" onclick="toggleSection(this)"><span>البيانات الواردة</span><i class="fas fa-chevron-down"></i></div>
                 <button class="sidebar-btn" data-perm="inbound_ratings" id="btnRatingsView" onclick="showRatingsView(this)"><i class="fas fa-star" style="color:#f1c40f"></i> <span>تقييمات المنصة الشاملة</span></button>
+                <button class="sidebar-btn" data-perm="inbound_mp_ratings" id="btnMpRatingsView" onclick="FGFrame.open('mataami-ratings.html?embed=1', 'تقييمات واستبيانات مطعمي برو', 'fa-utensils', this)"><i class="fas fa-utensils" style="color:#e8b95c"></i> <span>تقييمات مطعمي برو</span></button>
                 <button class="sidebar-btn inbound-btn" data-perm="inbound_books" onclick="showInboundView('books', this)"><i class="fas fa-book-open" style="color:#2ecc71"></i> <span>تحميل الكتب</span></button>
                 <button class="sidebar-btn inbound-btn" data-perm="inbound_diagnostics" onclick="showInboundView('diagnostics', this)"><i class="fas fa-stethoscope" style="color:#3498db"></i> <span>التشخيص والأدوات المجانية</span></button>
                 <button class="sidebar-btn inbound-btn" data-perm="inbound_requests" onclick="showInboundView('requests', this)"><i class="fas fa-inbox" style="color:#e67e22"></i> <span>طلبات المواقع</span></button>
@@ -707,6 +708,8 @@
                 <div class="bulk-actions">
                     <label style="font-size:0.88rem;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"> تحديد الكل</label>
                     <button data-needs-edit="1" onclick="bulkDelete()"><i class="fas fa-trash"></i> حذف المحدد</button>
+                    <button data-needs-edit="1" onclick="bulkSetFrozen(true)" title="تجميد الحسابات المحددة"><i class="fas fa-lock"></i> تجميد المحدد</button>
+                    <button data-needs-edit="1" onclick="bulkSetFrozen(false)" title="فك تجميد الحسابات المحددة"><i class="fas fa-lock-open"></i> فك التجميد</button>
                     <select id="bulkPlatformFilter" onchange="filterByPlatformSelect(this.value)" style="min-width:140px;">
                         <option value="">كل المنصات</option>
                         <option value="comprehensive">المنصة الشاملة</option>
@@ -1285,6 +1288,7 @@
         if (a.has('bookings_edit')) a.add('bookings_view');
         if (a.has('view_reports')) INBOUND_PERMS.forEach(x => a.add(x));
         if (plats.indexOf('comprehensive') !== -1) a.add('inbound_ratings');
+        if (plats.indexOf('menuEngineering') !== -1) a.add('inbound_mp_ratings');
         return { platforms: plats, platformEdit: edit.filter(k => plats.indexOf(k) !== -1), actions: Array.from(a) };
     }
     function isSuper() { return currentUser.isSuperAdmin || currentUser.role === 'super'; }
@@ -1844,7 +1848,7 @@
                 <td style="color:${color};font-weight:900;">${days}${planBadge(u)}</td>
                 <td class="${days > 0 ? 'status-active' : 'status-expired'}">${days > 0 ? 'نشط' : 'منتهي'}</td>
                 <td>${progressHtml}</td>
-                <td style="color:${u.frozen ? '#e74c3c' : '#2ecc71'};font-weight:700;">${u.frozen ? '🔒' : '✅'}</td>
+                <td style="color:${u.frozen ? '#e74c3c' : '#2ecc71'};font-weight:700;">${canEditPlatform(u.platformKey) ? `<button class="action-btn fz-btn" title="${u.frozen ? 'مجمَّد — اضغط لفك التجميد' : 'فعّال — اضغط للتجميد'}" onclick="toggleUserFrozen('${uid}')" style="background:none;border:1px solid ${u.frozen ? '#e74c3c' : '#2ecc71'}55;color:${u.frozen ? '#e74c3c' : '#2ecc71'}"><i class="fas ${u.frozen ? 'fa-lock' : 'fa-lock-open'}"></i></button>` : (u.frozen ? '🔒' : '✅')}</td>
                 <td>${canEditPlatform(u.platformKey) ? `<button class="action-btn edit-btn" onclick="openEditUserModal('${uid}')"><i class="fas fa-edit"></i></button>
                     <button class="action-btn delete-btn-action" onclick="deleteUser('${uid}')"><i class="fas fa-trash"></i></button>` : '<span title="مشاهدة فقط" style="color:#666;font-size:.78rem;"><i class="fas fa-eye"></i></span>'}</td>`;
             frag.appendChild(tr);
@@ -1941,6 +1945,45 @@
             } catch (e2) { showToast("فشل: " + (e.message || e2.message || 'خطأ'), "fa-times"); }
         }
     };
+    /* ===== V8.2: تجميد / فك تجميد المشتركين مباشرة من اللوحة (كل المنصات) ===== */
+    function frozenPayload(user, frozen) {
+        const k = user.platformKey, id = user.id;
+        if (k === 'comprehensive') return { fn: 'freeze', id, frozen };
+        if (k === 'menuEngineering') return { fn: 'updateUser', restaurantEmail: id, frozen: frozen ? 'true' : 'false' };
+        return { fn: 'freeze', username: id, frozen: frozen ? 'true' : 'false' }; // دورة المطاعم / الماليات (سكربت V2.1)
+    }
+    async function setUserFrozen(user, frozen) {
+        if (!canEditPlatform(user.platformKey)) return { ok: false, msg: 'ليس لديك صلاحية التعديل على ' + user.platform };
+        try {
+            const d = await callPlatform(user.platformKey, frozenPayload(user, frozen));
+            if (d && (d.status === 'success' || d.success === true || d.ok === true)) return { ok: true };
+            const m = (d && (d.message || d.error)) || 'خطأ';
+            return { ok: false, msg: /غير معروف|unknown/i.test(m) && user.platformKey !== 'comprehensive' && user.platformKey !== 'menuEngineering' ? 'حدّث سكربت ' + user.platform + ' إلى V2.1 لدعم التجميد' : m };
+        } catch (e) { return { ok: false, msg: e.message || 'تعذر الاتصال' }; }
+    }
+    window.toggleUserFrozen = async function(uid) {
+        const user = findUserByUniqueId(uid); if (!user) return;
+        const to = !user.frozen;
+        if (!confirm((to ? 'تجميد' : 'فك تجميد') + ' حساب "' + (user.name || user.id) + '" في ' + user.platform + '؟')) return;
+        showToast(to ? 'جاري التجميد...' : 'جاري فك التجميد...', 'fa-spinner');
+        const r = await setUserFrozen(user, to);
+        if (r.ok) {
+            user.frozen = to; applyFilterAndSort(); updateStatsCards(window.allUsersData); saveCache(window.allUsersData);
+            showToast(to ? 'تم تجميد الحساب' : 'تم فك التجميد', to ? 'fa-lock' : 'fa-lock-open');
+        } else showToast('فشل: ' + r.msg, 'fa-times', 'danger');
+    };
+    window.bulkSetFrozen = async function(frozen) {
+        const selected = getSelectedUniqueIds().map(findUserByUniqueId).filter(Boolean).filter(u => !!u.frozen !== frozen);
+        if (!selected.length) { showToast('حدّد مشتركين ' + (frozen ? 'غير مجمَّدين' : 'مجمَّدين') + ' أولاً', 'fa-info-circle'); return; }
+        const denied = selected.filter(u => !canEditPlatform(u.platformKey));
+        if (denied.length) { showToast('ليس لديك صلاحية تعديل ' + denied[0].platform, 'fa-lock', 'danger'); return; }
+        if (!confirm((frozen ? 'تجميد ' : 'فك تجميد ') + selected.length + ' حساب؟')) return;
+        let ok = 0; const fails = [];
+        for (const u of selected) { const r = await setUserFrozen(u, frozen); if (r.ok) { ok++; u.frozen = frozen; } else fails.push(r.msg); }
+        applyFilterAndSort(); updateStatsCards(window.allUsersData); saveCache(window.allUsersData);
+        showToast(`تم ${frozen ? 'تجميد' : 'فك تجميد'} ${ok} من ${selected.length}` + (fails.length ? ' — ' + fails[0] : ''), ok ? 'fa-check' : 'fa-times', fails.length ? 'danger' : undefined);
+    };
+
     window.bulkDelete = async function() {
         const selected = getSelectedUniqueIds(); if (!selected.length) { showToast("حدد مشتركين", "fa-info"); return; }
         if (!confirm(`حذف ${selected.length} مشترك؟`)) return;
@@ -3171,8 +3214,8 @@
     /* ===== محرر الصلاحيات: مرتب حسب الشريط الجانبي ===== */
     const PE_CHECKS = [
         ['الحجوزات', 'fa-calendar-check', [['booking_settings', 'تعديل إعدادات أوقات العمل والحجز']]],
-        ['البيانات الواردة', 'fa-inbox', [['inbound_ratings', 'تقييمات المنصة الشاملة'], ['inbound_books', 'تحميل الكتب'], ['inbound_diagnostics', 'التشخيص والأدوات المجانية'], ['inbound_requests', 'طلبات المواقع']]],
-        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)'], ['certificates', 'إصدار وإدارة شهادات التدريب'], ['delete_records', 'حذف السجلات (التقييمات والبيانات الواردة والأدوات)']]],
+        ['البيانات الواردة', 'fa-inbox', [['inbound_ratings', 'تقييمات المنصة الشاملة'], ['inbound_mp_ratings', 'تقييمات واستبيانات مطعمي برو'], ['inbound_books', 'تحميل الكتب'], ['inbound_diagnostics', 'التشخيص والأدوات المجانية'], ['inbound_requests', 'طلبات المواقع']]],
+        ['الرسائل والأدوات', 'fa-toolbox', [['send_messages', 'إرسال رسائل جديدة (الرد على الرسائل الواردة متاح دائماً)'], ['use_audit_tools', 'الأدوات الاستشارية (التدقيق والتقييم)'], ['certificates', 'إصدار وإدارة شهادات التدريب'], ['delete_records', 'حذف السجلات (التقييمات والبيانات الواردة والأدوات)'], ['ai_assistant', 'السكرتير الذكي (ينفّذ الأوامر ضمن صلاحيات الموظف فقط)']]],
         ['إدارة الشركة', 'fa-building', [['biz_reports', 'لوحة الأداء والتقارير (KPIs)'], ['biz_crm', 'العملاء (CRM)'], ['biz_projects', 'المشاريع وتوزيع المهام على الموظفين'], ['biz_finance', 'المالية (الإيرادات والمصروفات والمستحقات)']]]
     ];
     const PE_ACTS = PE_CHECKS.flatMap(g => g[2].map(x => x[0]));
@@ -3465,7 +3508,8 @@
         document.body.appendChild(m);
     };
 </script>
-<script src="js/fg-v81.js?v=8.1"></script>
+<script src="js/fg-v81.js?v=8.2"></script>
+<script src="js/fg-ai.js?v=8.2"></script>
 
 <script>
 // تسجيل PWA Service Worker

@@ -72,6 +72,7 @@
     src: '',
     open(src, title, icon, btn) {
       if (/certificates/.test(src) && !hasPerm('certificates')) { toast('ليس لديك صلاحية الشهادات', 'fa-lock', 'danger'); return; }
+      if (/mataami-ratings/.test(src) && !hasPerm('inbound_mp_ratings')) { toast('ليس لديك صلاحية تقييمات مطعمي برو', 'fa-lock', 'danger'); return; }
       if (/audit|investment/.test(src) && !hasPerm('use_audit_tools')) { toast('ليس لديك صلاحية الأدوات الاستشارية', 'fa-lock', 'danger'); return; }
       hideMainSections(); if (btn) markSidebar(btn);
       $('frameView').style.display = 'block';

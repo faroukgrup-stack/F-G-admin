@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
+<title>تقييمات واستبيانات مطعمي برو | FAROUK GRUP</title>
+<link rel="icon" type="image/png" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--gold:#b48554;--gold-light:#d9b869;--gold-bright:#edd088;--forest:#093323;--forest-deep:#061f15;--bg:#0b0e17;--card:#121726;--card2:#161c2e;--line:#232b40;--text:#e2e8f0;--muted:#94a3b8;--ok:#34d399;--warn:#fbbf24;--bad:#f87171}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tajawal,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Cairo,Tajawal,sans-serif}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding:22px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.top h1{font-size:1.35rem;font-weight:900;display:flex;align-items:center;gap:10px}
+.top h1 i{color:var(--gold-light)}
+.top a{color:var(--gold-light);text-decoration:none;font-size:.9rem;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+input,select{padding:9px 11px;border-radius:10px;border:1px solid #2a334b;background:#0b0e17;color:#fff}
+.btn{padding:9px 16px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#0b0e17;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid #2a334b}
+.btn.sm{padding:5px 10px;font-size:.8rem}
+.btn.red{background:#3b1a1f;color:#fca5a5;border:1px solid #5b2730}
+.msg{color:var(--muted);font-size:.9rem}
+.msg.err{color:var(--bad)}
+.chef{display:grid;grid-template-columns:62px minmax(0,1fr);gap:14px;align-items:center;background:linear-gradient(135deg,var(--forest),var(--forest-deep));border:1px solid rgba(217,184,105,.28);border-radius:16px;padding:14px 18px;margin-bottom:16px}
+.chef img{width:62px;height:62px;border-radius:50%;border:2px solid var(--gold-light);object-fit:cover}
+.chef b{color:var(--gold-bright);font-family:Cairo,sans-serif}
+.chef ul{list-style:none;display:grid;gap:3px;font-size:.93rem;margin-top:4px}
+.chef li:before{content:"•";color:var(--gold-light);margin-inline-end:7px}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi small{color:var(--muted);font-size:.82rem;font-weight:700}
+.kpi .v{font-family:Cairo,sans-serif;font-size:1.9rem;font-weight:900;line-height:1.2;margin:4px 0;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:.8rem;color:var(--muted)}
+.npsbar{display:flex;height:8px;border-radius:99px;overflow:hidden;margin-top:8px;background:#1f2638}
+.npsbar i{display:block;height:100%}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.75rem;color:var(--muted);margin-top:6px}
+.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-inline-end:4px;background:var(--c)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.card h2{font-size:1rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 i{color:var(--gold-light);font-size:.9rem}
+.card h2 small{color:var(--muted);font-weight:500;font-family:Tajawal;font-size:.78rem;margin-inline-start:auto}
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(110px,38%) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.86rem}
+.bar .tr{height:9px;background:#1f2638;border-radius:99px;overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.bar .tr i.g{background:linear-gradient(90deg,#0f766e,var(--ok))}
+.bar .tr i.r{background:linear-gradient(90deg,#b91c1c,var(--bad))}
+.bar b{font-variant-numeric:tabular-nums;font-size:.82rem;color:var(--muted);min-width:64px;text-align:end}
+.mods{width:100%;border-collapse:collapse;font-size:.86rem}
+.mods th,.mods td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:start}
+.mods th{color:var(--gold-light);font-weight:700;font-size:.78rem}
+.mods td.n{font-variant-numeric:tabular-nums}
+.stars{color:var(--gold-light);letter-spacing:1px;font-size:.8rem}
+.stars .off{color:#3a4257}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{border:1px solid #2a334b;background:transparent;color:var(--muted);padding:5px 12px;border-radius:99px;cursor:pointer;font-size:.82rem;font-weight:700}
+.tabs button[aria-pressed="true"]{background:var(--gold-light);color:#0b0e17;border-color:var(--gold-light)}
+.feed{display:grid;gap:10px;max-height:520px;overflow:auto;padding-inline-end:4px}
+.cm{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:.9rem}
+.cm .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:.76rem;color:var(--muted);margin-bottom:5px}
+.cm p{white-space:pre-wrap}
+.cm p b{color:var(--gold-light);font-weight:700;font-size:.78rem;display:block}
+.tag{padding:1px 8px;border-radius:99px;font-weight:800;font-size:.74rem}
+.tag.pro{background:#10b98126;color:#6ee7b7}.tag.pas{background:#f59e0b26;color:#fcd34d}.tag.det{background:#ef444426;color:#fca5a5}.tag.sub{background:#b4855430;color:var(--gold-bright)}
+.table-wrap{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:12px}
+table.rows{width:100%;border-collapse:collapse;font-size:.83rem;min-width:980px}
+table.rows th,table.rows td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start;white-space:nowrap}
+table.rows th{position:sticky;top:0;background:#151b2c;color:var(--gold-light);font-weight:700;z-index:1}
+table.rows td.wrap{white-space:normal;min-width:220px;max-width:360px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.empty img{width:110px;display:block;margin:0 auto 10px;opacity:.95}
+.demo-note{background:#b4855422;border:1px solid #b4855455;color:var(--gold-bright);border-radius:10px;padding:8px 12px;font-size:.85rem;margin-bottom:14px;display:none}
+.demo-note.show{display:block}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}.wrap{padding:14px}.bar{grid-template-columns:minmax(90px,40%) minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1><i class="fas fa-clipboard-list"></i>تقييمات واستبيانات مطعمي برو</h1>
+    <a href="https://mataami-pro.com/survey.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> فتح صفحة الاستبيان</a>
+  </div>
+
+  <div class="card ctrl">
+    <select id="days" aria-label="الفترة"><option value="30">آخر 30 يوماً</option><option value="7">آخر 7 أيام</option><option value="90">آخر 90 يوماً</option><option value="365">آخر سنة</option><option value="">كل الفترات</option></select>
+    <select id="fPlan" aria-label="الباقة"><option value="">كل الباقات</option></select>
+    <select id="fRole" aria-label="الدور"><option value="">كل الأدوار</option></select>
+    <label class="msg"><input type="checkbox" id="fSub"> المشتركون المسجّلون فقط</label>
+    <button class="btn" id="load"><i class="fas fa-rotate"></i>عرض النتائج</button>
+    <button class="btn ghost" id="demo"><i class="fas fa-flask"></i>بيانات تجريبية</button>
+    <button class="btn ghost" id="csv" disabled><i class="fas fa-file-csv"></i>تصدير CSV</button>
+    <span class="msg" id="msg"></span>
+  </div>
+  <div class="demo-note" id="demoNote"><i class="fas fa-flask"></i> تعرض الصفحة الآن بيانات تجريبية عشوائية لمعاينة الشكل فقط، وليست إجابات حقيقية.</div>
+
+  <div id="out"><div class="card empty"><img src="https://mataami-pro.com/assets/chef/chef-survey.webp" alt="">جارٍ تحميل تقييمات مطعمي برو من خلال بوابة الإدارة الآمنة...</div></div>
+</div>
+
+<script src="js/mp-survey-schema.js?v=8.2"></script>
+<script>
+(function () {
+  'use strict';
+  var SC = window.MP_SURVEY, OP = SC.OPTS, $ = function (s) { return document.querySelector(s); };
+  var h = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  // V8.2: تعمل داخل لوحة FAROUK GRUP — الطلب يمر عبر admin-proxy بجلسة الموظف، ومفتاح مطعمي برو محفوظ كسرّ في Supabase فقط
+  var PW = null; try { if (window.parent !== window && window.parent.FG) PW = window.parent; } catch (e) { PW = null; }
+  var CAN_DEL = !!(PW && typeof PW.hasPerm === 'function' && PW.hasPerm('delete_records'));
+  var qs = new URLSearchParams(location.search);
+  var ROWS = [], VIEW = [], feedTab = 'all';
+  function lbl(list, v) { var o = (list || []).filter(function (x) { return x.v === v; })[0]; return o ? o.t.ar : (v || '—'); }
+  function fill(sel, list) { list.forEach(function (o) { var e = document.createElement('option'); e.value = o.v; e.textContent = o.t.ar; sel.appendChild(e); }); }
+  fill($('#fPlan'), OP.plan); fill($('#fRole'), OP.role);
+  function A(r) { var a = r.answers; if (typeof a === 'string') { try { a = JSON.parse(a); } catch (e) { a = {}; } } return a || {}; }
+  function grp(n) { return n >= 9 ? 'pro' : n >= 7 ? 'pas' : 'det'; }
+  function pct(a, b) { return b ? Math.round(a * 100 / b) : 0; }
+  function avg(arr) { arr = arr.filter(function (x) { return typeof x === 'number' && x > 0; }); return arr.length ? arr.reduce(function (s, x) { return s + x; }, 0) / arr.length : null; }
+  function f1(x) { return x == null ? '—' : x.toFixed(1); }
+  function starStr(x) { if (x == null) return '<span class="stars"><span class="off">★★★★★</span></span>'; var n = Math.round(x); return '<span class="stars">' + '★'.repeat(n) + '<span class="off">' + '★'.repeat(5 - n) + '</span></span>'; }
+  function count(list, key, multi) {
+    var c = {}; VIEW.forEach(function (r) { var v = A(r)[key]; (multi ? (v || []) : (v ? [v] : [])).forEach(function (x) { c[x] = (c[x] || 0) + 1; }); });
+    return list.map(function (o) { return { v: o.v, t: o.t.ar, n: c[o.v] || 0 }; });
+  }
+  function bars(items, total, cls, sort) {
+    if (sort !== false) items = items.slice().sort(function (a, b) { return b.n - a.n; });
+    return '<div class="bars">' + items.map(function (x) { var p = pct(x.n, total); return '<div class="bar"><span>' + h(x.t) + '</span><span class="tr"><i class="' + (cls || '') + '" style="width:' + p + '%"></i></span><b>' + x.n + ' · ' + p + '%</b></div>'; }).join('') + '</div>';
+  }
+  function api(fn, p) {
+    if (!PW) return Promise.resolve({ success: false, error: 'افتح هذه الصفحة من داخل لوحة إدارة FAROUK GRUP' });
+    return PW.fetch(PW.FG.PROXY_URL + '/menuEngineering', { method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ fn: fn }, p || {})) }).then(function (r) { return r.json(); });
+  }
+  function filter() {
+    var pl = $('#fPlan').value, ro = $('#fRole').value, sub = $('#fSub').checked;
+    VIEW = ROWS.filter(function (r) { return (!pl || r.plan === pl) && (!ro || r.role === ro) && (!sub || r.is_subscriber); });
+    draw();
+  }
+
+  function insights(n, nps, csat, mods, qual, prio) {
+    var L = [];
+    L.push('لديك <b>' + n + '</b> إجابة، ومؤشر التوصية <b dir="ltr">' + (nps > 0 ? '+' : '') + nps + '</b> ' + (nps >= 50 ? '(ممتاز)' : nps >= 20 ? '(جيد)' : nps >= 0 ? '(يحتاج تحسيناً)' : '(سلبي، الأولوية للمعالجة)') + '.');
+    var topP = prio.slice().sort(function (a, b) { return b.n - a.n; })[0]; if (topP && topP.n) L.push('أكثر تطوير مطلوب: <b>' + h(topP.t) + '</b> (' + pct(topP.n, n) + '% من المشاركين).');
+    var rated = qual.filter(function (q) { return q.a != null; }).sort(function (a, b) { return a.a - b.a; });
+    if (rated.length) L.push('أضعف جانب في التجربة: <b>' + h(rated[0].t) + '</b> بمتوسط ' + f1(rated[0].a) + ' من 5، وأقواها <b>' + h(rated[rated.length - 1].t) + '</b>.');
+    var mr = mods.filter(function (m) { return m.n >= 2 && m.a != null; }).sort(function (a, b) { return a.a - b.a; });
+    if (mr.length) L.push('الوحدة الأقل تقييماً بين المستخدَمة: <b>' + h(mr[0].t) + '</b> (' + f1(mr[0].a) + ' ★).');
+    return '<div class="chef"><img src="https://mataami-pro.com/assets/chef/chef-face.webp" alt="الشيف برو"><div><b>ملخص الشيف برو</b><ul>' + L.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div></div>';
+  }
+
+  function draw() {
+    $('#csv').disabled = !VIEW.length;
+    var n = VIEW.length;
+    if (!n) { $('#out').innerHTML = '<div class="card empty"><img src="https://mataami-pro.com/assets/chef/chef-thinking.webp" alt="">لا توجد إجابات ضمن هذه الفترة أو الفلاتر بعد. شارك رابط الاستبيان مع مشتركيك.</div>'; return; }
+    var P = 0, Pa = 0, D = 0;
+    VIEW.forEach(function (r) { var g = grp(r.nps); if (g === 'pro') P++; else if (g === 'pas') Pa++; else D++; });
+    var nps = Math.round((P - D) * 100 / n);
+    var cs = VIEW.map(function (r) { return r.csat; }), csat = avg(cs), sat = pct(cs.filter(function (x) { return x >= 4; }).length, cs.filter(function (x) { return x; }).length);
+    var ces = avg(VIEW.map(function (r) { return r.ces; }));
+    var ren = VIEW.filter(function (r) { return r.renew; }), renY = pct(ren.filter(function (r) { return r.renew === 'definitely' || r.renew === 'probably'; }).length, ren.length);
+    var subs = VIEW.filter(function (r) { return r.is_subscriber; }).length;
+
+    var mods = SC.MODULES.map(function (m) {
+      var users = VIEW.filter(function (r) { return (A(r).modules || []).indexOf(m.v) > -1; });
+      var top = VIEW.filter(function (r) { return A(r).topModule === m.v; }).length;
+      return { v: m.v, t: m.t.ar, n: users.length, a: avg(users.map(function (r) { return (A(r).modRatings || {})[m.v]; })), top: top };
+    }).sort(function (a, b) { return b.n - a.n; });
+    var qual = SC.QUALITY.map(function (q) {
+      var vals = VIEW.map(function (r) { return (A(r).quality || {})[q.v]; });
+      return { t: q.t.ar, a: avg(vals), c: vals.filter(function (x) { return x > 0; }).length };
+    });
+    var prio = count(OP.priorities, 'priorities', true);
+
+    var html = insights(n, nps, csat, mods, qual, prio);
+    html += '<div class="kpis">' +
+      '<div class="card kpi"><small>عدد الإجابات</small><div class="v">' + n + '</div><div class="s">' + subs + ' منها من مشتركين مسجّلين</div></div>' +
+      '<div class="card kpi"><small>مؤشر صافي التوصية NPS</small><div class="v" style="color:' + (nps >= 30 ? 'var(--ok)' : nps >= 0 ? 'var(--warn)' : 'var(--bad)') + '" dir="ltr" style="text-align:end">' + (nps > 0 ? '+' : '') + nps + '</div>' +
+        '<div class="npsbar"><i style="width:' + pct(D, n) + '%;background:var(--bad)"></i><i style="width:' + pct(Pa, n) + '%;background:var(--warn)"></i><i style="width:' + pct(P, n) + '%;background:var(--ok)"></i></div>' +
+        '<div class="legend"><span style="--c:var(--ok)">مروّجون ' + pct(P, n) + '%</span><span style="--c:var(--warn)">محايدون ' + pct(Pa, n) + '%</span><span style="--c:var(--bad)">منتقدون ' + pct(D, n) + '%</span></div></div>' +
+      '<div class="card kpi"><small>متوسط الرضا CSAT</small><div class="v">' + f1(csat) + '<span style="font-size:1rem;color:var(--muted)"> / 5</span></div><div class="s">' + sat + '% راضون أو راضون جداً</div></div>' +
+      '<div class="card kpi"><small>سهولة البدء CES</small><div class="v">' + f1(ces) + '<span style="font-size:1rem;color:var(--muted)"> / 7</span></div><div class="s">كلما ارتفع كان أسهل</div></div>' +
+      '<div class="card kpi"><small>نية التجديد</small><div class="v">' + renY + '%</div><div class="s">سيجددون بالتأكيد أو غالباً</div></div></div>';
+
+    html += '<div class="grid2"><div class="card"><h2><i class="fas fa-puzzle-piece"></i>الوحدات: الاستخدام والتقييم<small>مرتبة حسب الاستخدام</small></h2><table class="mods"><thead><tr><th>الوحدة</th><th>المستخدمون</th><th>متوسط التقييم</th><th>لا يستغنون عنها</th></tr></thead><tbody>' +
+      mods.map(function (m) { return '<tr><td>' + h(m.t) + '</td><td class="n">' + m.n + ' <span class="msg">(' + pct(m.n, n) + '%)</span></td><td>' + starStr(m.a) + ' <span class="msg">' + f1(m.a) + '</span></td><td class="n">' + m.top + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<div class="card"><h2><i class="fas fa-gauge-high"></i>جودة التجربة<small>متوسط من 5، بدون «لا ينطبق»</small></h2><div class="bars">' +
+      qual.slice().sort(function (a, b) { return (b.a || 0) - (a.a || 0); }).map(function (q) { var p = q.a ? q.a / 5 * 100 : 0; return '<div class="bar"><span>' + h(q.t) + '</span><span class="tr"><i class="' + (q.a != null && q.a < 3 ? 'r' : q.a >= 4 ? 'g' : '') + '" style="width:' + p + '%"></i></span><b>' + f1(q.a) + ' · ' + q.c + ' تقييم</b></div>'; }).join('') + '</div></div></div>';
+
+    html += '<div class="grid2"><div class="card"><h2><i class="fas fa-flag"></i>أولويات التطوير<small>كل مشارك يختار حتى 3</small></h2>' + bars(prio, n) + '</div>' +
+      '<div class="card"><h2><i class="fas fa-arrows-rotate"></i>نية التجديد</h2>' + bars(count(OP.renew, 'renew'), n, '', false) +
+      '<h2 style="margin-top:18px"><i class="fas fa-scale-balanced"></i>ماذا كانوا يستخدمون قبلنا</h2>' + bars(count(OP.before, 'before'), n) + '</div></div>';
+
+    html += '<div class="grid3"><div class="card"><h2><i class="fas fa-user"></i>الدور</h2>' + bars(count(OP.role, 'role'), n) + '</div>' +
+      '<div class="card"><h2><i class="fas fa-store"></i>نوع النشاط</h2>' + bars(count(OP.rtype, 'rtype'), n) + '</div>' +
+      '<div class="card"><h2><i class="fas fa-tags"></i>الباقة ومدة الاستخدام</h2>' + bars(count(OP.plan, 'plan'), n, '', false) + '<div style="height:14px"></div>' + bars(count(OP.tenure, 'tenure'), n, '', false) + '</div></div>';
+
+    html += '<div class="grid3"><div class="card"><h2><i class="fas fa-percent"></i>تغيّر تكلفة الطعام</h2>' + bars(count(OP.foodcost, 'foodcost'), n, 'g', false) + '</div>' +
+      '<div class="card"><h2><i class="fas fa-clock"></i>الوقت الموفّر أسبوعياً</h2>' + bars(count(OP.time, 'time'), n, 'g', false) + '</div>' +
+      '<div class="card"><h2><i class="fas fa-lightbulb"></i>قرارات ساعد فيها النظام</h2>' + bars(count(OP.gains, 'gains', true), n, 'g') + '</div></div>';
+
+    html += '<div class="grid2"><div class="card"><h2><i class="fas fa-comments"></i>تعليقات المشاركين</h2><div class="tabs" id="tabs">' +
+      [['all', 'الكل'], ['det', 'المنتقدون'], ['pas', 'المحايدون'], ['pro', 'المروّجون']].map(function (x) { return '<button data-tab="' + x[0] + '" aria-pressed="' + (feedTab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div><div class="feed" id="feed">' + feed() + '</div></div>' +
+      '<div class="card"><h2><i class="fas fa-address-book"></i>متابعة وآراء للنشر</h2>' + follow() + '</div></div>';
+
+    html += '<div class="card"><h2><i class="fas fa-table"></i>كل الإجابات<small>' + n + ' صف</small></h2><div class="table-wrap"><table class="rows"><thead><tr><th>التاريخ</th><th>NPS</th><th>الرضا</th><th>CES</th><th>الدور</th><th>النشاط</th><th>الباقة</th><th>التجديد</th><th>الوحدات</th><th>اللغة</th><th>المصدر</th><th>التواصل</th><th></th></tr></thead><tbody>' +
+      VIEW.map(function (r) { var a = A(r); return '<tr><td>' + new Date(r.created_at).toLocaleString('ar-EG') + '</td><td><span class="tag ' + grp(r.nps) + '">' + r.nps + '</span></td><td>' + (r.csat || '—') + '</td><td>' + (r.ces || '—') + '</td><td>' + h(lbl(OP.role, r.role)) + '</td><td>' + h(lbl(OP.rtype, r.restaurant_type)) + '</td><td>' + h(lbl(OP.plan, r.plan)) + '</td><td>' + h(lbl(OP.renew, r.renew)) + '</td><td class="wrap">' + h((a.modules || []).map(function (m) { return lbl(SC.MODULES, m); }).join('، ')) + '</td><td>' + h(r.lang) + '</td><td>' + h(r.source) + '</td><td dir="ltr">' + h([r.name, r.email, r.contact].filter(Boolean).join(' · ')) + '</td><td>' + (r.__demo || !CAN_DEL ? '' : '<button class="btn sm red" data-del="' + h(r.id) + '" title="حذف"><i class="fas fa-trash"></i></button>') + '</td></tr>'; }).join('') +
+      '</tbody></table></div></div>';
+    $('#out').innerHTML = html;
+  }
+  function feed() {
+    var items = VIEW.filter(function (r) { var a = A(r); return (feedTab === 'all' || grp(r.nps) === feedTab) && (a.npsWhy || a.frustration || a.wish); });
+    if (!items.length) return '<p class="msg">لا توجد تعليقات في هذه الفئة.</p>';
+    return items.map(function (r) {
+      var a = A(r), g = grp(r.nps);
+      return '<div class="cm"><div class="meta"><span class="tag ' + g + '">NPS ' + r.nps + '</span>' + (r.is_subscriber ? '<span class="tag sub">مشترك</span>' : '') + '<span>' + h(lbl(OP.role, r.role)) + ' · ' + h(lbl(OP.rtype, r.restaurant_type)) + '</span><span>' + new Date(r.created_at).toLocaleDateString('ar-EG') + '</span></div>' +
+        (a.npsWhy ? '<p><b>سبب التقييم</b>' + h(a.npsWhy) + '</p>' : '') + (a.frustration ? '<p><b>ما يزعجه</b>' + h(a.frustration) + '</p>' : '') + (a.wish ? '<p><b>لو غيّر شيئاً واحداً</b>' + h(a.wish) + '</p>' : '') + '</div>';
+    }).join('');
+  }
+  function follow() {
+    var c = VIEW.filter(function (r) { return r.allow_contact && (r.email || r.contact); }).sort(function (a, b) { return a.nps - b.nps; });
+    var q = VIEW.filter(function (r) { return r.allow_quote && A(r).quote; });
+    var out = '<p class="msg" style="margin-bottom:8px">وافقوا على التواصل (المنتقدون أولاً): <b>' + c.length + '</b></p><div class="feed" style="max-height:230px">' +
+      (c.length ? c.map(function (r) { var wa = String(r.contact || '').replace(/[^\d]/g, ''); return '<div class="cm"><div class="meta"><span class="tag ' + grp(r.nps) + '">NPS ' + r.nps + '</span><span>' + h(r.name || 'بدون اسم') + '</span></div><p dir="ltr" style="text-align:start">' + h(r.email || '') + (r.contact ? ' · ' + h(r.contact) : '') + (wa.length >= 8 ? ' <a class="btn sm ghost" target="_blank" rel="noopener" href="https://wa.me/' + wa + '"><i class="fab fa-whatsapp"></i></a>' : '') + '</p></div>'; }).join('') : '<p class="msg">لا أحد بعد.</p>') + '</div>';
+    out += '<p class="msg" style="margin:14px 0 8px">آراء وافق أصحابها على نشرها (راجعها قبل النشر): <b>' + q.length + '</b></p><div class="feed" style="max-height:230px">' +
+      (q.length ? q.map(function (r) { return '<div class="cm"><p>«' + h(A(r).quote) + '»</p><div class="meta" style="margin:6px 0 0">' + h((r.name || '').split(' ')[0] || 'مشترك') + ' · ' + h(lbl(OP.rtype, r.restaurant_type)) + ' · NPS ' + r.nps + '</div></div>'; }).join('') : '<p class="msg">لا توجد آراء للنشر بعد.</p>') + '</div>';
+    return out;
+  }
+
+  function csv() {
+    var head = ['التاريخ', 'اللغة', 'المصدر', 'مشترك', 'الاسم', 'البريد', 'التواصل', 'يسمح بالتواصل', 'يسمح بالنشر', 'الدور', 'النشاط', 'الفروع', 'الباقة', 'مدة الاستخدام', 'الأجهزة', 'NPS', 'سبب التقييم', 'الرضا', 'سهولة البدء', 'الوحدات', 'الوحدة الأهم']
+      .concat(SC.MODULES.map(function (m) { return 'تقييم: ' + m.t.ar; })).concat(SC.QUALITY.map(function (q) { return 'جودة: ' + q.t.ar; }))
+      .concat(['قبل مطعمي برو', 'تكلفة الطعام', 'الوقت الموفّر', 'قرارات تحسنت', 'الأولويات', 'التجديد', 'ما يزعجه', 'تغيير واحد', 'رأي للنشر']);
+    var rows = VIEW.map(function (r) {
+      var a = A(r), L = function (list, v) { return v ? lbl(list, v) : ''; }, M = function (list, arr) { return (arr || []).map(function (x) { return lbl(list, x); }).join(' | '); };
+      return [new Date(r.created_at).toISOString(), r.lang, r.source, r.is_subscriber ? 'نعم' : '', r.name, r.email, r.contact, r.allow_contact ? 'نعم' : '', r.allow_quote ? 'نعم' : '',
+        L(OP.role, a.role), L(OP.rtype, a.rtype), L(OP.branches, a.branches), L(OP.plan, a.plan), L(OP.tenure, a.tenure), M(OP.devices, a.devices), r.nps, a.npsWhy || '', r.csat || '', r.ces || '', M(SC.MODULES, a.modules), L(SC.MODULES, a.topModule)]
+        .concat(SC.MODULES.map(function (m) { return (a.modRatings || {})[m.v] || ''; }))
+        .concat(SC.QUALITY.map(function (q) { var v = (a.quality || {})[q.v]; return v === 0 ? 'لا ينطبق' : (v || ''); }))
+        .concat([L(OP.before, a.before), L(OP.foodcost, a.foodcost), L(OP.time, a.time), M(OP.gains, a.gains), M(OP.priorities, a.priorities), L(OP.renew, a.renew), a.frustration || '', a.wish || '', a.quote || '']);
+    });
+    var q = function (v) { v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var text = '\ufeff' + [head].concat(rows).map(function (r) { return r.map(q).join(','); }).join('\r\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'mataami-survey-' + new Date().toISOString().slice(0, 10) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  function demoRows() {
+    var rnd = function (a) { return a[Math.floor(Math.random() * a.length)]; }, pick = function (list, k) { return list.slice().sort(function () { return Math.random() - .5; }).slice(0, k).map(function (o) { return o.v; }); };
+    var comments = ['حساب تكلفة الأطباق غيّر طريقة تسعيري بالكامل', 'التقارير تحتاج وقتاً للتحميل أحياناً', 'أتمنى ربطاً مباشراً مع منصات التوصيل', 'الكاشير سريع وسهل للموظفين', 'أحتاج شرحاً بالفيديو للمحاسبة', 'شاشة المطبخ ممتازة في أوقات الذروة', 'الترجمة التركية تحتاج مراجعة في بعض الشاشات', 'الدعم ردّ بسرعة وحل مشكلتي'];
+    var out = [];
+    for (var i = 0; i < 64; i++) {
+      var nps = rnd([10, 10, 9, 9, 9, 8, 8, 7, 7, 6, 5, 3, 9, 10, 8]), mods = pick(SC.MODULES, 2 + Math.floor(Math.random() * 5)), mr = {}, ql = {};
+      mods.forEach(function (m) { mr[m] = Math.max(1, Math.min(5, Math.round(nps / 2.2 + Math.random() * 1.6 - .4))); });
+      SC.QUALITY.forEach(function (q) { ql[q.v] = Math.random() < .12 ? 0 : Math.max(1, Math.min(5, Math.round(nps / 2.4 + Math.random() * 1.8 - (q.v === 'speed' ? .9 : 0)))); });
+      var a = { role: rnd(OP.role).v, rtype: rnd(OP.rtype).v, branches: rnd(OP.branches).v, plan: rnd(OP.plan).v, tenure: rnd(OP.tenure).v, devices: pick(OP.devices, 2), nps: nps, csat: Math.max(1, Math.min(5, Math.round(nps / 2.2))), ces: Math.max(1, Math.min(7, Math.round(nps / 1.6))),
+        modules: mods, modRatings: mr, topModule: mods[0], quality: ql, before: rnd(OP.before).v, foodcost: rnd(OP.foodcost).v, time: rnd(OP.time).v, gains: pick(OP.gains, 3), priorities: pick(OP.priorities, 3),
+        renew: nps >= 9 ? 'definitely' : nps >= 7 ? rnd(['probably', 'unsure']) : rnd(['unsure', 'probably_not', 'no']), npsWhy: Math.random() < .55 ? rnd(comments) : '', frustration: Math.random() < .3 ? rnd(comments) : '' };
+      if (Math.random() < .25) { a.allowQuote = true; a.quote = rnd(['أفضل نظام جربته لمطعمي', 'وفّر علي ساعات من الحسابات كل أسبوع', 'أخيراً أعرف ربحي الحقيقي من كل طبق']); }
+      out.push({ id: 'demo' + i, __demo: true, created_at: new Date(Date.now() - Math.random() * 28 * 864e5).toISOString(), lang: rnd(['ar', 'ar', 'en', 'tr']), source: rnd(['app', 'whatsapp', 'email']), email: '', name: rnd(['أحمد', 'سارة', 'محمد', 'Ayşe', 'Omar']), contact: Math.random() < .3 ? '+90555000' + (1000 + i) : '', is_subscriber: Math.random() < .8,
+        role: a.role, restaurant_type: a.rtype, plan: a.plan, nps: nps, csat: a.csat, ces: a.ces, renew: a.renew, allow_quote: !!a.allowQuote, allow_contact: Math.random() < .35, answers: a });
+    }
+    return out.sort(function (x, y) { return y.created_at < x.created_at ? -1 : 1; });
+  }
+
+  $('#load').onclick = function () {
+    $('#msg').className = 'msg'; $('#msg').textContent = 'جارٍ التحميل...';
+    api('adminSurveys', { days: $('#days').value }).then(function (r) {
+      if (!r.success) { $('#msg').className = 'msg err'; $('#msg').textContent = r.error || r.message || 'غير مصرح'; if (!ROWS.length) $('#out').innerHTML = '<div class="card empty"><img src="https://mataami-pro.com/assets/chef/chef-thinking.webp" alt="">' + h(r.error || r.message || 'غير مصرح') + '</div>'; return; }
+      $('#demoNote').classList.remove('show'); $('#msg').textContent = 'آخر تحديث: ' + new Date().toLocaleTimeString('ar-EG');
+      ROWS = r.rows || []; filter();
+    }).catch(function () { $('#msg').className = 'msg err'; $('#msg').textContent = 'تعذر الاتصال بالخادم'; });
+  };
+  $('#demo').onclick = function () { ROWS = demoRows(); $('#demoNote').classList.add('show'); $('#msg').textContent = ''; filter(); };
+  $('#csv').onclick = csv;
+  ['#fPlan', '#fRole', '#fSub'].forEach(function (s) { $(s).onchange = filter; });
+  $('#days').onchange = function () { if (ROWS.length && !ROWS[0].__demo) $('#load').click(); };
+  $('#out').addEventListener('click', function (e) {
+    var t = e.target.closest('[data-tab]'); if (t) { feedTab = t.getAttribute('data-tab'); [].forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.setAttribute('aria-pressed', String(b === t)); }); $('#feed').innerHTML = feed(); return; }
+    var d = e.target.closest('[data-del]'); if (d && confirm('حذف هذه الإجابة نهائياً؟')) {
+      api('adminSurveyDelete', { id: d.getAttribute('data-del') }).then(function (r) { if (r.success) { ROWS = ROWS.filter(function (x) { return x.id !== d.getAttribute('data-del'); }); filter(); } else alert(r.error || r.message || 'تعذر الحذف'); });
+    }
+  });
+  if (qs.get('demo') === '1') $('#demo').click(); else $('#load').click();
+})();
+</script>
+</body>
+</html>
