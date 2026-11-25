@@ -1949,7 +1949,7 @@
     function frozenPayload(user, frozen) {
         const k = user.platformKey, id = user.id;
         if (k === 'comprehensive') return { fn: 'freeze', id, frozen };
-        if (k === 'menuEngineering') return { fn: 'updateUser', restaurantEmail: id, frozen: frozen ? 'true' : 'false' };
+        if (k === 'menuEngineering') return { fn: 'updateUser', username: id, email: id, restaurantEmail: id, frozen: frozen ? 'true' : 'false' };
         return { fn: 'freeze', username: id, frozen: frozen ? 'true' : 'false' }; // دورة المطاعم / الماليات (سكربت V2.1)
     }
     async function setUserFrozen(user, frozen) {
